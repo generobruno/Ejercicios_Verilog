@@ -1,7 +1,0 @@
-Running: xsim.dir/alu_alfa_tb_behav/xsimk -simmode gui -wdb alu_alfa_tb_behav.wdb -simrunnum 0 -socket 33335
-Design successfully loaded
-Design Loading Memory Usage: 23480 KB (Peak: 24108 KB)
-Design Loading CPU Usage: 40 ms
-Simulation completed
-Simulation Memory Usage: 105216 KB (Peak: 162748 KB)
-Simulation CPU Usage: 40 ms
