@@ -24,6 +24,7 @@ module alu
     )
     (
         // Inputs
+        input                   i_clock,
         input   [N-1 : 0]       i_alu_A, i_alu_B,       // ALU Operands // TODO Reg?
         input   [NSel-1 : 0]    i_alu_Op,               // ALU Operation// TODO Reg? 
         // Outputs
@@ -33,20 +34,20 @@ module alu
     // TODO Definir operaciones como localparam
 
     // Body
-    always @(*) // TODO clock?
+    always @(posedge i_clock)
     begin
-
+        // TODO Revisar ops segun el manual MIPS
         // Make Operation depending on ALU Op
         case(i_alu_Op)
-            6'b100000: o_alu_Result = i_alu_A + i_alu_B;   
-            6'b100010: o_alu_Result = i_alu_A - i_alu_B;
-            6'b100100: o_alu_Result = i_alu_A & i_alu_B;
-            6'b100101: o_alu_Result = i_alu_A | i_alu_B;
-            6'b100110: o_alu_Result = i_alu_A ^ i_alu_B;
-            6'b000011: o_alu_Result = i_alu_A >> i_alu_B; // TODO REVISAR SI ES ESTO
-            6'b000010: o_alu_Result = i_alu_A << i_alu_B; // TODO REVISAR SI ES ESTO
-            6'b100111: o_alu_Result = ~ (i_alu_A | i_alu_B);
-            default: o_alu_Result = {N,{1'b0}}; // TODO Esto esta bien?
+            6'b100000: o_alu_Result <= i_alu_A + i_alu_B;   
+            6'b100010: o_alu_Result <= i_alu_A - i_alu_B;
+            6'b100100: o_alu_Result <= i_alu_A & i_alu_B;
+            6'b100101: o_alu_Result <= i_alu_A | i_alu_B;
+            6'b100110: o_alu_Result <= i_alu_A ^ i_alu_B;
+            6'b000011: o_alu_Result <= i_alu_A >> i_alu_B;
+            6'b000010: o_alu_Result <= i_alu_A << i_alu_B;
+            6'b100111: o_alu_Result <= ~ (i_alu_A | i_alu_B);
+            default: o_alu_Result <= {N {1'b0}}; // TODO Esto esta bien?
         endcase
 
 
