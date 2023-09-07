@@ -1,5 +1,11 @@
 /**
-
+    ALU Input Control
+    Este modulo gestiona las entradas de la ALU, usando
+    los switches de la pieza. Se utilizan 4 (o hasta 5) bits
+    para los operandos de la ALU y 6 bits para definir la 
+    operación que se realizará.
+    Además, tenemos 3 botones para actualizar los valores
+    mencionados, luego de que se haga un cambio en los switches.
 **/
 
 module alu_input_ctrl

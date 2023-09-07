@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_input_ctrl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu_input_ctrl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu_alfa_tb

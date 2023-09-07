@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.1.1 (64-bit)
+# SW Build 3900603 on Fri Jun 16 19:30:25 MDT 2023
+# IP Build 3900379 on Sat Jun 17 05:28:05 MDT 2023
+# SharedData Build 3899622 on Fri Jun 16 03:34:24 MDT 2023
+# Start of session at: Thu Sep  7 17:56:59 2023
+# Process ID: 664777
+# Current directory: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.runs/synth_1
+# Command line: vivado -log alu.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source alu.tcl
+# Log file: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.runs/synth_1/alu.vds
+# Journal file: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.runs/synth_1/vivado.jou
+# Running On: BrunoLaptop, OS: Linux, CPU Frequency: 2399.997 MHz, CPU Physical cores: 2, Host memory: 16635 MB
+#-----------------------------------------------------------
+source alu.tcl -notrace
