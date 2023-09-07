@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.1.1 (64-bit)
+# SW Build 3900603 on Fri Jun 16 19:30:25 MDT 2023
+# IP Build 3900379 on Sat Jun 17 05:28:05 MDT 2023
+# SharedData Build 3899622 on Fri Jun 16 03:34:24 MDT 2023
+# Start of session at: Wed Sep  6 19:06:44 2023
+# Process ID: 618546
+# Current directory: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Ejemplo_2/Ejemplo_2.runs/synth_1
+# Command line: vivado -log counter.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source counter.tcl
+# Log file: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Ejemplo_2/Ejemplo_2.runs/synth_1/counter.vds
+# Journal file: /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Ejemplo_2/Ejemplo_2.runs/synth_1/vivado.jou
+# Running On: BrunoLaptop, OS: Linux, CPU Frequency: 3699.984 MHz, CPU Physical cores: 2, Host memory: 16635 MB
+#-----------------------------------------------------------
+source counter.tcl -notrace

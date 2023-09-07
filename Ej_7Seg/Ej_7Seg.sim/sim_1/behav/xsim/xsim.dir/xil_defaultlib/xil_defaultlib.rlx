@@ -1,0 +1,8 @@
+0.7
+2020.2
+Jun 16 2023
+19:36:26
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Ej_7Seg/Ej_7Seg.sim/sim_1/behav/xsim/glbl.v,1683266558,verilog,,,,glbl,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/disp_mux.v,1693486523,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg.v,,disp_mux,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg.v,1693483287,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg_test.v,,hex_to_sseg,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg_test.v,1693483285,verilog,,,,hex_to_sseg_test,,,,,,,,

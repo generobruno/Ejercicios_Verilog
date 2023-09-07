@@ -1,0 +1,7 @@
+Running: xsim.dir/hex_to_sseg_test_func_synth/xsimk -simmode gui -wdb hex_to_sseg_test_func_synth.wdb -simrunnum 0 -socket 49653
+Design successfully loaded
+Design Loading Memory Usage: 23772 KB (Peak: 24160 KB)
+Design Loading CPU Usage: 50 ms
+Simulation completed
+Simulation Memory Usage: 105768 KB (Peak: 163040 KB)
+Simulation CPU Usage: 60 ms

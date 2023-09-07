@@ -1,0 +1,11 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../sources/hex_7seg_decoder/disp_mux.v" \
+"../../../../../sources/hex_7seg_decoder/hex_to_sseg.v" \
+"../../../../../sources/hex_7seg_decoder/hex_to_sseg_test.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

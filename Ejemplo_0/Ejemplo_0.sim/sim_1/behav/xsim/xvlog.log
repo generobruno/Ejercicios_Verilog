@@ -1,0 +1,4 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/Ej_0/ej_0_src.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module modulo_1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/Ej_0/ej_0_test.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module module_1_tb

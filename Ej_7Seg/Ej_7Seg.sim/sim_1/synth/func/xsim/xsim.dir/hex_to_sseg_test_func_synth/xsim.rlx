@@ -1,0 +1,12 @@
+
+{ 
+    crc :  4071971094576181685  , 
+    ccp_crc :  0  , 
+    cmdline : " --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L secureip --snapshot hex_to_sseg_test_func_synth xil_defaultlib.hex_to_sseg_test xil_defaultlib.glbl" , 
+    buildDate : "Jun 16 2023" , 
+    buildTime : "19:36:26" , 
+    linkCmd : "/usr/bin/gcc -Wa,-W  -O -fPIC  -m64  -Wl,--no-as-needed  -Wl,--unresolved-symbols=ignore-all  -o \"xsim.dir/hex_to_sseg_test_func_synth/xsimk\"   \"xsim.dir/hex_to_sseg_test_func_synth/obj/xsim_0.lnx64.o\" \"xsim.dir/hex_to_sseg_test_func_synth/obj/xsim_1.lnx64.o\" -L\"/home/bruno/Xilinx/Vivado/2023.1/lib/lnx64.o\" -lrdi_simulator_kernel    -L/home/bruno/Xilinx/Vivado/2023.1/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -Wl,--disable-new-dtags -Wl,-rpath=/home/bruno/Xilinx/Vivado/2023.1/lib/lnx64.o/../../tps/lnx64/gcc-9.3.0/bin/../lib64 -lrdi_simbridge_kernel" , 
+    aggregate_nets : 
+    [ 
+    ] 
+} 

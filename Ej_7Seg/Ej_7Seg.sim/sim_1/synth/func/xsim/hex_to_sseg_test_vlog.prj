@@ -1,0 +1,8 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"hex_to_sseg_test_func_synth.v" \
+"../../../../../../sources/hex_7seg_decoder/hex_to_sseg.v" \
+"../../../../../../sources/hex_7seg_decoder/hex_to_sseg_test.v" \
+
+# Do not sort compile order
+nosort

@@ -1,0 +1,7 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Ej_7Seg/Ej_7Seg.sim/sim_1/synth/func/xsim/hex_to_sseg_test_func_synth.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module disp_mux
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hex_to_sseg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/hex_7seg_decoder/hex_to_sseg_test.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hex_to_sseg_test

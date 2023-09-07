@@ -1,0 +1,45 @@
+$date
+   Fri Sep  1 10:45:18 2023
+$end
+$version
+  2023.1.1
+$end
+$timescale
+  1ps
+$end
+$scope module alu_alfa_tb $end
+$var reg 8 ! i_A [7:0] $end
+$var reg 8 " i_B [7:0] $end
+$var reg 6 # i_ALU_Op [5:0] $end
+$var wire 8 $ o_ALU_Result [7:0] $end
+$scope module alu_1 $end
+$var wire 8 % i_alu_A [7:0] $end
+$var wire 8 & i_alu_B [7:0] $end
+$var wire 6 ' i_alu_Op [5:0] $end
+$var reg 8 ( o_alu_Result [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b11111111 !
+b0 "
+b100000 #
+b11111111 $
+b11111111 %
+b0 &
+b100000 '
+b11111111 (
+$end
+#50000
+b11110000 !
+b1111 "
+b11110000 %
+b1111 &
+#100000
+b11111111 !
+b11111111 "
+b11111110 $
+b11111111 %
+b11111111 &
+b11111110 (
