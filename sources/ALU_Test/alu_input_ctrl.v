@@ -32,7 +32,7 @@ module alu_input_ctrl
     reg [N_OPERANDS-1 : 0] stored_B;
     reg [N_OP-1 : 0] stored_Op;
 
-    // TODO Initial con valores en 0??
+    // TODO Initial con valores en 0 y/o agregar i_reset para limpiar regs???
 
     // Update values on button presses
     always @(posedge i_clock) 

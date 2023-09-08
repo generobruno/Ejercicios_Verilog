@@ -16,14 +16,14 @@ module alu_alfa_tb;
     localparam NSel = 6;
 
     // Operation parameters
-    localparam ADD = 100000;
-    localparam SUB = 100010;
-    localparam AND = 100100;
-    localparam OR  = 100101;
-    localparam XOR = 100110;
-    localparam SRA = 000011;
-    localparam SRL = 000010;
-    localparam NOR = 100111;
+    localparam ADD = 6'b100000;
+    localparam SUB = 6'b100010;
+    localparam AND = 6'b100100;
+    localparam OR  = 6'b100101;
+    localparam XOR = 6'b100110;
+    localparam SRA = 6'b000011;
+    localparam SRL = 6'b000010;
+    localparam NOR = 6'b100111;
 
     // Clock generation 
     reg clk = 0;
@@ -66,26 +66,21 @@ module alu_alfa_tb;
     end
 
     initial
-    begin
+    begin // TODO HACER TESTS ALEATORIOS y CHEQUEO AUTOMATICO
         // Test 1 A = 2, B = 3, Op = Suma (100000)
-        i_sw = 16'b00_100000_0101_0010;
-        #25;
-        i_button_A = 1; 
-        #25; // Wait 
-        i_button_A = 0;
-        #25; // Wait 
-        i_button_B = 1;
-        #25; // Wait 
-        i_button_B = 0;
-        #25; // Wait 
-        i_button_Op = 1;
-        #25; // Wait 
-        i_button_Op = 0;
+        i_sw = {2'b00, ADD, 4'b0101, 4'b0010};
+        #25 i_button_A = 1; 
+        #25 i_button_A = 0;
+        #25 i_button_B = 1;
+        #25 i_button_B = 0;
+        #25 i_button_Op = 1;
+        #25 i_button_Op = 0;
         #50; // Wait 
     end
 
     // Monitor variables
-    initial $monitor($time, "A=%d, B=%d, Op=%d, Result=%d",
+    initial $monitor("A=%d, B=%d, Op=%b, Result=%d",
                     o_alu_A, o_alu_B, o_alu_Op, o_alu_Result);
+    // TODO GUARDAR VARS EN FILE O DUMPFILE PARA LOS GRAFICOS??
 
 endmodule
