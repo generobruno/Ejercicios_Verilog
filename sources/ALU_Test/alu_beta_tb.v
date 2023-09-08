@@ -15,6 +15,16 @@ module alu_alfa_tb;
     localparam N = 4;
     localparam NSel = 6;
 
+    // Operation parameters
+    localparam ADD = 100000;
+    localparam SUB = 100010;
+    localparam AND = 100100;
+    localparam OR  = 100101;
+    localparam XOR = 100110;
+    localparam SRA = 000011;
+    localparam SRL = 000010;
+    localparam NOR = 100111;
+
     // Clock generation 
     reg clk = 0;
     always #25 clk = ~clk;
@@ -55,10 +65,23 @@ module alu_alfa_tb;
         i_button_Op = 0;
     end
 
-    // TODO HACER PRUEBAS
     initial
     begin
-
+        // Test 1 A = 2, B = 3, Op = Suma (100000)
+        i_sw = 16'b00_100000_0101_0010;
+        #25;
+        i_button_A = 1; 
+        #25; // Wait 
+        i_button_A = 0;
+        #25; // Wait 
+        i_button_B = 1;
+        #25; // Wait 
+        i_button_B = 0;
+        #25; // Wait 
+        i_button_Op = 1;
+        #25; // Wait 
+        i_button_Op = 0;
+        #50; // Wait 
     end
 
     // Monitor variables
