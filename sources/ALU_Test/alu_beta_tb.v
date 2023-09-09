@@ -34,6 +34,7 @@ module alu_alfa_tb;
     reg i_button_A, i_button_B, i_button_Op;
     wire [5:0] o_alu_Op;
     wire [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
+    wire o_ovf_flag;
 
     // Instantiate the ALU Input Control
     alu_input_ctrl u_ctrl (
@@ -53,7 +54,8 @@ module alu_alfa_tb;
         .i_alu_A(o_alu_A),
         .i_alu_B(o_alu_B),
         .i_alu_Op(o_alu_Op),
-        .o_alu_Result(o_alu_Result)
+        .o_alu_Result(o_alu_Result),
+        .o_overflow_Flag(o_ovf_flag)
     );
 
     // Initial setup
@@ -68,7 +70,7 @@ module alu_alfa_tb;
     initial
     begin // TODO HACER TESTS ALEATORIOS y CHEQUEO AUTOMATICO
         // Test 1 A = 2, B = 3, Op = Suma (100000)
-        i_sw = {2'b00, ADD, 4'b0101, 4'b0010};
+        i_sw = {2'b00, SUB, 4'b0111, 4'b0010};
         #25 i_button_A = 1; 
         #25 i_button_A = 0;
         #25 i_button_B = 1;
@@ -79,8 +81,8 @@ module alu_alfa_tb;
     end
 
     // Monitor variables
-    initial $monitor("A=%d, B=%d, Op=%b, Result=%d",
-                    o_alu_A, o_alu_B, o_alu_Op, o_alu_Result);
+    initial $monitor("A=%d, B=%d, Op=%b, Result=%d, OVF=%b",
+                    o_alu_A, o_alu_B, o_alu_Op, o_alu_Result, o_ovf_flag);
     // TODO GUARDAR VARS EN FILE O DUMPFILE PARA LOS GRAFICOS??
 
 endmodule

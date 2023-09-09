@@ -32,12 +32,13 @@ module alu
         input   [N-1 : 0]       i_alu_A, i_alu_B,       // ALU Operands 
         input   [NSel-1 : 0]    i_alu_Op,               // ALU Operation
         // Outputs
-        output reg [N-1 : 0]    o_alu_Result            // ALU Result 
+        output reg [N-1 : 0]    o_alu_Result,           // ALU Result
+        output reg              o_overflow_Flag         // Overflow Flag
     );
 
     // Operation parameters
-    localparam ADD = 6'b100000;     // Add Word - If overflow, then trap // TODO Detect of?
-    localparam SUB = 6'b100010;     // Subtract Word - If overflow, then trap // TODO Detect of?
+    localparam ADD = 6'b100000;     // Add Word - If overflow, then trap
+    localparam SUB = 6'b100010;     // Subtract Word - If overflow, then trap
     localparam AND = 6'b100100;     // Logical bitwise AND 
     localparam OR  = 6'b100101;     // Logical bitwise OR
     localparam XOR = 6'b100110;     // Logical bitwise XOR
@@ -50,15 +51,27 @@ module alu
     begin
         // Make Operation depending on ALU Op
         case(i_alu_Op)
-            ADD     : o_alu_Result <= i_alu_A + i_alu_B;   
-            SUB     : o_alu_Result <= i_alu_A - i_alu_B;
+            ADD     : 
+            begin
+                o_alu_Result <= i_alu_A + i_alu_B;
+                o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1])); 
+            end
+            SUB     : 
+            begin
+                o_alu_Result <= i_alu_A - i_alu_B;
+                o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1])); 
+            end
             AND     : o_alu_Result <= i_alu_A & i_alu_B;
             OR      : o_alu_Result <= i_alu_A | i_alu_B;
             XOR     : o_alu_Result <= i_alu_A ^ i_alu_B;
             SRA     : o_alu_Result <= i_alu_A >>> i_alu_B;
             SRL     : o_alu_Result <= i_alu_A >> i_alu_B;
             NOR     : o_alu_Result <= ~ (i_alu_A | i_alu_B);
-            default : o_alu_Result <= {N {1'b0}}; // TODO Esto esta bien?
+            default : 
+            begin
+                o_alu_Result <= {N {1'b0}};
+                o_overflow_Flag <= 1'b0;
+            end
         endcase
     end
 
