@@ -33,7 +33,7 @@ module alu_alfa_tb;
     reg [15:0] i_sw;
     reg i_button_A, i_button_B, i_button_Op;
     wire [5:0] o_alu_Op;
-    wire [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
+    wire signed [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
     wire o_ovf_flag;
 
     // Instantiate the ALU Input Control
@@ -67,10 +67,14 @@ module alu_alfa_tb;
         i_button_Op = 0;
     end
 
+    // Operands Parameters
+    localparam A_VALUE = 4'b0111;
+    localparam B_VALUE = 4'b1010;
+
     initial
     begin // TODO HACER TESTS ALEATORIOS y CHEQUEO AUTOMATICO
         // Test 1 A = 2, B = 3, Op = Suma (100000)
-        i_sw = {2'b00, ADD, 4'b1010, 4'b0111};
+        i_sw = {2'b00, SUB, B_VALUE, A_VALUE};
         #25 i_button_A = 1; 
         #25 i_button_A = 0;
         #25 i_button_B = 1;
@@ -83,6 +87,5 @@ module alu_alfa_tb;
     // Monitor variables
     initial $monitor("A=%d, B=%d, Op=%b, Result=%d, OVF=%b",
                     o_alu_A, o_alu_B, o_alu_Op, o_alu_Result, o_ovf_flag);
-    // TODO GUARDAR VARS EN FILE O DUMPFILE PARA LOS GRAFICOS??
 
 endmodule

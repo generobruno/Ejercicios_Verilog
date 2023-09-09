@@ -28,8 +28,8 @@ module alu
     )
     (
         // Inputs
-        input                   i_clock,
-        input  [N-1 : 0]       i_alu_A, i_alu_B,       // ALU Operands 
+        input                  i_clock,
+        input [N-1 : 0]        i_alu_A, i_alu_B,       // ALU Operands 
         input  [NSel-1 : 0]    i_alu_Op,               // ALU Operation
         // Outputs
         output reg [N-1 : 0]    o_alu_Result,           // ALU Result
@@ -45,8 +45,6 @@ module alu
     localparam SRA = 6'b000011;     // Shift Word Right Arithmetic
     localparam SRL = 6'b000010;     // Shift Word Right Logic
     localparam NOR = 6'b100111;     // Logical bitwise NOR 
-
-    // TODO Usar un reg temp para calcular los valores y flag_ovf y despues pasar ese valor en comp2 a alu_Result??
 
     // Body
     always @(posedge i_clock)
