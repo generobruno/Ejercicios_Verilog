@@ -70,7 +70,7 @@ module alu_alfa_tb;
     initial
     begin // TODO HACER TESTS ALEATORIOS y CHEQUEO AUTOMATICO
         // Test 1 A = 2, B = 3, Op = Suma (100000)
-        i_sw = {2'b00, SUB, 4'b1010, 4'b0111};
+        i_sw = {2'b00, ADD, 4'b1010, 4'b0111};
         #25 i_button_A = 1; 
         #25 i_button_A = 0;
         #25 i_button_B = 1;
