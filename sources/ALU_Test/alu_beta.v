@@ -55,7 +55,7 @@ module alu
             begin
                 o_alu_Result <= i_alu_A + i_alu_B;
                 // Ovf = Operands of same sign and result of different sign
-                o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1])); 
+                o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1]));
             end
             SUB     : 
             begin

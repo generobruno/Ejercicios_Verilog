@@ -68,13 +68,17 @@ module alu_alfa_tb;
     end
 
     // Operands Parameters
-    localparam A_VALUE = 4'b0111;
-    localparam B_VALUE = 4'b1010;
+    reg signed [N-1 : 0] A_VALUE;
+    reg signed [N-1 : 0] B_VALUE;
+    reg signed [N-1 : 0] expected_res;
 
     initial
-    begin // TODO HACER TESTS ALEATORIOS y CHEQUEO AUTOMATICO
-        // Test 1 A = 2, B = 3, Op = Suma (100000)
-        i_sw = {2'b00, SUB, B_VALUE, A_VALUE};
+    begin 
+        // Generate Random input values
+        A_VALUE = $random;
+        B_VALUE = $random;
+
+        i_sw = {2'b00, ADD, B_VALUE, A_VALUE};
         #25 i_button_A = 1; 
         #25 i_button_A = 0;
         #25 i_button_B = 1;
@@ -82,6 +86,13 @@ module alu_alfa_tb;
         #25 i_button_Op = 1;
         #25 i_button_Op = 0;
         #50; // Wait 
+
+        // Check results
+        expected_res = A_VALUE + B_VALUE;
+        if (o_alu_Result == expected_res) 
+            $display("SUB passed OK!");
+        else 
+            $error("SUB test failed.");
     end
 
     // Monitor variables
