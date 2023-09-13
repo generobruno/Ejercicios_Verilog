@@ -30,7 +30,7 @@ module alu_alfa_tb;
     always #25 clk = ~clk;
 
     // Inputs and Outputs
-    reg [15:0] i_sw;
+    reg [13:0] i_sw;
     reg i_button_A, i_button_B, i_button_Op;
     wire [5:0] o_alu_Op;
     wire signed [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
