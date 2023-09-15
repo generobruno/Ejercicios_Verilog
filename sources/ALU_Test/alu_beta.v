@@ -46,6 +46,8 @@ module alu
     localparam SRL = 6'b000010;     // Shift Word Right Logic
     localparam NOR = 6'b100111;     // Logical bitwise NOR 
 
+    //TODO agregar i_reset para darle valor inicial a los outputs
+
     // Body
     always @(posedge i_clock)
     begin

@@ -36,13 +36,13 @@ module alu_input_ctrl
 
     // Update values on button presses
     always @(posedge i_clock) 
-    begin // TODO Ver manera de asignacion mas generica
+    begin
         if (i_button_A) 
-            stored_A <= i_sw[3:0];
+            stored_A <= i_sw[N_OPERANDS-1 : 0];
         if (i_button_B) 
-            stored_B <= i_sw[7:4];  
+            stored_B <= i_sw[(N_OPERANDS*2)-1 : N_OPERANDS];
         if (i_button_Op) 
-            stored_Op <= i_sw[13:8];     
+            stored_Op <= i_sw[N_SW-1 : (N_SW - N_OP)];    
     end
 
     // Connect input sw to alu inputs

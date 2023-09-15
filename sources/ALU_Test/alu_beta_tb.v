@@ -12,8 +12,9 @@
 module alu_alfa_tb;
 
     // Parameters
-    localparam N = 4;
+    localparam N = 5;
     localparam NSel = 6;
+    localparam N_SW = (N*2) + NSel;
 
     // Operation parameters
     localparam ADD = 6'b100000;
@@ -30,14 +31,14 @@ module alu_alfa_tb;
     always #25 clk = ~clk;
 
     // Inputs and Outputs
-    reg [13:0] i_sw;
+    reg [N_SW-1 : 0] i_sw;
     reg i_button_A, i_button_B, i_button_Op;
-    wire [5:0] o_alu_Op;
+    wire [NSel-1:0] o_alu_Op;
     wire signed [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
     wire o_ovf_flag;
 
     // Instantiate the ALU Input Control
-    alu_input_ctrl u_ctrl (
+    alu_input_ctrl #(.N_SW(N_SW), .N_OP(NSel), .N_OPERANDS(N)) u_ctrl (
         .i_clock(clk),
         .i_sw(i_sw),
         .i_button_A(i_button_A),
@@ -61,7 +62,7 @@ module alu_alfa_tb;
     // Initial setup
     initial 
     begin
-        i_sw = 16'b0;
+        i_sw = {N_SW {1'b0}};
         i_button_A = 0;
         i_button_B = 0;
         i_button_Op = 0;
