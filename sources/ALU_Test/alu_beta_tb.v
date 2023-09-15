@@ -32,14 +32,15 @@ module alu_alfa_tb;
 
     // Inputs and Outputs
     reg [N_SW-1 : 0] i_sw;
-    reg i_button_A, i_button_B, i_button_Op;
+    reg i_button_A, i_button_B, i_button_Op, i_reset;
     wire [NSel-1:0] o_alu_Op;
     wire signed [N-1 : 0] o_alu_A, o_alu_B, o_alu_Result;
-    wire o_ovf_flag;
+    wire o_ovf_flag, o_zero_flag;
 
     // Instantiate the ALU Input Control
     alu_input_ctrl #(.N_SW(N_SW), .N_OP(NSel), .N_OPERANDS(N)) u_ctrl (
         .i_clock(clk),
+        .i_reset(i_reset),
         .i_sw(i_sw),
         .i_button_A(i_button_A),
         .i_button_B(i_button_B),
@@ -52,11 +53,13 @@ module alu_alfa_tb;
     // Instantiate the ALU module
     alu #(.N(N), .NSel(NSel)) uut (
         .i_clock(clk),
+        .i_reset(i_reset),
         .i_alu_A(o_alu_A),
         .i_alu_B(o_alu_B),
         .i_alu_Op(o_alu_Op),
         .o_alu_Result(o_alu_Result),
-        .o_overflow_Flag(o_ovf_flag)
+        .o_overflow_Flag(o_ovf_flag),
+        .o_zero_Flag(o_zero_flag)
     );
 
     // Initial setup
@@ -66,11 +69,13 @@ module alu_alfa_tb;
         i_button_A = 0;
         i_button_B = 0;
         i_button_Op = 0;
+        i_reset = 0;
     end
 
     // Operands Parameters
     reg signed [N-1 : 0] A_VALUE;
     reg signed [N-1 : 0] B_VALUE;
+    reg [NSel-1 : 0] OP_VALUE;
     reg signed [N-1 : 0] expected_res;
 
     initial
@@ -79,7 +84,7 @@ module alu_alfa_tb;
         A_VALUE = $random;
         B_VALUE = $random;
 
-        i_sw = {2'b00, ADD, B_VALUE, A_VALUE};
+        i_sw = {2'b00, SUB, B_VALUE, A_VALUE};
         #25 i_button_A = 1; 
         #25 i_button_A = 0;
         #25 i_button_B = 1;
@@ -89,7 +94,7 @@ module alu_alfa_tb;
         #50; // Wait 
 
         // Check results
-        expected_res = A_VALUE + B_VALUE;
+        expected_res = A_VALUE - B_VALUE;
         if (o_alu_Result == expected_res) 
             $display("SUB passed OK!");
         else 
@@ -97,7 +102,7 @@ module alu_alfa_tb;
     end
 
     // Monitor variables
-    initial $monitor("A=%d, B=%d, Op=%b, Result=%d, OVF=%b",
-                    o_alu_A, o_alu_B, o_alu_Op, o_alu_Result, o_ovf_flag);
+    initial $monitor("A=%d, B=%d, Op=%b, Result=%d, OVF=%b, Z=%b",
+                    o_alu_A, o_alu_B, o_alu_Op, o_alu_Result, o_ovf_flag, o_zero_flag);
 
 endmodule

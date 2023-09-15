@@ -17,6 +17,7 @@ module alu_input_ctrl
     )(
         // Inputs
         input                           i_clock,
+        input                           i_reset,
         input [N_SW-1 : 0]              i_sw,
         input                           i_button_A,
         input                           i_button_B,
@@ -32,11 +33,20 @@ module alu_input_ctrl
     reg [N_OPERANDS-1 : 0] stored_B;
     reg [N_OP-1 : 0] stored_Op;
 
-    // TODO Initial con valores en 0 y/o agregar i_reset para limpiar regs???
+    // TODO Initial con valores en 0??
 
     // Update values on button presses
     always @(posedge i_clock) 
     begin
+        //! Reset
+        if(i_reset)
+        begin
+            stored_A <= {N_OPERANDS {1'b0}};
+            stored_B <= {N_OPERANDS {1'b0}};
+            stored_Op <= {N_OP {1'b0}};
+        end
+
+        //! Save Values
         if (i_button_A) 
             stored_A <= i_sw[N_OPERANDS-1 : 0];
         if (i_button_B) 

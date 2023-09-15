@@ -28,12 +28,14 @@ module alu
     )
     (
         // Inputs
+        input                  i_reset,
         input                  i_clock,
         input [N-1 : 0]        i_alu_A, i_alu_B,       // ALU Operands 
         input  [NSel-1 : 0]    i_alu_Op,               // ALU Operation
         // Outputs
         output reg [N-1 : 0]    o_alu_Result,           // ALU Result
-        output reg              o_overflow_Flag         // Overflow Flag
+        output reg              o_overflow_Flag,         // Overflow Flag
+        output reg              o_zero_Flag             // Zero Flag 
     );
 
     // Operation parameters
@@ -46,24 +48,37 @@ module alu
     localparam SRL = 6'b000010;     // Shift Word Right Logic
     localparam NOR = 6'b100111;     // Logical bitwise NOR 
 
-    //TODO agregar i_reset para darle valor inicial a los outputs
+    //TODO deteccion de flags en always separado?
 
     // Body
     always @(posedge i_clock)
     begin
-        // Make Operation depending on ALU Op
+        //! Reset
+        if (i_reset)
+        begin
+            o_alu_Result <= {N {1'b0}};
+            o_overflow_Flag <= 1'b0;
+            o_zero_Flag <= 1'b0;
+        end
+
+        else 
+        begin
+        //! Make Operation depending on ALU Op
         case(i_alu_Op)
             ADD     : 
             begin
                 o_alu_Result <= i_alu_A + i_alu_B;
+                //! Flag Detection
                 // Ovf = Operands of same sign and result of different sign
                 o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1]));
             end
             SUB     : 
             begin
                 o_alu_Result <= i_alu_A - i_alu_B;
+                //! Flag Detection
                 // Ovf = Operands of different sign and result of same sign as B (substraend)
-                o_overflow_Flag <= ((~i_alu_A[N-1] & i_alu_B[N-1] & o_alu_Result[N-1])) | ((i_alu_A[N-1] & ~i_alu_B[N-1] & ~o_alu_Result[N-1])); 
+                o_overflow_Flag <= ((~i_alu_A[N-1] & i_alu_B[N-1] & o_alu_Result[N-1])) | ((i_alu_A[N-1] & ~i_alu_B[N-1] & ~o_alu_Result[N-1]));
+                o_zero_Flag <= (o_alu_Result == 0);
             end
             AND     : o_alu_Result <= i_alu_A & i_alu_B;
             OR      : o_alu_Result <= i_alu_A | i_alu_B;
@@ -77,6 +92,7 @@ module alu
                 o_overflow_Flag <= 1'b0;
             end
         endcase
+        end
     end
 
 endmodule
