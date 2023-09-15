@@ -73,32 +73,51 @@ module alu_alfa_tb;
     end
 
     // Operands Parameters
+    integer test_case;
     reg signed [N-1 : 0] A_VALUE;
     reg signed [N-1 : 0] B_VALUE;
     reg [NSel-1 : 0] OP_VALUE;
     reg signed [N-1 : 0] expected_res;
 
+    // TODO Revisar para que los tests y cambios se hagan en el tiempo correcto
     initial
     begin 
-        // Generate Random input values
-        A_VALUE = $random;
-        B_VALUE = $random;
+        // Run 10 test cases
+        for (test_case = 0; test_case < 10; test_case = test_case + 1)
+        begin
+            // Generate random input values
+            A_VALUE = $random;
+            B_VALUE = $random;
+            OP_VALUE = $random;
 
-        i_sw = {2'b00, SUB, B_VALUE, A_VALUE};
-        #25 i_button_A = 1; 
-        #25 i_button_A = 0;
-        #25 i_button_B = 1;
-        #25 i_button_B = 0;
-        #25 i_button_Op = 1;
-        #25 i_button_Op = 0;
-        #50; // Wait 
+            i_sw = {OP_VALUE, B_VALUE, A_VALUE};
+            #25 i_button_A = 1;
+            #25 i_button_A = 0;
+            #25 i_button_B = 1;
+            #25 i_button_B = 0;
+            #25 i_button_Op = 1;
+            #25 i_button_Op = 0;
+            #50; // Wait
 
-        // Check results
-        expected_res = A_VALUE - B_VALUE;
-        if (o_alu_Result == expected_res) 
-            $display("SUB passed OK!");
-        else 
-            $error("SUB test failed.");
+            // Check results
+            case (OP_VALUE)
+                ADD: expected_res = A_VALUE + B_VALUE;
+                SUB: expected_res = A_VALUE - B_VALUE;
+                AND: expected_res = A_VALUE & B_VALUE;
+                OR : expected_res = A_VALUE | B_VALUE;
+                XOR: expected_res = A_VALUE ^ B_VALUE;
+                SRA: expected_res = A_VALUE >> B_VALUE;
+                SRL: expected_res = A_VALUE >>> B_VALUE;
+                NOR: expected_res = ~(A_VALUE | B_VALUE);
+                default: expected_res = 0;
+            endcase
+
+            if (o_alu_Result == expected_res)
+                $display("Test case %0d passed OK!", test_case);
+            else
+                $error("Test case %0d failed.", test_case);
+        end
+        $finish;
     end
 
     // Monitor variables

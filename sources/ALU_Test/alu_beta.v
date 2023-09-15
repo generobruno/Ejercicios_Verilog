@@ -90,6 +90,7 @@ module alu
             begin
                 o_alu_Result <= {N {1'b0}};
                 o_overflow_Flag <= 1'b0;
+                o_zero_Flag <= 1'b0;
             end
         endcase
         end
