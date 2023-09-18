@@ -79,7 +79,6 @@ module alu_alfa_tb;
     reg [NSel-1 : 0] OP_VALUE;
     reg signed [N-1 : 0] expected_res;
 
-    // TODO Revisar para que los tests y cambios se hagan en el tiempo correcto
     initial
     begin 
         // Run 10 test cases
@@ -88,7 +87,18 @@ module alu_alfa_tb;
             // Generate random input values
             A_VALUE = $random;
             B_VALUE = $random;
-            OP_VALUE = $random;
+            
+            case (test_case)
+                0: OP_VALUE = ADD;
+                1: OP_VALUE = SUB;
+                2: OP_VALUE = AND;
+                3: OP_VALUE = OR;
+                4: OP_VALUE = XOR;
+                5: OP_VALUE = SRA;
+                6: OP_VALUE = SRL;
+                7: OP_VALUE = NOR;
+                default: OP_VALUE = 0;
+            endcase
 
             i_sw = {OP_VALUE, B_VALUE, A_VALUE};
             #25 i_button_A = 1;
@@ -97,7 +107,7 @@ module alu_alfa_tb;
             #25 i_button_B = 0;
             #25 i_button_Op = 1;
             #25 i_button_Op = 0;
-            #50; // Wait
+            #100; // Wait
 
             // Check results
             case (OP_VALUE)
@@ -116,6 +126,10 @@ module alu_alfa_tb;
                 $display("Test case %0d passed OK!", test_case);
             else
                 $error("Test case %0d failed.", test_case);
+
+            #25 i_reset = 1;
+            #25 i_reset = 0;
+
         end
         $finish;
     end
