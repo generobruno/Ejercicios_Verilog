@@ -28,7 +28,7 @@ module alu_top
 
     // Signals
     wire [N-1 : 0] alu_A, alu_B, o_alu_Result;
-    wire [N_OP-1 : 0] alu_Op;
+    wire [NSel-1 : 0] alu_Op;
     wire ovf_flag, zero_flag;
 
     //! Instantiate the ALU Input Control
