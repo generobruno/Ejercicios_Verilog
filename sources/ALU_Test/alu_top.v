@@ -6,9 +6,9 @@
 module alu_top
     #(
         // Parameters
-        parameter N = 5,
-        parameter NSel = 6,
-        parameter N_SW = (N*2) + NSel
+        parameter N = 5,                                    // Operands Size
+        parameter NSel = 6,                                 // Operation Size
+        parameter N_SW = (N*2) + NSel                       // Switch Size
     )
     (
         // Inputs
