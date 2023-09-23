@@ -34,7 +34,7 @@ module alu
         input  [NSel-1 : 0]    i_alu_Op,               // ALU Operation
         // Outputs
         output reg [N-1 : 0]    o_alu_Result,           // ALU Result
-        output reg              o_overflow_Flag,         // Overflow Flag
+        output reg              o_overflow_Flag,        // Overflow Flag
         output reg              o_zero_Flag             // Zero Flag 
     );
 
@@ -47,8 +47,6 @@ module alu
     localparam SRA = 6'b000011;     // Shift Word Right Arithmetic
     localparam SRL = 6'b000010;     // Shift Word Right Logic
     localparam NOR = 6'b100111;     // Logical bitwise NOR 
-
-    //TODO deteccion de flags en always separado?
 
     // Body
     always @(posedge i_clock)
@@ -67,14 +65,14 @@ module alu
         case(i_alu_Op)
             ADD     : 
             begin
-                o_alu_Result <= i_alu_A + i_alu_B;
+                o_alu_Result <= $signed(i_alu_A) + $signed(i_alu_B);
                 //! Flag Detection
                 // Ovf = Operands of same sign and result of different sign
                 o_overflow_Flag <= ((i_alu_A[N-1] & i_alu_B[N-1] & ~o_alu_Result[N-1]) | (~i_alu_A[N-1] & ~i_alu_B[N-1] & o_alu_Result[N-1]));
             end
             SUB     : 
             begin
-                o_alu_Result <= i_alu_A - i_alu_B;
+                o_alu_Result <= $signed(i_alu_A) - $signed(i_alu_B);
                 //! Flag Detection
                 // Ovf = Operands of different sign and result of same sign as B (substraend)
                 o_overflow_Flag <= ((~i_alu_A[N-1] & i_alu_B[N-1] & o_alu_Result[N-1])) | ((i_alu_A[N-1] & ~i_alu_B[N-1] & ~o_alu_Result[N-1]));
@@ -83,7 +81,7 @@ module alu
             AND     : o_alu_Result <= i_alu_A & i_alu_B;
             OR      : o_alu_Result <= i_alu_A | i_alu_B;
             XOR     : o_alu_Result <= i_alu_A ^ i_alu_B;
-            SRA     : o_alu_Result <= i_alu_A >>> i_alu_B;
+            SRA     : o_alu_Result <= $signed(i_alu_A) >>> i_alu_B;
             SRL     : o_alu_Result <= i_alu_A >> i_alu_B;
             NOR     : o_alu_Result <= ~ (i_alu_A | i_alu_B);
             default : 

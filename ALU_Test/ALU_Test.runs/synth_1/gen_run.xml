@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-3" LaunchTime="1694120215">
-  <File Type="VDS-TIMINGSUMMARY" Name="alu_timing_summary_synth.rpt"/>
-  <File Type="RDS-DCP" Name="alu.dcp"/>
-  <File Type="RDS-UTIL-PB" Name="alu_utilization_synth.pb"/>
-  <File Type="RDS-UTIL" Name="alu_utilization_synth.rpt"/>
-  <File Type="VDS-TIMING-PB" Name="alu_timing_summary_synth.pb"/>
-  <File Type="PA-TCL" Name="alu.tcl"/>
-  <File Type="REPORTS-TCL" Name="alu_reports.tcl"/>
-  <File Type="RDS-RDS" Name="alu.vds"/>
-  <File Type="RDS-PROPCONSTRS" Name="alu_drc_synth.rpt"/>
+<GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-3" LaunchTime="1695245345" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/alu.dcp">
+  <File Type="VDS-TIMINGSUMMARY" Name="alu_top_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="alu_top.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="alu_top_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="alu_top_utilization_synth.rpt"/>
+  <File Type="RDS-PROPCONSTRS" Name="alu_top_drc_synth.rpt"/>
+  <File Type="RDS-RDS" Name="alu_top.vds"/>
+  <File Type="REPORTS-TCL" Name="alu_top_reports.tcl"/>
+  <File Type="VDS-TIMING-PB" Name="alu_top_timing_summary_synth.pb"/>
+  <File Type="PA-TCL" Name="alu_top.tcl"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
     <File Path="$PPRDIR/../sources/ALU_Test/alu_beta.v">
@@ -20,7 +20,13 @@
     </File>
     <File Path="$PPRDIR/../sources/ALU_Test/alu_input_ctrl.v">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../sources/ALU_Test/alu_top.v">
+      <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -28,13 +34,13 @@
     </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="alu"/>
+      <Option Name="TopModule" Val="alu_top"/>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
     <Filter Type="Constrs"/>
-    <File Path="$PPRDIR/../../Constraints/Basys-3-Master.xdc">
+    <File Path="$PPRDIR/../sources/ALU_Test/constraits/Basys-3-Master.xdc">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -46,14 +52,20 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
     <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/alu.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2023"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

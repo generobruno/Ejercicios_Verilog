@@ -1,0 +1,9 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"alu_alfa_tb_func_synth.v" \
+"../../../../../../sources/ALU_Test/alu_beta.v" \
+"../../../../../../sources/ALU_Test/alu_input_ctrl.v" \
+"../../../../../../sources/ALU_Test/alu_beta_tb.v" \
+
+# Do not sort compile order
+nosort

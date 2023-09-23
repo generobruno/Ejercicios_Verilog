@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.runs/synth_1/alu.tcl"
+  variable script "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.runs/synth_1/alu_top.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,8 +70,10 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param xicom.use_bs_reader 1
+set_param chipscope.maxJobs 1
 set_param checkpoint.writeSynthRtdsInDcp 1
-set_param synth.incrementalSynthesisCache ./.Xil/Vivado-664015-BrunoLaptop/incrSyn
+set_param synth.incrementalSynthesisCache ./.Xil/Vivado-1018347-BrunoLaptop/incrSyn
 set_msg_config -id {Synth 8-256} -limit 10000
 set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
@@ -88,7 +90,11 @@ set_property ip_output_repo /home/bruno/Documents/Facultad/5to_anio/Arquitectura
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_verilog -library xil_defaultlib /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta.v
+read_verilog -library xil_defaultlib {
+  /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta.v
+  /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_input_ctrl.v
+  /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_top.v
+}
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -98,14 +104,16 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Constraints/Basys-3-Master.xdc
-set_property used_in_implementation false [get_files /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Constraints/Basys-3-Master.xdc]
+read_xdc /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/constraits/Basys-3-Master.xdc
+set_property used_in_implementation false [get_files /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/constraits/Basys-3-Master.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
+
+read_checkpoint -auto_incremental -incremental /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.srcs/utils_1/imports/synth_1/alu.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
-synth_design -top alu -part xc7a35tcpg236-3
+synth_design -top alu_top -part xc7a35tcpg236-3
 OPTRACE "synth_design" END { }
 if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
  send_msg_id runtcl-6 info "Synthesis results are not added to the cache due to CRITICAL_WARNING"
@@ -115,10 +123,10 @@ if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
 OPTRACE "write_checkpoint" START { CHECKPOINT }
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef alu.dcp
+write_checkpoint -force -noxdef alu_top.dcp
 OPTRACE "write_checkpoint" END { }
 OPTRACE "synth reports" START { REPORT }
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file alu_utilization_synth.rpt -pb alu_utilization_synth.pb"
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file alu_top_utilization_synth.rpt -pb alu_top_utilization_synth.pb"
 OPTRACE "synth reports" END { }
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

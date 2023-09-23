@@ -1,0 +1,8 @@
+0.7
+2020.2
+Jun 16 2023
+19:36:26
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/ALU_Test/ALU_Test.sim/sim_1/synth/func/xsim/alu_alfa_tb_func_synth.v,1695243362,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta.v,,alu_top;glbl,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta.v,1694812993,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_input_ctrl.v,,alu,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta_tb.v,1695239946,verilog,,,,alu_alfa_tb,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_input_ctrl.v,1694811390,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/ALU_Test/alu_beta_tb.v,,alu_input_ctrl,,,,,,,,

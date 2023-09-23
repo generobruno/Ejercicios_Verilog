@@ -1,0 +1,10 @@
++====================+===================+========================================+
+| Launch Setup Clock | Launch Hold Clock | Pin                                    |
++====================+===================+========================================+
+| sys_clk_pin        | sys_clk_pin       | uut/o_alu_Result_reg[3]_lopt_replica/D |
+| sys_clk_pin        | sys_clk_pin       | uut/o_alu_Result_reg[1]/D              |
+| sys_clk_pin        | sys_clk_pin       | uut/o_alu_Result_reg[0]_lopt_replica/D |
+| sys_clk_pin        | sys_clk_pin       | uut/o_zero_Flag_reg/D                  |
+| sys_clk_pin        | sys_clk_pin       | uut/o_alu_Result_reg[4]_lopt_replica/D |
+| sys_clk_pin        | sys_clk_pin       | uut/o_overflow_Flag_reg/D              |
++--------------------+-------------------+----------------------------------------+
