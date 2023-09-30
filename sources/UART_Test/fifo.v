@@ -42,7 +42,7 @@ module fifo
     wire wr_en;                                         // Write enable signal
 
     //! Register File Write Operation
-    always @(posedge clock) 
+    always @(posedge i_clk) 
     begin
         if(wr_en)
             array_reg[w_ptr_reg] <= i_w_data;    
@@ -86,32 +86,38 @@ module fifo
         empty_next = empty_reg;
 
         case ({i_wr, i_rd})
-            // 2'b00: no op
             2'b01:  // READ
-            begin
-                if (~empty_reg) // NOT EMPTY
                 begin
-                    r_ptr_next = r_ptr_succ;
-                    full_next = 1'b0;
-                    if(r_ptr_succ == w_ptr_reg)
-                        empty_next = 1'b1;
+                    if (~empty_reg) // NOT EMPTY
+                    begin
+                        r_ptr_next = r_ptr_succ;
+                        full_next = 1'b0;
+                        if(r_ptr_succ == w_ptr_reg)
+                            empty_next = 1'b1;
+                    end
                 end
-            end
             2'b10:  // WRITE
-            begin
-                if (~full_reg) // NOT FULL
+                begin
+                    if (~full_reg) // NOT FULL
+                    begin
+                        w_ptr_next = w_ptr_succ;
+                        empty_next = 1'b0;
+                        if(w_ptr_succ==r_ptr_reg)
+                            full_next = 1'b1;
+                    end
+                end
+            2'b11:  // WRITE AND READ
                 begin
                     w_ptr_next = w_ptr_succ;
-                    empty_next = 1'b0;
-                    if(w_ptr_succ==r_ptr_reg)
-                        full_next = 1'b1;
+                    r_ptr_next = r_ptr_succ;
                 end
-            end
-            2'b11:  // WRITE AND READ
-            begin
-                w_ptr_next = w_ptr_succ;
-                r_ptr_next = r_ptr_succ;
-            end
+            default: // TODO Revisar
+                begin
+                    w_ptr_next = w_ptr_reg;
+                    r_ptr_next = r_ptr_reg;
+                    full_next = full_reg;
+                    empty_next = empty_reg;
+                end
         endcase    
     end
 

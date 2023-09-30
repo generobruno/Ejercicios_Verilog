@@ -18,7 +18,7 @@ module uart_top
         input wire              i_rd_uart,          // Receiever FIFO Input Read Signal
         input wire              i_wr_uart,          // Transmiter FIFO Input Write Signal
         input wire              i_rx,               // UART Receiver Input
-        input wire [7 : 0]      i_w_data            //! Receiver FIFO Input from UART -> DATA TO BE TRANSMITED
+        input wire [7 : 0]      i_w_data,           //! Receiver FIFO Input from UART -> DATA TO BE TRANSMITED
         // Outputs
         output wire             o_tx_full,          // Transmiter FIFO Full Signal
         output wire             o_rx_empty,         // Receiver FIFO Empty Signal
@@ -32,8 +32,8 @@ module uart_top
     wire                tx_done_tick;               // Transmiter Done Signal
     wire                tx_empty;                   // Transmiter FIFO Empty Signal
     wire                tx_fifo_not_empty;          // Transmiter FIFO Not-Empty Signal
-    wire [7: 0]         tx_fifo_out;                // Data to send, from tx FIFO to tx
-    wire                rx_data_out;                // Data to receive, from rx to rx FIFO
+    wire [7 : 0]        tx_fifo_out;                // Data to send, from tx FIFO to tx
+    wire [7 : 0]        rx_data_out;                // Data to receive, from rx to rx FIFO
 
     //! Instantiations
     mod_m_counter #(.M(DVSR), .N(DVSR_BIT)) baud_rate_gen

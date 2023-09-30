@@ -36,7 +36,7 @@ module mod_m_counter
     assign r_next = (r_reg==(M-1)) ? 0 : r_reg + 1;
 
     //! Output Logic
-    assign o_tick = r_reg;
+    assign o_ticks = r_reg;
     assign o_max_tick = (r_reg==(M-1)) ? 1'b1 : 1'b0;
 
 endmodule
