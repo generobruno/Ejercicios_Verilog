@@ -87,7 +87,7 @@ module alu_alfa_tb;
             // Generate random input values
             A_VALUE = $random;
             B_VALUE = $random;
-            
+
             case (test_case)
                 0: OP_VALUE = ADD;
                 1: OP_VALUE = SUB;
