@@ -6,8 +6,8 @@
 
 module mod_m_counter
     #(
-        parameter N = 4,        // Number of bits in counter
-        parameter M = 10        // mod-M
+        parameter   N       =       4,        // Number of bits in counter
+                    M       =       10        // mod-M
     )
     (
         input wire clk, reset,
