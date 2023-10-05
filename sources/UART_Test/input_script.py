@@ -24,7 +24,7 @@ def read_binary_response(ser):
 
 def binary_to_ascii(binary_data):
     # Convert binary data to ASCII
-    ascii_data = int(binary_data, 2)
+    ascii_data = int(binary_data, 2) # TODO SIGNED
     return chr(ascii_data)
 
 # Number of bits for each field
