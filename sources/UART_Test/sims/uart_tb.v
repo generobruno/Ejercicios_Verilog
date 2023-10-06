@@ -14,6 +14,7 @@ module uart_tb();
     wire o_tx_full, o_rx_empty;
     wire [7:0] o_r_data;
     reg [7:0] data_to_send; // Data to be sent
+    reg [7:0] data_to_send2;
     integer bit_count;
 
     // Instantiate the UART module
@@ -52,7 +53,7 @@ module uart_tb();
         i_reset = 1'b0;    
     end
 
-    //! Task UART_RECEIVE_BYTE: Simulates data being sent to the UART
+    //! Task (static) UART_RECEIVE_BYTE: Simulates data being sent to the UART
     task UART_RECEIVE_BYTE(input [7:0] data);
     integer i;
     begin
@@ -94,12 +95,13 @@ module uart_tb();
         UART_RECEIVE_BYTE(data_to_send);
 
         // Test Case: Read received data 
-        wait(o_rx_empty == 0);
-        i_rd_uart = 1'b1; // Start reading
-        $display("Received bits: %b", o_r_data);
-        @(negedge i_clk);
-        wait(o_rx_empty == 1);
-        i_rd_uart = 1'b0;
+        while (o_rx_empty != 1) begin 
+            i_rd_uart = 1'b1;   // Read FIFO
+            $display("Received bits: %b", o_r_data);
+            @(negedge i_clk);   // Assert i_rd_signal for 1 clk cycle to remove word
+            i_rd_uart = 1'b0;
+            @(negedge i_clk);
+        end
 
         // Stop simulation
         $stop;
