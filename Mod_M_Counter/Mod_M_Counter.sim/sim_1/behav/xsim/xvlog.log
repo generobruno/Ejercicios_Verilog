@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/mod_m_counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mod_m_counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/sims/mod_m_counter_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mod_m_counter_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/Mod_M_Counter/Mod_M_Counter.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
