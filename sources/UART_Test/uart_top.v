@@ -1,5 +1,7 @@
 /**
     UART Top Module
+    Default Settings:
+        19200 Baud Rate, 8 Data bits, 1 Stop Bit, 2² FIFO.
 **/
 
 module uart_top

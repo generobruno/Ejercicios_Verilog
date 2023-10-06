@@ -1,12 +1,20 @@
+`timescale 1ns/10ps
+
+// The simulation time unit is 1 ns and the simulator time step is 10 ps
+
 module uart_tb();
 
+    // Parameters
+    localparam T = 20;              // Clock Period [ns]
+    localparam CLKS_PER_BIT = 2604; // 50Mhz / 19200 baud rate = 2604 Clocks per bit 
+    localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
+
     // Declarations
-    localparam T = 20; // Clock Period
-    reg i_clk, i_reset, i_rd_uart, i_wr_uart, i_rx;
+    reg i_clk, i_reset, i_rd_uart, i_rx;
     wire o_tx_full, o_rx_empty, o_tx;
     wire [7:0] o_r_data;
     reg [7:0] data_to_send; // Data to be sent
-    integer i;
+    integer bit_count;
 
     // Instantiate the UART module
     uart_top #(
@@ -14,17 +22,17 @@ module uart_tb();
         .SB_TICK(16),
         .DVSR(163),
         .FIFO_W(2)
-    ) uut (
-        .i_clk(i_clk),
-        .i_reset(i_reset),
-        .i_rd_uart(i_rd_uart),
-        .i_wr_uart(i_wr_uart),
-        .i_rx(i_rx), // Connect i_rx to UART receiver input
-        .i_w_data(), 
-        .o_tx_full(o_tx_full),
-        .o_rx_empty(o_rx_empty),
-        .o_tx(o_tx),
-        .o_r_data(o_r_data)
+    ) uart (
+        .i_clk(i_clk),                  // Clock
+        .i_reset(i_reset),              // Reset
+        .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
+        .i_wr_uart(),                   //
+        .i_rx(i_rx),                    // RX: RX input bit
+        .i_w_data(),                    //
+        .o_tx_full(o_tx_full),          //
+        .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
+        .o_tx(),                        //
+        .o_r_data(o_r_data)             // RX: RX FIFO Data packed
     );
 
     // Clock Generation
@@ -49,34 +57,39 @@ module uart_tb();
     begin
         // Initialize testbench signals
         i_rd_uart = 1'b0;
-        i_wr_uart = 1'b0;
-        i_rx = 1'b0;
-        data_to_send = 8'b01010101; // Data to be sent
+        i_rx = 1'b1;
+        data_to_send = 8'b10101010; // Data to be sent
+        bit_count = 0;
 
         @(negedge i_reset); // Wait for reset to deassert
 
-        // Test Case: Send all data first
-        for (i = 0; i < 8; i = i + 1) begin
-            i_wr_uart = 1'b1;
-            i_rx = data_to_send[0]; // Set i_rx to the next bit to transmit
-            @(negedge i_clk);
-            $display("Transmitted bit %0d: %b", 7 - i, i_rx);
+        //! Test: Send all data first
+        // Send Start bit
+        i_rx = 1'b0;
+        #(BIT_PERIOD);
+
+        // Send Data
+        while (bit_count < 8) begin
+            i_rx = data_to_send[0]; // Set i_rx to the next bit to transmit (LSB to MSB)
+            #(BIT_PERIOD);
+
             $display("data_to_send: %b", data_to_send);
-            i_wr_uart = 1'b0;
-            #100; // Wait before transmitting the next bit
+            $display("Transmitted bit %0d: %b", bit_count, i_rx);
+
             data_to_send = data_to_send >> 1; // Shift right to get the next bit
+            bit_count = bit_count + 1;
         end
+        $display("ALL DATA SENT\n");
 
-        // Wait for a while to ensure data reception
-        #500;
+        // Send Stop bit
+        i_rx = 1'b1;
+        #(BIT_PERIOD);
 
-        // Test Case: Read received data
+        // Test Case: Read received data 
+        wait(o_rx_empty == 0);
         i_rd_uart = 1'b1; // Start reading
-        for (i = 0; i < 8; i = i + 1) begin
-            @(negedge i_clk);
-            $display("Received bit %0d: %b", 7 - i, o_r_data);
-            #100; // Wait before reading the next bit
-        end
+        $display("Received bits: %b", o_r_data);
+        wait(o_rx_empty == 1);
         i_rd_uart = 1'b0;
 
         // Stop simulation
