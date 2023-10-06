@@ -8,7 +8,6 @@ module uart_top
         parameter   DBIT        =       8,      // # Data bits
                     SB_TICK     =       16,     // # Ticks for stop bits (16/24/32 for 1/1.5/2 bits)
                     DVSR        =       163,    // Baud Rate divisor ( Clock/(BaudRate*16) )
-                    DVSR_BIT    =       8,      // # Bits of DVSR
                     FIFO_W      =       2       // # Address bits of FIFO ( # Words in FIFO = 2^FIFO_W )
     )
     (
@@ -36,7 +35,7 @@ module uart_top
     wire [7 : 0]        rx_data_out;                // Data to receive, from rx to rx FIFO
 
     //! Instantiations
-    mod_m_counter #(.M(DVSR), .N(DVSR_BIT)) baud_rate_gen
+    mod_m_counter #(.M(DVSR)) baud_rate_gen
         (.i_clk(i_clk) , .i_reset(i_reset),
             .o_ticks() , .o_max_tick(tick));
 
