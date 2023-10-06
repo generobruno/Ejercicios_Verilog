@@ -11,7 +11,7 @@ module uart_tb();
 
     // Declarations
     reg i_clk, i_reset, i_rd_uart, i_rx;
-    wire o_tx_full, o_rx_empty, o_tx;
+    wire o_tx_full, o_rx_empty;
     wire [7:0] o_r_data;
     reg [7:0] data_to_send; // Data to be sent
     integer bit_count;
@@ -52,6 +52,33 @@ module uart_tb();
         i_reset = 1'b0;    
     end
 
+    //! Task UART_RECEIVE_BYTE: Simulates data being sent to the UART
+    task UART_RECEIVE_BYTE(input [7:0] data);
+    integer i;
+    begin
+        // Send Start bit
+        i_rx = 1'b0;
+        #(BIT_PERIOD);
+
+        // Send Data
+        while (bit_count < 8) begin
+            i_rx = data[0]; // Set i_rx to the next bit to transmit (LSB to MSB)
+            #(BIT_PERIOD);
+
+            $display("data_to_send: %b", data);
+            $display("Transmitted bit %0d: %b", bit_count, i_rx);
+
+            data = data >> 1; // Shift right to get the next bit
+            bit_count = bit_count + 1;
+        end
+        $display("ALL DATA SENT\n");
+
+        // Send Stop bit
+        i_rx = 1'b1;
+        #(BIT_PERIOD);
+    end 
+    endtask
+
     // Test cases
     initial
     begin
@@ -63,27 +90,8 @@ module uart_tb();
 
         @(negedge i_reset); // Wait for reset to deassert
 
-        //! Test: Send all data first
-        // Send Start bit
-        i_rx = 1'b0;
-        #(BIT_PERIOD);
-
-        // Send Data
-        while (bit_count < 8) begin
-            i_rx = data_to_send[0]; // Set i_rx to the next bit to transmit (LSB to MSB)
-            #(BIT_PERIOD);
-
-            $display("data_to_send: %b", data_to_send);
-            $display("Transmitted bit %0d: %b", bit_count, i_rx);
-
-            data_to_send = data_to_send >> 1; // Shift right to get the next bit
-            bit_count = bit_count + 1;
-        end
-        $display("ALL DATA SENT\n");
-
-        // Send Stop bit
-        i_rx = 1'b1;
-        #(BIT_PERIOD);
+        //! Test: Send all data 
+        UART_RECEIVE_BYTE(data_to_send);
 
         // Test Case: Read received data 
         wait(o_rx_empty == 0);
