@@ -97,6 +97,7 @@ module uart_tb();
         wait(o_rx_empty == 0);
         i_rd_uart = 1'b1; // Start reading
         $display("Received bits: %b", o_r_data);
+        @(negedge i_clk);
         wait(o_rx_empty == 1);
         i_rd_uart = 1'b0;
 
