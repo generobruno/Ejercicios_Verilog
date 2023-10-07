@@ -9,11 +9,13 @@ module uart_tb();
     localparam NUM_TESTS = 4;       // Number of tests
 
     // Declarations
-    reg i_clk, i_reset, i_rd_uart, i_rx;
-    wire o_tx_full, o_rx_empty;
+    reg i_clk, i_reset, i_rd_uart, i_wr_uart, i_rx;
+    wire o_tx_full, o_rx_empty, o_tx;
     wire [7:0] o_r_data;
+    reg [7:0] i_w_data;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
+    reg [7:0] transmitted_data [NUM_TESTS-1:0]; // Data transmitted during each test
     integer bit_count;
     integer received_data_mismatch;
     integer test_num;
@@ -28,12 +30,12 @@ module uart_tb();
         .i_clk(i_clk),                  // Clock
         .i_reset(i_reset),              // Reset
         .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
-        .i_wr_uart(),                   //
+        .i_wr_uart(i_wr_uart),          // TX: Write RX FIFO Signal
         .i_rx(i_rx),                    // RX: RX input bit
-        .i_w_data(),                    //
-        .o_tx_full(o_tx_full),          //
+        .i_w_data(i_w_data),            // TX: TX Packed Data to transmit
+        .o_tx_full(o_tx_full),          // TX: TX FIFO Full Signal
         .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
-        .o_tx(),                        //
+        .o_tx(o_tx),                    // TX: TX Output bit
         .o_r_data(o_r_data)             // RX: RX FIFO Data packed
     );
 
@@ -97,6 +99,8 @@ module uart_tb();
 
         @(negedge i_reset); // Wait for reset to deassert
 
+        $display("\nTESTING UART RX MODULE...\n");
+
         //! Test: Send all data
         UART_RECEIVE_BYTE();
 
@@ -124,8 +128,39 @@ module uart_tb();
         else
             $display("\nFailed Receiving Data. Check UART FIFO_W Size.");
 
+        //! Test: Transmit all data
+        $display("\nTESTING UART TX MODULE...\n");
+
+        for (test_num = 0; test_num < NUM_TESTS; test_num = test_num + 1) begin
+            @(negedge i_clk);
+            $display("Transmitting Data: %b", sent_data[test_num]);
+            
+            i_w_data = sent_data[test_num];
+
+            i_wr_uart = 1'b1;   // Write FIFO
+            @(negedge i_clk);   // Assert i_wr_signal for 1 clk cycle to write word
+            i_wr_uart = 1'b0;
+        
+            // Wait for start bit
+            #(BIT_PERIOD);
+
+            // Save transmitted data every BIT_PERIOD
+            for (bit_count = 0; bit_count < 8; bit_count = bit_count + 1) begin
+                transmitted_data[test_num] = transmitted_data[test_num] << 1 | o_tx; // Save o_tx
+                #(BIT_PERIOD);
+            end
+
+            wait(o_tx == 1);    // Wait for stop bit
+            #(BIT_PERIOD);
+
+            $display("Transmitted Data (Collected): %b", transmitted_data[test_num]);
+        end
+        $display("ALL DATA SENT\n");
+
+        $monitor("Data transmited: %b", o_tx);
+
         // Stop simulation
-        $stop;
+        $stop;  
     end
 
 endmodule
