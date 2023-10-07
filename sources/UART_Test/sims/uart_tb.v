@@ -86,6 +86,40 @@ module uart_tb();
         end
     end
     endtask
+    
+    
+    //! Task (automatic) UART_RECEIVE_BYTE: Simulates data being sent to the UART
+    task automatic UART_SEND_BYTE();
+    integer i;
+    begin
+        for (i = 0; i < NUM_TESTS; i = i + 1) begin
+            // Generate random data to be sent
+            $display("DATA N° %d", i);
+            data_to_send = $random;
+            sent_data[i] = data_to_send; // Store sent data
+
+            // Send Start bit
+            i_rx = 1'b0;
+            #(BIT_PERIOD);
+
+            // Send Data
+            for (bit_count = 0; bit_count < 8; bit_count = bit_count + 1) begin
+                i_rx = data_to_send[0]; // Set i_rx to the next bit to transmit (LSB to MSB)
+                #(BIT_PERIOD);
+
+                $display("data_to_send: %b", data_to_send);
+                $display("Transmitted bit %0d: %b", bit_count, i_rx);
+
+                data_to_send = data_to_send >> 1; // Shift right to get the next bit
+            end
+            $display("ALL DATA SENT\n");
+
+            // Send Stop bit
+            i_rx = 1'b1;
+            #(BIT_PERIOD);
+        end
+    end
+    endtask
 
     // Test cases
     initial
@@ -129,3 +163,4 @@ module uart_tb();
     end
 
 endmodule
+
