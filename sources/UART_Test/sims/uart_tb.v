@@ -140,8 +140,10 @@ module uart_tb();
             i_wr_uart = 1'b1;   // Write FIFO
             @(negedge i_clk);   // Assert i_wr_signal for 1 clk cycle to write word
             i_wr_uart = 1'b0;
+            @(negedge i_clk);
         
             // Wait for start bit
+            wait(o_tx == 0);
             #(BIT_PERIOD);
 
             // Save transmitted data every BIT_PERIOD
@@ -156,8 +158,6 @@ module uart_tb();
             $display("Transmitted Data (Collected): %b", transmitted_data[test_num]);
         end
         $display("ALL DATA SENT\n");
-
-        $monitor("Data transmited: %b", o_tx);
 
         // Stop simulation
         $stop;  
