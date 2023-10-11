@@ -4,7 +4,7 @@ module uart_test (
     input wire i_reset,         // Reset
     input wire i_rx,            // UART Receiver Input
     // Outputs
-    output wire o_tx,           // UART Data Transmitted
+    output wire o_tx           // UART Data Transmitted
 );
 
 
