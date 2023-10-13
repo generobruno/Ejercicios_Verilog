@@ -70,7 +70,7 @@ module uart_tx_tb();
             @(negedge i_clk);   // Assert i_wr_signal for 1 clk cycle to remove word
             i_wr_uart = 1'b0;
             @(negedge i_clk);
-            #(TX_PERIOD);
+            
         end
     end
     endtask

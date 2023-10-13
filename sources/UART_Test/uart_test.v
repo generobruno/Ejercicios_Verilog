@@ -49,6 +49,14 @@ module uart_alu_interface
         begin
             // State
             state_reg <= IDLE;
+            // Control
+            rd_uart_reg = 1'b0;
+            wr_uart_reg = 1'b0;
+            // Data
+            opcode = {OPCODE_SZ {1'b0}};
+            op1 = {DATA_WIDTH{1'b0}};
+            op2 = {DATA_WIDTH{1'b0}};
+            result = {DATA_WIDTH{1'b0}};
         end 
         else 
         begin
@@ -58,21 +66,14 @@ module uart_alu_interface
 
     //! Next-State Logic
     always @(*) begin
+        // Initial assignments
         state_next = state_reg;
-
-        if (i_reset) 
-        begin
-            // Control
-            rd_uart_reg = 1'b0;
-            wr_uart_reg = 1'b0;
-            // Data
-            opcode = {OPCODE_SZ {1'b0}};
-            op1 = {DATA_WIDTH{1'b0}};
-            op2 = {DATA_WIDTH{1'b0}};
-            result = {DATA_WIDTH{1'b0}};
-        end
-        else
-        begin
+        wr_uart_reg = 1'b0;
+        rd_uart_reg = 1'b0;
+        op1 = {DATA_WIDTH{1'b0}};
+        op2 = {DATA_WIDTH{1'b0}};
+        opcode = {OPCODE_SZ {1'b0}};
+        result = {DATA_WIDTH{1'b0}};
 
         case (state_reg)
             IDLE: 
@@ -114,7 +115,7 @@ module uart_alu_interface
             end
             default: state_next = IDLE;
         endcase
-        end
+       
     end
 
     //! Assignments
