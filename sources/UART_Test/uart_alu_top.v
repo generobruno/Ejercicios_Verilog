@@ -31,7 +31,7 @@ module uart_alu_top
         // Parameters
         .DBIT(DATA_BITS),
         .SB_TICK(16),
-        .DVSR(163),
+        .DVSR(326),
         .FIFO_W(2)
     ) uart_unit (
         // Inputs

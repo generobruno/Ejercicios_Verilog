@@ -55,7 +55,7 @@ module uart_tb();
     begin
         for (i = 0; i < NUM_TESTS; i = i + 1) begin
             if (i == 0)
-                data_to_send = ADD; // ADD
+                data_to_send = 8'b00100000; // ADD
             else
                 data_to_send = 8'b00000010;
 
