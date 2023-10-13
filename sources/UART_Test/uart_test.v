@@ -1,125 +1,128 @@
-module uart_test (
-    // Inputs
-    input wire i_clk,           // Clock
-    input wire i_reset,         // Reset
-    input wire i_rx,            // UART Receiver Input
-    // Outputs
-    output wire o_tx           // UART Data Transmitted
-);
-
-
-    //! States
-    reg [2:0] state_reg, state_next;
-    localparam  IDLE = 3'b000, 
-                SAVE_OPCODE = 3'b001, 
-                SAVE_OP1 = 3'b010, 
-                SAVE_OP2 = 3'b011, 
-                COMPUTE_RESULT = 3'b100;
-
-    // Registers to save data
-    reg [7:0] opcode_reg, opcode_next;
-    reg [7:0] op1_reg, op1_next;
-    reg [7:0] op2_reg, op2_next;
-    reg [7:0] result_reg, result_next;
-    reg i_rd_uart_reg, i_wr_uart_reg;
-
-    wire i_rd_uart, i_wr_uart;
-    wire [7:0] o_r_data;
-    wire o_tx_full, o_rx_empty;
-
-    uart_top #(.DBIT(8), .SB_TICK(16), .DVSR(163), .FIFO_W(2)) uart (
-        .i_clk(i_clk),                  // Clock
-        .i_reset(i_reset),              // Reset
-        .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
-        .i_wr_uart(i_wr_uart),          // TX: Write RX FIFO Signal
-        .i_rx(i_rx),                    // RX: RX input bit
-        .i_w_data(i_w_data),            // TX: TX Packed Data to transmit
-        .o_tx_full(o_tx_full),          // TX: TX FIFO Full Signal
-        .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
-        .o_tx(o_tx),                    // TX: TX Output bit
-        .o_r_data(o_r_data)             // RX: RX FIFO Data packed
+module uart_alu_interface
+    #(
+        // Parameters
+        parameter       DATA_WIDTH      = 8,                // Data width (number of bits)
+                        SAVE_COUNT      = 3,                // Number of data words to save
+                        OP_SZ           = DATA_WIDTH,       // Operand size
+                        OPCODE_SZ       = 6                 // Opcode size
+    )
+    (
+        // Inputs
+        input wire i_clk,                           // Clock
+        input wire i_reset,                         // Reset
+        input wire i_rx_empty,                      // Receiver FIFO Empty Signal
+        input wire i_tx_full,                       // Transmitter FIFO Full Signal
+        input wire [DATA_WIDTH-1:0] i_r_data,       // UART Receiver Input
+        input wire [DATA_WIDTH-1:0] i_result_data,  // ALU Result Register
+        
+        // Outputs
+        output wire [DATA_WIDTH-1:0] o_w_data,      // UART Data Transmitted
+        output wire o_wr_uart,                      // Receiver FIFO Input Read Signal
+        output wire o_rd_uart,                      // Transmitter FIFO Input Write Signal
+        output wire [OP_SZ-1:0] o_op_a,             // ALU Operand A
+        output wire [OP_SZ-1:0] o_op_b,             // ALU Operand B
+        output wire [OPCODE_SZ-1:0] o_op_code       // ALU Opcode
     );
 
-    // FSM to control the data processing
+    //! State Declaration
+    localparam [2:0]
+        IDLE        =   3'b000,
+        SAVE_OP1    =   3'b001,
+        SAVE_OP2    =   3'b010,
+        COMPUTE_ALU =   3'b011,
+        SEND_RESULT =   3'b100;
+
+    //! Signal Declaration
+    //reg [DATA_WIDTH-1 : 0] r_data, w_data;
+    reg [2:0] state_reg, state_next;
+    reg rd_uart_reg, wr_uart_reg;
+
+    // Registers to store received data //TODO Cambiar a array de regs?
+    reg [OPCODE_SZ-1 : 0] opcode;
+    reg [DATA_WIDTH-1 : 0] op1; 
+    reg [DATA_WIDTH-1 : 0] op2;
+    reg [DATA_WIDTH-1 : 0] result;
+
+    //! FSMD States and data registers
     always @(posedge i_clk, posedge i_reset) begin
         if (i_reset) 
-            begin
-                state_reg <= IDLE;
-                opcode_reg <= 8'b0;
-                op1_reg <= 8'b0;
-                op2_reg <= 8'b0;
-                result_reg <= 8'b0;
-            end 
+        begin
+            // State
+            state_reg <= IDLE;
+        end 
         else 
-            begin
-                state_reg <= state_next;
-                opcode_reg <= opcode_next;
-                op1_reg <= op1_next;
-                op2_reg <= op2_next;
-                result_reg <= result_next;
-            end
+        begin
+            state_reg <= state_next;
+        end
     end
 
-    // Next-State Logic
+    //! Next-State Logic
     always @(*) begin
-
         state_next = state_reg;
-        opcode_next = opcode_reg;
-        op1_next = op1_reg;
-        op2_next = op2_reg;
-        result_next = result_reg;
-        i_rd_uart_reg = 1'b0;
-        i_wr_uart_reg = 1'b0;
+
+        if (i_reset) 
+        begin
+            // Control
+            rd_uart_reg = 1'b0;
+            wr_uart_reg = 1'b0;
+            // Data
+            opcode = {OPCODE_SZ {1'b0}};
+            op1 = {DATA_WIDTH{1'b0}};
+            op2 = {DATA_WIDTH{1'b0}};
+            result = {DATA_WIDTH{1'b0}};
+        end
+        else
+        begin
 
         case (state_reg)
-            IDLE:
+            IDLE: 
             begin
-                if (o_rx_empty == 0) // TODO or o_r_data == 0?
-                    begin
-                        state_next = SAVE_OPCODE;
-                        opcode_next = o_r_data;
-                        i_rd_uart_reg = 1'b1; 
-                    end
-                else 
-                    begin
-                        state_next = IDLE;
-                        i_rd_uart_reg = 1'b0;
-                        i_wr_uart_reg = 1'b0;
-                    end
+                wr_uart_reg = 1'b0;
+                if (~i_rx_empty) 
+                begin
+                    state_next = SAVE_OP1;
+                    opcode = i_r_data[OPCODE_SZ-1 : 0];
+                    rd_uart_reg = 1'b1;
+                end
             end
-            SAVE_OPCODE:
-            begin
-                state_next = SAVE_OP1;
-                op1_next = o_r_data;
-                i_rd_uart_reg = 1'b1;
-            end
-            SAVE_OP1:
+            SAVE_OP1: 
             begin
                 state_next = SAVE_OP2;
-                op2_next = o_r_data;
-                i_rd_uart_reg = 1'b1;
+                op1 = i_r_data;
+                rd_uart_reg = 1'b1;
             end
-            SAVE_OP2:
+            SAVE_OP2: 
             begin
-                state_next = COMPUTE_RESULT;
-                i_rd_uart_reg = 1'b1;
+                state_next = COMPUTE_ALU;
+                op2 = i_r_data;
+                rd_uart_reg = 1'b1;
             end
-            COMPUTE_RESULT: //TODO Hace falta hacer i_rd_uart = 0??
+            COMPUTE_ALU: 
             begin
-                if(o_tx_full == 0)
+                rd_uart_reg = 1'b0;
+                state_next = SEND_RESULT;
+            end
+            SEND_RESULT: 
+            begin
+                result = i_result_data; 
+                if (~i_tx_full) 
                     begin
                         state_next = IDLE;
-                        result_next = op1_reg + op2_reg;
-                        i_wr_uart_reg = 1'b1;
-                    end // TODO Else???
+                        wr_uart_reg = 1'b1;
+                    end 
+                // Else, if the transmitter FIFO is full, stay in the current state
             end
             default: state_next = IDLE;
         endcase
+        end
     end
-    
-    // Assignments
-    assign i_rd_uart = i_rd_uart_reg;
-    assign i_wr_uart = i_wr_uart_reg;
-    assign i_w_data = result_next; //TODO ???
+
+    //! Assignments
+    assign o_rd_uart = rd_uart_reg;     // Read UART Signal
+    assign o_w_data = result;           // Write UART (TX)
+    assign o_wr_uart = wr_uart_reg;     // Write UART Signal
+    assign o_op_code = opcode;          // ALU Operation Code
+    assign o_op_a = op1;                // ALU Operand A
+    assign o_op_b = op2;                // ALU Operand B
 
 endmodule

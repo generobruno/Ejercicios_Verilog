@@ -4,39 +4,31 @@ module uart_tb();
 
     // Parameters
     localparam T = 20;              // Clock Period [ns]
-    localparam CLKS_PER_BIT = 2604; // 50MHz / 19200 baud rate = 2604 Clocks per bit 
+    localparam CLKS_PER_BIT = 2604; // 50MHz / 19200 baud rate = 2604 Clocks per bit
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
-    localparam NUM_TESTS = 4;       // Number of tests
+    localparam NUM_TESTS = 3;       // Number of tests
+
+    // Operation parameters
+    localparam ADD = 8'b00100000;
+    localparam SUB = 8'b00100010;
+    localparam AND = 8'b00100100;
+    localparam OR  = 8'b00100101;
+    localparam XOR = 8'b00100110;
+    localparam SRA = 8'b00000011;
+    localparam SRL = 8'b00000010;
+    localparam NOR = 8'b00100111;
 
     // Declarations
-    reg i_clk, i_reset, i_rd_uart, i_wr_uart, i_rx;
-    wire o_tx_full, o_rx_empty, o_tx;
-    wire [7:0] o_r_data;
-    reg [7:0] i_w_data;
+    reg i_clk, i_reset, i_rx;
+    wire o_tx;
     reg [7:0] data_to_send; // Data to be sent
-    reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
-    reg [7:0] transmitted_data [NUM_TESTS-1:0]; // Data transmitted during each test
-    integer bit_count;
-    integer received_data_mismatch;
-    integer test_num;
 
     // Instantiate the UART module
-    uart_top #(
-        .DBIT(8),
-        .SB_TICK(16),
-        .DVSR(163),
-        .FIFO_W(2)
-    ) uart (
-        .i_clk(i_clk),                  // Clock
-        .i_reset(i_reset),              // Reset
-        .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
-        .i_wr_uart(i_wr_uart),          // TX: Write RX FIFO Signal
-        .i_rx(i_rx),                    // RX: RX input bit
-        .i_w_data(i_w_data),            // TX: TX Packed Data to transmit
-        .o_tx_full(o_tx_full),          // TX: TX FIFO Full Signal
-        .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
-        .o_tx(o_tx),                    // TX: TX Output bit
-        .o_r_data(o_r_data)             // RX: RX FIFO Data packed
+    uart_alu_top top (
+        .i_clk(i_clk),              // Clock
+        .i_reset(i_reset),          // Reset
+        .i_rx(i_rx),                // UART Receiver Input
+        .o_tx(o_tx)                 // UART Data Transmitted
     );
 
     // Clock Generation
@@ -59,12 +51,13 @@ module uart_tb();
     //! Task (automatic) UART_RECEIVE_BYTE: Simulates data being sent to the UART
     task automatic UART_RECEIVE_BYTE();
     integer i;
+    integer bit_count;
     begin
         for (i = 0; i < NUM_TESTS; i = i + 1) begin
-            // Generate random data to be sent
-            $display("DATA N° %d", i);
-            data_to_send = $random;
-            sent_data[i] = data_to_send; // Store sent data
+            if (i == 0)
+                data_to_send = ADD; // ADD
+            else
+                data_to_send = 8'b00000010;
 
             // Send Start bit
             i_rx = 1'b0;
@@ -92,72 +85,12 @@ module uart_tb();
     // Test cases
     initial
     begin
-        // Initialize testbench signals
-        i_rd_uart = 1'b0;
-        i_rx = 1'b1;
-        received_data_mismatch = 0;
-
         @(negedge i_reset); // Wait for reset to deassert
 
-        $display("\nTESTING UART RX MODULE...\n");
+        $display("\nTESTING UART...\n");
 
         //! Test: Send all data
         UART_RECEIVE_BYTE();
-
-        // Test Case: Read received data and compare with sent data
-        while ((o_rx_empty != 1) && (received_data_mismatch != 1)) begin
-            for (test_num = 0; test_num < NUM_TESTS; test_num = test_num + 1) begin
-                @(negedge i_clk);
-                $display("Received bits: %b", o_r_data);
-
-                // Compare received data with stored sent data
-                if (o_r_data !== sent_data[test_num]) begin
-                    $display("Data Mismatch! Received data does not match sent data.");
-                    received_data_mismatch = 1;
-                end
-
-                i_rd_uart = 1'b1;   // Read FIFO
-                @(negedge i_clk);   // Assert i_rd_signal for 1 clk cycle to remove word
-                i_rd_uart = 1'b0;
-                @(negedge i_clk);
-            end
-        end
-
-        if (received_data_mismatch == 0)
-            $display("\nAll received data matches sent data. Test Passed!");
-        else
-            $display("\nFailed Receiving Data. Check UART FIFO_W Size.");
-
-        //! Test: Transmit all data
-        $display("\nTESTING UART TX MODULE...\n");
-
-        for (test_num = 0; test_num < NUM_TESTS; test_num = test_num + 1) begin
-            @(negedge i_clk);
-            $display("Transmitting Data: %b", sent_data[test_num]);
-            
-            i_w_data = sent_data[test_num];
-
-            i_wr_uart = 1'b1;   // Write FIFO
-            @(negedge i_clk);   // Assert i_wr_signal for 1 clk cycle to write word
-            i_wr_uart = 1'b0;
-            @(negedge i_clk);
-        
-            // Wait for start bit
-            wait(o_tx == 0);
-            #(BIT_PERIOD);
-
-            // Save transmitted data every BIT_PERIOD
-            for (bit_count = 0; bit_count < 8; bit_count = bit_count + 1) begin
-                transmitted_data[test_num] = transmitted_data[test_num] << 1 | o_tx; // Save o_tx
-                #(BIT_PERIOD);
-            end
-
-            wait(o_tx == 1);    // Wait for stop bit
-            #(BIT_PERIOD);
-
-            $display("Transmitted Data (Collected): %b", transmitted_data[test_num]);
-        end
-        $display("ALL DATA SENT\n");
 
         // Stop simulation
         $stop;  
