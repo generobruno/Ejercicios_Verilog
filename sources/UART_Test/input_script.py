@@ -4,7 +4,7 @@ import sys
 # Function to configure the UART serial connection
 def configure_serial_connection():
     try:
-        ser = serial.Serial('COM1', 9600)  # Change 'COM1' to the appropriate port
+        ser = serial.Serial('/dev/ttyUSB0', baudrate = 19200, bytesize = serial.EIGHTBITS, parity = serial.PARITY_NONE, stopbits = serial.STOPBITS_ONE)  # Change 'COM1' to the appropriate port
         return ser
     except serial.SerialException:
         return None
