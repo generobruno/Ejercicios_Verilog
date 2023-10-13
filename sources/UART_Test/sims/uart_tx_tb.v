@@ -7,17 +7,20 @@ module uart_tx_tb();
     localparam CLKS_PER_BIT = 2604; // 50MHz / 19200 baud rate = 2604 Clocks per bit 
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
     localparam TX_PERIOD = 520830;  // BIT_PERIOD * 10 = TX period
-    localparam NUM_TESTS = 4;       // Number of tests
+    localparam NUM_TESTS = 3;       // Number of tests
 
     // Declarations
-    reg i_clk, i_reset, i_rd_uart, i_rx, i_wr_uart, i_w_data;
-    wire o_tx_full, o_rx_empty;
+    reg i_clk, i_reset, i_rd_uart, i_rx, i_wr_uart, tx_data;
+    wire o_tx_full, o_rx_empty, tx_to_rx;
+    reg [7:0] i_w_data;
     wire [7:0] o_r_data;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
     integer bit_count;
     integer received_data_mismatch;
     integer test_num;
+    
+    
 
     // Instantiate the UART module
     uart_top #(
@@ -65,7 +68,7 @@ module uart_tx_tb();
             $display("Written bits: %b", data_to_send);
             sent_data[i] = data_to_send;
             i_w_data = data_to_send;
-
+            tx_data = tx_to_rx;
             i_wr_uart = 1'b1;   // Write FIFO
             @(negedge i_clk);   // Assert i_wr_signal for 1 clk cycle to remove word
             i_wr_uart = 1'b0;
@@ -82,14 +85,14 @@ module uart_tx_tb();
     begin
         // Initialize testbench signals
         i_rd_uart = 1'b0;
-        i_rx = 1'b1;
+        i_wr_uart = 1'b0;
         received_data_mismatch = 0;
 
         @(negedge i_reset); // Wait for reset to deassert
 
         //! Test: Send all data
         UART_SEND_BYTE();
-
+        #(TX_PERIOD*10);
         // Test Case: Write random data into TX FIFO
         while ((o_rx_empty != 1) && (received_data_mismatch != 1)) begin
             for (test_num = 0; test_num < NUM_TESTS; test_num = test_num + 1) begin
