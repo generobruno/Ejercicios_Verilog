@@ -35,13 +35,14 @@ module uart_alu_interface
     //! Signal Declaration
     //reg [DATA_WIDTH-1 : 0] r_data, w_data;
     reg [2:0] state_reg, state_next;
-    reg rd_uart_reg, wr_uart_reg;
+    reg rd_uart_reg, rd_uart_reg_next;
+    reg wr_uart_reg, wr_uart_reg_next;
 
     // Registers to store received data //TODO Cambiar a array de regs?
-    reg [OPCODE_SZ-1 : 0] opcode;
-    reg [DATA_WIDTH-1 : 0] op1; 
-    reg [DATA_WIDTH-1 : 0] op2;
-    reg [DATA_WIDTH-1 : 0] result;
+    reg [OPCODE_SZ-1 : 0] opcode, opcode_next;
+    reg [DATA_WIDTH-1 : 0] op1, op1_next; 
+    reg [DATA_WIDTH-1 : 0] op2, op2_next;
+    reg [DATA_WIDTH-1 : 0] result, result_next;
 
     //! FSMD States and data registers
     always @(posedge i_clk, posedge i_reset) begin
@@ -50,17 +51,25 @@ module uart_alu_interface
             // State
             state_reg <= IDLE;
             // Control
-            rd_uart_reg = 1'b0;
-            wr_uart_reg = 1'b0;
+            rd_uart_reg <= 1'b0;
+            wr_uart_reg <= 1'b0;
             // Data
-            opcode = {OPCODE_SZ {1'b0}};
-            op1 = {DATA_WIDTH{1'b0}};
-            op2 = {DATA_WIDTH{1'b0}};
-            result = {DATA_WIDTH{1'b0}};
+            opcode <= {OPCODE_SZ {1'b0}};
+            op1 <= {DATA_WIDTH{1'b0}};
+            op2 <= {DATA_WIDTH{1'b0}};
+            result <= {DATA_WIDTH{1'b0}};
         end 
         else 
         begin
             state_reg <= state_next;
+            // Control
+            rd_uart_reg <= rd_uart_reg_next;
+            wr_uart_reg <= wr_uart_reg_next;
+            // Data
+            opcode <= opcode_next;
+            op1 <= op1_next;
+            op2 <= op2_next;
+            result <= result_next;
         end
     end
 
@@ -68,48 +77,48 @@ module uart_alu_interface
     always @(*) begin
         // Initial assignments
         state_next = state_reg;
-        wr_uart_reg = 1'b0;
-        rd_uart_reg = 1'b0;
-        op1 = {DATA_WIDTH{1'b0}};
-        op2 = {DATA_WIDTH{1'b0}};
-        opcode = {OPCODE_SZ {1'b0}};
-        result = {DATA_WIDTH{1'b0}};
+        wr_uart_reg_next = wr_uart_reg;
+        rd_uart_reg_next = rd_uart_reg;
+        op1_next = op1;
+        op2_next = op2;
+        opcode_next = opcode;
+        result_next = result;
 
         case (state_reg)
             IDLE: 
             begin
-                wr_uart_reg = 1'b0;
+                wr_uart_reg_next = 1'b0;
                 if (~i_rx_empty) 
                 begin
                     state_next = SAVE_OP1;
-                    opcode = i_r_data[OPCODE_SZ-1 : 0];
-                    rd_uart_reg = 1'b1;
+                    opcode_next = i_r_data[OPCODE_SZ-1 : 0];
+                    rd_uart_reg_next = 1'b1;
                 end
             end
             SAVE_OP1: 
             begin
                 state_next = SAVE_OP2;
-                op1 = i_r_data;
-                rd_uart_reg = 1'b1;
+                op1_next = i_r_data;
+                rd_uart_reg_next = 1'b1;
             end
             SAVE_OP2: 
             begin
                 state_next = COMPUTE_ALU;
-                op2 = i_r_data;
-                rd_uart_reg = 1'b1;
+                op2_next = i_r_data;
+                rd_uart_reg_next = 1'b1;
             end
             COMPUTE_ALU: 
             begin
-                rd_uart_reg = 1'b0;
+                rd_uart_reg_next = 1'b0;
                 state_next = SEND_RESULT;
             end
             SEND_RESULT: 
             begin
-                result = i_result_data; 
+                result_next = i_result_data; 
                 if (~i_tx_full) 
                     begin
                         state_next = IDLE;
-                        wr_uart_reg = 1'b1;
+                        wr_uart_reg_next = 1'b1;
                     end 
                 // Else, if the transmitter FIFO is full, stay in the current state
             end
