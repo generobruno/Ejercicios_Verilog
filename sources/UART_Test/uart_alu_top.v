@@ -10,7 +10,8 @@ module uart_alu_top
         input wire i_reset,                  // Reset
         input wire i_rx,   
         // Outputs
-        output wire o_tx           
+        output wire o_tx,
+        output reg [DATA_BITS-1:0] result         
     );
 
     //! Signal Declaration
@@ -25,6 +26,9 @@ module uart_alu_top
     wire [DATA_BITS-1 :0]       op_b;               // ALU Operand B
     wire [OPCODE_BITS-1 :0]     op_code;            // ALU Operation Code
 
+    
+    
+    
     //! Instantiations
     // UART Module
     uart_top #(
@@ -85,5 +89,18 @@ module uart_alu_top
         .o_op_b(op_b),
         .o_op_code(op_code)
     );
+
+
+    always @(posedge i_clk, posedge i_reset) 
+    begin
+        if (i_reset)        // Reset system 
+            begin
+                result <= {DATA_BITS{1'b0}};
+            end
+        else                // Next state assignments
+            begin
+                result<= result_data;
+            end
+    end
 
 endmodule

@@ -26,7 +26,7 @@ module uart_tx_tb();
     uart_top #(
         .DBIT(8),
         .SB_TICK(16),
-        .DVSR(163),
+        .DVSR(326),
         .FIFO_W(2)
     ) uart (
         .i_clk(i_clk),                  // Clock
