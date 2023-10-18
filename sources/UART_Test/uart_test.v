@@ -90,27 +90,33 @@ module uart_alu_interface
                 wr_uart_reg_next = 1'b0;
                 if (~i_rx_empty) 
                 begin
-                    state_next = SAVE_OP1;
+                    state_next = state_reg+1;
                     opcode_next = i_r_data[OPCODE_SZ-1 : 0];
                     rd_uart_reg_next = 1'b1;
                 end
             end
             SAVE_OP1: 
             begin
-                state_next = SAVE_OP2;
-                op1_next = i_r_data;
-                rd_uart_reg_next = 1'b1;
+                if (~i_rx_empty)
+                begin
+                    state_next = state_reg+1;
+                    op1_next = i_r_data;
+                    //rd_uart_reg_next = 1'b1;
+                end
             end
             SAVE_OP2: 
             begin
-                state_next = COMPUTE_ALU;
-                op2_next = i_r_data;
-                rd_uart_reg_next = 1'b1;
+                if (~i_rx_empty)
+                begin
+                    state_next = state_reg+1;
+                    op2_next = i_r_data;
+                    //rd_uart_reg_next = 1'b1;
+                end
             end
             COMPUTE_ALU: 
             begin
                 rd_uart_reg_next = 1'b0;
-                state_next = SEND_RESULT;
+                state_next = state_reg+1;
             end
             SEND_RESULT: 
             begin

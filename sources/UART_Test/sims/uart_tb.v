@@ -24,14 +24,29 @@ module uart_tb();
     wire o_tx;
     reg [7:0] data_to_send; // Data to be sent
     wire [7:0] result;
-
+    wire [31:0] inst;
+    wire [7:0] COMM_result;
+    /*
+    wire [7:0] val1_result;
+    wire [7:0] val2_result;
+    wire [5:0] opc_result;
+    */
     // Instantiate the UART module
     uart_alu_top top (
         .i_clk(i_clk),              // Clock
         .i_reset(i_reset),          // Reset
         .i_rx(i_rx),                // UART Receiver Input
         .o_tx(o_tx),                 // UART Data Transmitted
-        .result(result)
+        .result(result),
+        .o_inst(inst),
+        .COMM_result(COMM_result)
+        /*
+        .val1_result(val1_result),
+        .val2_result(val2_result),
+        .opc_result(opc_result)
+        */
+        
+        
     );
 
     // Clock Generation
@@ -58,9 +73,9 @@ module uart_tb();
     begin
         for (i = 0; i < NUM_TESTS; i = i + 1) begin
             if (i == 0)
-                data_to_send = 8'b00000100; // ADD
+                data_to_send = 8'b00100000; // ADD
             else
-                data_to_send = 8'b00100000;
+                data_to_send = 8'b00000010;
 
             // Send Start bit
             i_rx = 1'b0;
@@ -94,7 +109,7 @@ module uart_tb();
         for (i = 0; i < NUM_TESTS; i = i + 1) begin
             // Generate random data to be sent
             $display("DATA N° %d", i);
-            data_to_send = 1'b00100000;
+            data_to_send = 8'b00100000;
             //sent_data[i] = data_to_send; // Store sent data
 
             // Send Start bit
@@ -128,9 +143,12 @@ module uart_tb();
         $display("\nTESTING UART...\n");
 
         //! Test: Send all data
-        UART_RECEIVE_BYTE();
+        UART_SEND_BYTE();
         #(TX_PERIOD*10);
         // Stop simulation
+        
+        
+        
         $stop;  
     end
 

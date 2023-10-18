@@ -11,7 +11,16 @@ module uart_alu_top
         input wire i_rx,   
         // Outputs
         output wire o_tx,
-        output reg [DATA_BITS-1:0] result         
+        output reg [DATA_BITS-1:0] result,
+        output wire [32-1:0] o_inst,   
+        output wire [DATA_BITS-1:0] COMM_result
+        /*
+        output wire [DATA_BITS-1:0] val1_result,
+        output wire [DATA_BITS-1:0] val2_result,
+        output wire [OPCODE_BITS-1:0] opc_result
+        */
+          
+                
     );
 
     //! Signal Declaration
@@ -46,12 +55,13 @@ module uart_alu_top
         .i_rx(i_rx),
         .i_w_data(w_data),
         // Outputs
+        .o_rx_done(o_rx_done),
         .o_tx_full(tx_full),
         .o_rx_empty(rx_empty),
         .o_tx(o_tx),
         .o_r_data(r_data)
     );
-
+    /*
     // ALU Module
     alu #(
         // Parameters
@@ -65,7 +75,31 @@ module uart_alu_top
         // Outputs
         .o_alu_Result(result_data)
     );
-
+    */
+    
+    //UART_ALU_COMM 
+    UART_ALU_COMM #(
+        .N(DATA_BITS),
+        .OPC_N(OPCODE_BITS)
+    )uart_alu_interface_unit(
+        .i_clock(i_clk),
+        .i_reset(i_reset),
+        .i_data(r_data),
+        .i_available_data(o_rx_done),
+        .i_result(result_data),
+        .o_result(COMM_result),
+        .o_inst(o_inst),
+        /*
+        .o_val1(val1_result),
+        .o_val2(val2_result),
+        .o_opc(opc_result),
+        */
+        .o_wr(wr_uart),
+        .o_rd(rd_uart)
+    );
+    
+    
+    /*
     // UART-ALU Interface Module
     uart_alu_interface #(
         // Parameters
@@ -82,24 +116,33 @@ module uart_alu_top
         .i_r_data(r_data),
         .i_result_data(result_data),
         // Outputs
-        .o_w_data(w_data),
+        .o_w_data(COMM_result),
         .o_wr_uart(wr_uart),
         .o_rd_uart(rd_uart),
-        .o_op_a(op_a),
-        .o_op_b(op_b),
-        .o_op_code(op_code)
+        .o_op_a(val1_result),
+        .o_op_b(val2_result),
+        .o_op_code(opc_result)
     );
-
+    */
 
     always @(posedge i_clk, posedge i_reset) 
     begin
         if (i_reset)        // Reset system 
             begin
                 result <= {DATA_BITS{1'b0}};
+                /*
+                COMM_result<= {DATA_BITS{1'b0}};
+                val1_result<= {DATA_BITS{1'b0}};
+                val2_result<= {DATA_BITS{1'b0}};
+                */
             end
         else                // Next state assignments
             begin
-                result<= result_data;
+                /*
+                COMM_result<= result_data;
+                val1_result<=op_a;
+                val2_result<=op_b;
+                */
             end
     end
 
