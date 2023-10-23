@@ -3,8 +3,8 @@
 module uart_tb();
 
     // Parameters
-    localparam T = 20;              // Clock Period [ns]
-    localparam CLKS_PER_BIT = 2604; // 50MHz / 19200 baud rate = 2604 Clocks per bit
+    localparam T = 10;              // Clock Period [ns]
+    localparam CLKS_PER_BIT = 5208; // 50MHz / 19200 baud rate = 2604 Clocks per bit
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
     localparam TX_PERIOD = 520830;  // BIT_PERIOD * 10 = TX period
     localparam NUM_TESTS = 3;       // Number of tests
@@ -143,7 +143,7 @@ module uart_tb();
         $display("\nTESTING UART...\n");
 
         //! Test: Send all data
-        UART_SEND_BYTE();
+        UART_RECEIVE_BYTE();
         #(TX_PERIOD*10);
         // Stop simulation
         

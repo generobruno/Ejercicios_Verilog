@@ -115,8 +115,10 @@ module fifo
                 begin
                     w_ptr_next = w_ptr_reg;
                     r_ptr_next = r_ptr_reg;
+                    /*
                     full_next = full_reg;
                     empty_next = empty_reg;
+                    */
                 end
         endcase    
     end

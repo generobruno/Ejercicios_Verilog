@@ -29,14 +29,15 @@ module UART_ALU_COMM#(
         input wire i_reset,
         input wire [N-1:0] i_data,
         input wire i_available_data,
+        input wire i_fifo_empty,
         input wire [N-1:0 ] i_result,
         output wire [32-1:0] o_inst,
         output wire [N-1:0] o_result,
-        /*
+        
         output wire [N-1:0] o_val1,
         output wire [N-1:0] o_val2,
         output wire [OPC_N-1:0] o_opc,
-        */
+        
         output wire o_wr,
         output wire o_rd
         
@@ -53,6 +54,8 @@ module UART_ALU_COMM#(
         COMPUTE_ALU =   3'b110;
 
     reg [2:0]        counter;
+    reg              done;
+    reg [2:0]        cont;
     //reg [2:0]        counter_next;
     reg [32-1:0]     inst_reg;
     reg [N-1 : 0]    alu_Result;
@@ -65,14 +68,13 @@ module UART_ALU_COMM#(
 
     assign o_result = to_tx_fifo;
     assign o_inst = inst_reg;
-    /*
+    
     assign o_val1 = val1_reg;
     assign o_val2 = val2_reg;
     assign o_opc = opc_reg;
-    */
+    
     assign o_rd = rd_reg;
     assign o_wr = wr_reg; 
-    integer i;
     
     
     always @(posedge i_clock, posedge i_reset)begin
@@ -86,73 +88,67 @@ module UART_ALU_COMM#(
             rd_reg <= 1'b0;
             wr_reg <= 1'b0;
             counter <= {3{1'b0}};
+            done <= 1'b0;
+            cont <= {3{1'b0}};
         end
         else
         begin
-        for(i=0; i<4; i= i+1)begin
-            if(i_available_data)begin
-                if(i<3)begin
-                    inst_reg <= i_data << i*8;
-                    //rd_reg <= 1'b1;
+            if(!done)begin
+                wr_reg <= 1'b0;
+                if(!i_fifo_empty)begin
+                
+                    
+                      if(counter==0)begin
+                        opc_reg <= i_data;
+                        rd_reg <= 1'b1;
+                        inst_reg[8*(counter)+:8] <= i_data;
+                        counter <= counter +1;
+                        cont <= counter+1;
+                      end
+                      else if(counter==1)begin
+                        val1_reg <= i_data;
+                        rd_reg <= 1'b1;
+                        inst_reg[8*(counter)+:8] <= i_data;
+                        counter <= counter +1;
+                        cont <= counter+1;
+                      end
+                      else if(counter==2)begin
+                        val2_reg <= i_data;
+                        rd_reg <= 1'b1;
+                        inst_reg[8*(counter)+:8] <= i_data;
+                        counter <= counter +1;
+                        cont <= counter+1;
+                      end
+                      else if(counter == 4)begin
+     
+                            rd_reg <= 1'b1;
+                            
+                            counter <= cont;
+                      end
+                      
+       
+                    
                 end
                 else
                 begin
-                    rd_reg <= 1'b0;
-                    to_tx_fifo <= i_result;
-                    wr_reg <= 1'b1;
+                        if(counter<3)begin
+                            rd_reg <= 1'b0;
+                            counter <= 3'b100;
+                        end
+                        
+                              
                 end
-            /*
-            case(counter)
-                SAVE_OPC:
-                begin
-                    opc_reg<=i_data[OPC_N-1:0];
-                    rd_reg <=1'b1;
-                    counter <= counter + 1;
-                end
-                WAIT1:
-                begin
-                    rd_reg <= 1'b0;
-                    counter <= counter + 1;
-                end
-                SAVE_OP1:
-                begin
-                    val1_reg<=i_data;
-                    rd_reg <=1'b1;
-                    counter <= counter + 1;
-                end
-                WAIT2:
-                begin
-                    rd_reg <= 1'b0;
-                    counter <= counter + 1;
-                end
-                SAVE_OP2:
-                begin
-                    val2_reg<=i_data;
-                    rd_reg <=1'b1;
-                    counter <= counter + 1;
-                end
-                WAIT3:
-                begin
-                    rd_reg <= 1'b0;
-                    counter <= counter + 1;
-                end
-                COMPUTE_ALU:
-                begin
-                    to_tx_fifo<=i_result;
-                    wr_reg <=1'b1;
-                    rd_reg <= 1'b0;
-                    counter <= counter + 1;
-                end
-                default: 
-                begin
-                    counter <= 3'b000;
-                    wr_reg <= 1'b0;
-                    rd_reg <= 1'b0;
-                end                                
-            endcase
-            */
+                
+                if(counter == 3)begin
+                            
+                            rd_reg <= 1'b0;
+                            to_tx_fifo <= i_result;
+                            wr_reg <= 1'b1;
+                            counter <= 0;
+                            cont <= 0;
+                 end
+                
             end
-        end
         end
     
     end
