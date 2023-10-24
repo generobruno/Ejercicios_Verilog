@@ -78,7 +78,7 @@ module uart_alu_top
     
     
     //UART_ALU_COMM 
-    UART_ALU_COMM #(
+    UART_ALU_COMM_conv#(
         .N(DATA_BITS),
         .OPC_N(OPCODE_BITS)
     )uart_alu_interface_unit_comm(
