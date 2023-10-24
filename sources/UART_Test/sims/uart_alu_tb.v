@@ -34,7 +34,6 @@ module uart_alu_tb();
     wire o_tx_full, o_rx_empty, tx_to_rx;
     reg [7:0] i_w_data;
     wire [7:0] o_r_data;
-    wire [7: 0] o_result;
     wire [7: 0] COMM_result;
     wire [31: 0] o_inst;
     wire [7: 0] val1;
@@ -42,7 +41,6 @@ module uart_alu_tb();
     wire [5: 0] opc;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
-    integer bit_count;
     integer received_data_mismatch;
     integer test_num;
     
@@ -55,14 +53,12 @@ module uart_alu_tb();
         .i_reset(i_reset),
         .i_rx(tx_to_rx),
         .o_tx(alu_tx),
-        .result(o_result),
         .o_inst(o_inst),
         .COMM_result(COMM_result),
         .val1_result(val1),
         .val2_result(val2),
         .opc_result(opc)
-          
-    
+
     );
     
 

@@ -11,7 +11,6 @@ module uart_alu_top
         input wire i_rx,   
         // Outputs
         output wire o_tx,
-        output reg [DATA_BITS-1:0] result,
         output wire [32-1:0] o_inst,   
         output wire [DATA_BITS-1:0] COMM_result,
        
@@ -127,25 +126,6 @@ module uart_alu_top
     );
     */
 
-    always @(posedge i_clk, posedge i_reset) 
-    begin
-        if (i_reset)        // Reset system 
-            begin
-                result <= {DATA_BITS{1'b0}};
-                /*
-                COMM_result<= {DATA_BITS{1'b0}};
-                val1_result<= {DATA_BITS{1'b0}};
-                val2_result<= {DATA_BITS{1'b0}};
-                */
-            end
-        else                // Next state assignments
-            begin
-                /*
-                COMM_result<= result_data;
-                val1_result<=op_a;
-                val2_result<=op_b;
-                */
-            end
-    end
+    
 
 endmodule

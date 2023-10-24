@@ -54,24 +54,20 @@ module UART_ALU_COMM#(
         COMPUTE_ALU =   3'b110;
 
     reg [2:0]        counter;
-    reg              done;
     reg [2:0]        cont;
     //reg [2:0]        counter_next;
     reg [32-1:0]     inst_reg;
-    reg [N-1 : 0]    alu_Result;
     reg [N-1: 0]     to_tx_fifo;
-    reg [N-1:0]      val1_reg;
-    reg [N-1:0]      val2_reg;
-    reg [OPC_N-1:0]      opc_reg;
     reg              rd_reg;
     reg              wr_reg;   
 
     assign o_result = to_tx_fifo;
     assign o_inst = inst_reg;
     
-    assign o_val1 = val1_reg;
-    assign o_val2 = val2_reg;
-    assign o_opc = opc_reg;
+    assign o_opc = inst_reg[0*N+:8];
+    assign o_val1 = inst_reg[1*N+:8];
+    assign o_val2 = inst_reg[2*N+:8];
+    
     
     assign o_rd = rd_reg;
     assign o_wr = wr_reg; 
@@ -80,77 +76,58 @@ module UART_ALU_COMM#(
     always @(posedge i_clock, posedge i_reset)begin
         if(i_reset)begin
             inst_reg <= {32{1'b0}};
-            opc_reg <= {OPC_N{1'b0}};
-            val1_reg <= {N{1'b0}};
-            val2_reg <= {N{1'b0}};
             to_tx_fifo <= {N{1'b0}};
-            alu_Result <= {N{1'b0}};
             rd_reg <= 1'b0;
             wr_reg <= 1'b0;
             counter <= {3{1'b0}};
-            done <= 1'b0;
+
             cont <= {3{1'b0}};
         end
         else
         begin
-            if(!done)begin
+            if(!i_fifo_empty)begin
                 
-                if(!i_fifo_empty)begin
-                
-                      wr_reg <= 1'b0;
-                      if(counter==0)begin
-                        opc_reg <= i_data;
-                        rd_reg <= 1'b1;
-                        inst_reg[8*(counter)+:8] <= i_data;
-                        counter <= counter +1;
-                        cont <= counter+1;
-                      end
-                      else if(counter==1)begin
-                        val1_reg <= i_data;
-                        rd_reg <= 1'b1;
-                        inst_reg[8*(counter)+:8] <= i_data;
-                        counter <= counter +1;
-                        cont <= counter+1;
-                      end
-                      else if(counter==2)begin
-                        val2_reg <= i_data;
-                        rd_reg <= 1'b1;
-                        inst_reg[8*(counter)+:8] <= i_data;
-                        counter <= counter +1;
-                        cont <= counter+1;
-                      end
-                      else if(counter == 4)begin
-     
-                            rd_reg <= 1'b1;
-                            
-                            counter <= cont;
-                      end
-                      
-       
-                    
-                end
-                else
-                begin
-                        if(counter<3)begin
-                            rd_reg <= 1'b0;
-                            counter <= 3'b100;
-                        end
-                        
-                              
-                end
-                
-                if(counter == 3)begin
-                            
-                            rd_reg <= 1'b0;
-                            to_tx_fifo <= i_result;
-                            wr_reg <= 1'b1;
-                            counter <= 3'b100;
-                            cont <= 3'b000;
+                wr_reg <= 1'b0;
+                if(counter==0)begin
+                    rd_reg <= 1'b1;
+                    inst_reg[8*(counter)+:8] <= i_data;
+                    counter <= counter +1;
+                    cont <= counter+1;
                  end
-                
+                 else if(counter==1)begin
+                    rd_reg <= 1'b1;
+                    inst_reg[8*(counter)+:8] <= i_data;
+                    counter <= counter +1;
+                    cont <= counter+1;
+                 end
+                 else if(counter==2)begin
+                    rd_reg <= 1'b1;
+                    inst_reg[8*(counter)+:8] <= i_data;
+                    counter <= counter +1;
+                    cont <= counter+1;
+                 end
+                 else if(counter == 4)begin
+                    rd_reg <= 1'b1;
+                            
+                    counter <= cont;
+                 end
             end
+            else
+            begin
+                if(counter<3)begin
+                    rd_reg <= 1'b0;
+                    counter <= 3'b100;
+                end
+            end
+            if(counter == 3)begin
+                rd_reg <= 1'b0;
+                to_tx_fifo <= i_result;
+                wr_reg <= 1'b1;
+                counter <= 3'b100;
+                cont <= 3'b000;
+            end
+ 
         end
-    
     end
     
     
