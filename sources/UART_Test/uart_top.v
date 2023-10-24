@@ -10,7 +10,7 @@ module uart_top
         parameter   DBIT        =       8,      // # Data bits
                     SB_TICK     =       16,     // # Ticks for stop bits (16/24/32 for 1/1.5/2 bits)
                     DVSR        =       163,    // Baud Rate divisor ( Clock/(BaudRate*16) )
-                    FIFO_W      =       2       // # Address bits of FIFO ( # Words in FIFO = 2^FIFO_W )
+                    FIFO_W      =       5       // # Address bits of FIFO ( # Words in FIFO = 2^FIFO_W )
     )
     (
         // Inputs

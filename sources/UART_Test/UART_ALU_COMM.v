@@ -94,10 +94,10 @@ module UART_ALU_COMM#(
         else
         begin
             if(!done)begin
-                wr_reg <= 1'b0;
+                
                 if(!i_fifo_empty)begin
                 
-                    
+                      wr_reg <= 1'b0;
                       if(counter==0)begin
                         opc_reg <= i_data;
                         rd_reg <= 1'b1;
@@ -144,8 +144,8 @@ module UART_ALU_COMM#(
                             rd_reg <= 1'b0;
                             to_tx_fifo <= i_result;
                             wr_reg <= 1'b1;
-                            counter <= 0;
-                            cont <= 0;
+                            counter <= 3'b100;
+                            cont <= 3'b000;
                  end
                 
             end

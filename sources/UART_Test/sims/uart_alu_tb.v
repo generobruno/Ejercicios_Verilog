@@ -71,13 +71,13 @@ module uart_alu_tb();
         .DBIT(8),
         .SB_TICK(16),
         .DVSR(326),
-        .FIFO_W(2)
+        .FIFO_W(5)
     ) uart (
         .i_clk(i_clk),                  // Clock
         .i_reset(i_reset),              // Reset
         .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
         .i_wr_uart(i_wr_uart),                   //
-        .i_rx(alu_tx),                    // RX: RX input bit
+        .i_rx(tx_to_rx),                    // RX: RX input bit
         .i_w_data(i_w_data),                    //
         .o_tx_full(o_tx_full),          //
         .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
@@ -144,7 +144,7 @@ module uart_alu_tb();
 
         //! Test: Send all data
         UART_SEND_BYTE();
-        #(TX_PERIOD*40);
+        #(TX_PERIOD*NUM_TESTS);
         
         
         // Test Case: Write random data into TX FIFO
