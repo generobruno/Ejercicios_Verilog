@@ -1,0 +1,17 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../sources/UART_Test/UART_ALU_COMM.v" \
+"../../../../../sources/UART_Test/alu.v" \
+"../../../../../sources/UART_Test/fifo.v" \
+"../../../../../sources/UART_Test/mod_m_counter.v" \
+"../../../../../sources/UART_Test/uart_alu_top.v" \
+"../../../../../sources/UART_Test/uart_rx.v" \
+"../../../../../sources/UART_Test/uart_top.v" \
+"../../../../../sources/UART_Test/uart_tx.v" \
+"../../../../../sources/UART_Test/sims/uart_alu_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

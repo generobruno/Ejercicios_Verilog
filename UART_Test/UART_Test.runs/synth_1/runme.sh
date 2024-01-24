@@ -37,4 +37,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log uart_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source uart_top.tcl
+EAStep vivado -log uart_alu_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source uart_alu_top.tcl

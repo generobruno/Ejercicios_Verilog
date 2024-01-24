@@ -11,12 +11,12 @@ module uart_alu_top
         input wire i_rx,   
         // Outputs
         output wire o_tx,
-        output wire [32-1:0] o_inst,   
-        output wire [DATA_BITS-1:0] COMM_result,
+        //output wire [32-1:0] o_inst,   
+        output wire [DATA_BITS-1:0] COMM_result
        
-        output wire [DATA_BITS-1:0] val1_result,
-        output wire [DATA_BITS-1:0] val2_result,
-        output wire [OPCODE_BITS-1:0] opc_result
+        //output wire [DATA_BITS-1:0] val1_result,
+        //output wire [DATA_BITS-1:0] val2_result,
+        //output wire [OPCODE_BITS-1:0] opc_result
         
           
                 
