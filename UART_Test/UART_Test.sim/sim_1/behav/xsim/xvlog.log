@@ -1,0 +1,18 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/UART_ALU_COMM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module UART_ALU_COMM
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/alu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/fifo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/mod_m_counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mod_m_counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/uart_alu_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_alu_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/uart_rx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_rx
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/uart_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/uart_tx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_tx
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/UART_Test/sims/uart_alu_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_alu_tb

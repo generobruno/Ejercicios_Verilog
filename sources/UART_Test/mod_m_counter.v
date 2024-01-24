@@ -7,8 +7,7 @@
 module mod_m_counter
     #(
         // Parameters
-        parameter   N       =       4,          // Number of bits in counter
-                    M       =       10          // mod-M
+        parameter   M       =       10          // mod-M
     )
     (
         // Inputs
@@ -16,10 +15,11 @@ module mod_m_counter
         input wire i_reset,                     // Reset
         // Outputs
         output wire o_max_tick,                 // Max Tick signal
-        output wire [N-1 : 0] o_ticks           // Ticks
+        output wire [log2(M)-1 : 0] o_ticks     // Ticks
     );
 
     // Signal Declaration
+    localparam N    =   log2(M);                // Number of bits for M
     reg     [N-1 : 0]   r_reg;        
     wire    [N-1 : 0]   r_next;      
 
@@ -38,5 +38,15 @@ module mod_m_counter
     //! Output Logic
     assign o_ticks = r_reg;
     assign o_max_tick = (r_reg==(M-1)) ? 1'b1 : 1'b0;
+
+    //! Log2 Function
+    function integer log2(input integer n);
+        integer i;
+    begin
+        log2 = 1;
+        for (i = 0; 2**i < n; i = i + 1)
+            log2 = i + 1;
+    end 
+    endfunction
 
 endmodule
