@@ -54,7 +54,7 @@ module alu
             SRA     : alu_Result = $signed(i_alu_A) >>> i_alu_B;
             SRL     : alu_Result = i_alu_A >> i_alu_B;
             NOR     : alu_Result = ~ (i_alu_A | i_alu_B);
-            SLL     : alu_Result = i_alu_A << i_alu_B;
+            SLL     : alu_Result = i_alu_A << i_alu_B;                  //TODO i_alu_B debe ser inst[10:6] para las Shift ops
             SLLV    : alu_Result = i_alu_A << i_alu_B;
             SRLV    : alu_Result = i_alu_A >> i_alu_B;
             SRAV    : alu_Result = $signed(i_alu_A) >>> i_alu_B;
