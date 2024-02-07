@@ -2,22 +2,22 @@
 
 **/
 
-module data_memory
+module data_mem
     #(
         // Parameters
         parameter   B   =   32,     // Number of bits
-        parameter   W   =   2       // Number of address bits
+        parameter   W   =   5       // Number of address bits
 
     )
     (
         // Inputs
-        input wire                      i_clk,                      //
-        input wire                      i_mem_read,                 //
-        input wire                      i_mem_write,                //
-        input [W-1 : 0]                 i_addr,                     // 
-        input [B-1 : 0]                 i_data,                     // 
+        input wire                      i_clk,                      // Clock
+        input wire                      i_mem_read,                 // Read Control Line
+        input wire                      i_mem_write,                // Write Control Line
+        input [W-1 : 0]                 i_addr,                     // Address
+        input [B-1 : 0]                 i_data,                     // Data to Write
         // Outputs
-        output [B-1 : 0]                o_data,                     // 
+        output [B-1 : 0]                o_data                      // Data to Read
     );
 
     //! Signal Declaration
