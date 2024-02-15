@@ -2,6 +2,7 @@
 
 **/
 
+// TODO Agregar lineas de control para tamaño de palabras
 module MainControlUnit
     #(
         // Parameters

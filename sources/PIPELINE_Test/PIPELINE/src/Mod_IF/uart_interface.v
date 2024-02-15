@@ -46,6 +46,8 @@ module uart_interface
     reg [DATA_WIDTH-1 : 0] op2, op2_next;
     reg [DATA_WIDTH-1 : 0] result, result_next;
 
+    // TODO Modificar FSMD
+
     //! FSMD States and data registers
     always @(posedge i_clk, posedge i_reset) begin
         if (i_reset) 
