@@ -13,6 +13,7 @@ module instruction_mem
         // Inputs
         input wire                      i_clk,                      // Clock
         input wire                      i_reset,                    // Reset
+        input wire                      i_write,                    // Write Control Line
         input [W-1 : 0]                 i_addr,                     // Address (Program Counter)
         input [B-1 : 0]                 i_data,                     // Instructions to write
         // Outputs
@@ -22,29 +23,18 @@ module instruction_mem
     //! Signal Declaration
     // TODO Registros para debug
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
-    reg [B-1 : 0]   read_reg;
 
     // Body
     always @(posedge i_clk) 
     begin
-        if(i_mem_write)
+        if(i_write)
             begin
                 // Write Operation
                 array_reg[i_addr] <= i_data;
-            end
-        else if(i_mem_read)
-            begin
-                // Read Operation
-                read_reg <= array_reg[i_addr];
-            end
-        else
-            begin
-                // Default
-                read_reg <= {B {1'b0}};
-            end   
+            end 
     end
 
     //! Assignments
-    assign o_data = read_reg;
+    assign o_data = array_reg[i_addr >> 2];
 
 endmodule
