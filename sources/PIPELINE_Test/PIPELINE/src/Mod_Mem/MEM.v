@@ -16,7 +16,7 @@ module MEM
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_M,             // ALU Result
         output [INST_SZ-1 : 0]          o_read_data_M,              // Read Data (from data mem)
-        output [15 : 11]                o_instr_rd_M                // Instruction RD
+        output [4 : 0]                  o_instr_rd_M                // Instruction RD  (instr[15:11])
     );
 
     // TODO Instanciar: Data_Memory

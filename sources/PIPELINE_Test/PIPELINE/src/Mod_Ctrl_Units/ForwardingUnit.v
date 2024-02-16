@@ -10,12 +10,12 @@ module ForwardingUnit
     )
     (
         // Inputs
-        input [25 : 21]                 i_instr_rs_D,               // Instruction RS from ID (instr[25:21])
-        input [20 : 16]                 i_instr_rt_D,               // Instruction RT from ID (instr[20:16])
-        input [20 : 16]                 i_instr_rt_E,               // Instruction RT from EX (instr[20:16])
-        input [25 : 21]                 i_instr_rs_E,               // Instruction RS from EX (instr[25:21])
-        input [15 : 11]                 i_instr_rd_M,               // Instruction RD from MEM (instr[15:11])
-        input [15 : 11]                 i_instr_rd_W,               // Instruction RD from WB (instr[15:11])
+        input [4 : 0]                   i_instr_rs_D,               // Instruction RS from ID (instr[25:21])
+        input [4 : 0]                   i_instr_rt_D,               // Instruction RT from ID (instr[20:16])
+        input [4 : 0]                   i_instr_rt_E,               // Instruction RT from EX (instr[20:16])
+        input [4 : 0]                   i_instr_rs_E,               // Instruction RS from EX (instr[25:21])
+        input [4 : 0]                   i_instr_rd_M,               // Instruction RD from MEM (instr[15:11])
+        input [4 : 0]                   i_instr_rd_W,               // Instruction RD from WB (instr[15:11])
         input                           i_reg_write_M,              // RegWrite Control Line from MEM
         input                           i_reg_write_W,              // RegWrite Control Line from WB
         // Outputs

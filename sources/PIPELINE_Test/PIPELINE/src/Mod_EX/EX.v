@@ -22,10 +22,10 @@ module EX
         input [ALU_OP-1 : 0]            i_alu_op_MC,                // ALUOp Control Line
         input [FORW_ALU-1 : 0]          i_forward_a_FU,             // Forwarding A Control Line
         input [FORW_ALU-1 : 0]          i_forward_b_FU,             // Forwarding B Control Line
-        input [15 : 0]                  i_instr_imm_D,              // Instruction Immediate //TODO Dar formato correcto a tamaños de wires
-        input [25 : 21]                 i_instr_rs_D,               // Instruction RS
-        input [20 : 16]                 i_instr_rt_D,               // Instruction RT
-        input [15 : 11]                 i_instr_rd_D,               // Instruction RD
+        input [15 : 0]                  i_instr_imm_D,              // Instruction Immediate (instr[15:0])
+        input [4 : 0]                   i_instr_rs_D,               // Instruction RS (instr[25:21]) 
+        input [4 : 0]                   i_instr_rt_D,               // Instruction RT (instr[20:16])
+        input [4 : 0]                   i_instr_rd_D,               // Instruction RD (instr[15:11])
 
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_E,             // ALU Result

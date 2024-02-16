@@ -26,9 +26,9 @@ module ID_EX_reg
         input wire [INST_SZ-1 : 0]      i_read_data_1,              // Read Data 1
         input wire [INST_SZ-1 : 0]      i_read_data_2,              // Read Data 2
         input wire [INST_SZ-1 : 0]      i_instr_imm,                // Instruction Immediate (instr[15:0] extended with sign)
-        input wire [20 : 16]            i_instr_rt,                 // Instruction rt (instr[20:16])
-        input wire [15 : 11]            i_instr_rd,                 // Instruction rd (instr[15:11])
-        input wire [25 : 21]            i_instr_rs,                 // Instruction rs (instr[25:21])
+        input wire [4 : 0]              i_instr_rt,                 // Instruction rt (instr[20:16])
+        input wire [4 : 0]              i_instr_rd,                 // Instruction rd (instr[15:11])
+        input wire [4 : 0]              i_instr_rs,                 // Instruction rs (instr[25:21])
         // Outputs  
         output wire                     o_alu_src,                  // ALUSrc Control Line
         output wire [2 : 0]             o_alu_op,                   // ALUOp Control Line
@@ -44,9 +44,9 @@ module ID_EX_reg
         output wire [INST_SZ-1 : 0]     o_read_data_1,              // Read Data 1
         output wire [INST_SZ-1 : 0]     o_read_data_2,              // Read Data 2
         output wire [INST_SZ-1 : 0]     o_instr_imm,                // Instruction Immediate (instr[15:0] extended with sign)
-        output wire [20 : 16]           o_instr_rt,                 // Instruction rt (instr[20:16])
-        output wire [15 : 11]           o_instr_rd,                 // Instruction rd (instr[15:11])
-        output wire [25 : 21]           o_instr_rs,                 // Instruction rs (instr[25:21])
+        output wire [4 : 0]             o_instr_rt,                 // Instruction rt (instr[20:16])
+        output wire [4 : 0]             o_instr_rd,                 // Instruction rd (instr[15:11])
+        output wire [4 : 0]             o_instr_rs,                 // Instruction rs (instr[25:21])
     );
 
     //! Signal Definition
@@ -64,9 +64,9 @@ module ID_EX_reg
     reg [INST_SZ-1 : 0]     read_data_1;              
     reg [INST_SZ-1 : 0]     read_data_2;              
     reg [INST_SZ-1 : 0]     instr_imm;                
-    reg [20 : 16]           instr_rt;                 
-    reg [15 : 11]           instr_rd;                 
-    reg [25 : 21]           instr_rs;                 
+    reg [4 : 0]             instr_rt;                 
+    reg [4 : 0]             instr_rd;                 
+    reg [4 : 0]             instr_rs;                 
 
     // Body
     always @(posedge i_clk) 
