@@ -24,12 +24,9 @@ module MEM
         output [4 : 0]                  o_instr_rd_M                // Instruction RD  (instr[15:11])
     );
 
-    // TODO Instanciar: Data_Memory
-    //! Signal Declaration
-
     //! Instantiation
     data_mem #(.B(INST_SZ), .W()) data_mem
-        (.i_clk(i_clk), // TODO Reset
+        (.i_clk(i_clk), // TODO Reset?
         .i_mem_read(i_mem_read_M), .i_mem_write(i_mem_write_M),
         .i_addr(i_alu_result_E), .i_data(i_operand_b_E),
         .o_data(o_read_data_M));

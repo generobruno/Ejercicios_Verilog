@@ -57,7 +57,7 @@ module IF
 
     instruction_mem #(.B(INST_SZ), .W())
         (.i_clk(i_clk), i_reset(i_reset),
-        .i_write(i_write), .i_addr(instr_addr), .i_data(i_instruction_F),
+        .i_write(i_write), .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
         .o_data(o_instruction_F))
 
 endmodule

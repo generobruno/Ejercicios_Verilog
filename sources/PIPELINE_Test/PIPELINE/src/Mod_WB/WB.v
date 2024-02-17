@@ -18,6 +18,15 @@ module WB
         output [INST_SZ-1 : 0]          o_write_data_W,             // Write Data
     );
 
-    // TODO Instanciar: MPX (x2)
+    //! Instantiations
+    mpx_2to1 #(.N(INST_SZ)) mem_to_reg_mpx
+        (.input_a(i_read_data_M), .input_b(i_alu_result_M),
+        .i_select(i_mem_to_reg_W),
+        .o_output(mem_to_reg));
+        
+    mpx_2to1 #(.N(INST_SZ)) bds_sel_mpx
+        (.input_a(mem_to_reg), .input_b(i_branch_delay_slot_M),
+        .i_select(i_bds_sel_W),
+        .o_output(o_write_data_W));
 
 endmodule

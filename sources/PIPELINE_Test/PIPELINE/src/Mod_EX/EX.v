@@ -44,7 +44,7 @@ module EX
     mpx_2to1 #(.N(INST_SZ)) reg_dst_mpx
         (.input_a(i_instr_rt_D), .input_b(i_instr_rd_D),
         .i_select(i_reg_dst_MC),
-        .o_output(o_reg_dst_mpx)); // TODO Revisar si hace falta wire explicito
+        .o_output(o_reg_dst_mpx)); 
 
     mpx_2to1 #(.N(INST_SZ)) jal_sel_mpx
         (.input_a(o_reg_dst_mpx), .input_b(5'h1F),
