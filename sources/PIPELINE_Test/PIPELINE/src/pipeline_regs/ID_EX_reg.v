@@ -23,6 +23,7 @@ module ID_EX_reg
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
+        input wire [INST_SZ-1 : 0]      i_bds,                      // Branch Delay Slot
         input wire [INST_SZ-1 : 0]      i_read_data_1,              // Read Data 1
         input wire [INST_SZ-1 : 0]      i_read_data_2,              // Read Data 2
         input wire [INST_SZ-1 : 0]      i_instr_imm,                // Instruction Immediate (instr[15:0] extended with sign)
@@ -41,6 +42,7 @@ module ID_EX_reg
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
+        output wire [INST_SZ-1 : 0]     o_bds,                      // Branch Delay Slot
         output wire [INST_SZ-1 : 0]     o_read_data_1,              // Read Data 1
         output wire [INST_SZ-1 : 0]     o_read_data_2,              // Read Data 2
         output wire [INST_SZ-1 : 0]     o_instr_imm,                // Instruction Immediate (instr[15:0] extended with sign)
@@ -60,7 +62,8 @@ module ID_EX_reg
     reg                     mem_write;                
     reg                     reg_write;                
     reg                     mem_to_reg;               
-    reg                     bds_sel;               
+    reg                     bds_sel;
+    reg [INST_SZ-1 : 0]     bds;               
     reg [INST_SZ-1 : 0]     read_data_1;              
     reg [INST_SZ-1 : 0]     read_data_2;              
     reg [INST_SZ-1 : 0]     instr_imm;                
@@ -84,6 +87,7 @@ module ID_EX_reg
             reg_write      <=       0;
             mem_to_reg     <=       0;
             bds_sel        <=       0;
+            bds            <=       0;
             read_data_1    <=       0;
             read_data_2    <=       0;
             instr_imm      <=       0;
@@ -104,6 +108,7 @@ module ID_EX_reg
             reg_write      <=       i_reg_write;
             mem_to_reg     <=       i_mem_to_reg;
             bds_sel        <=       i_bds_sel;
+            bds            <=       i_bds;
             read_data_1    <=       i_read_data_1;
             read_data_2    <=       i_read_data_2;
             instr_imm      <=       i_instr_imm;
@@ -127,6 +132,7 @@ module ID_EX_reg
     assign o_reg_write      =       reg_write;
     assign o_mem_to_reg     =       mem_to_reg;
     assign o_bds_sel        =       bds_sel;
+    assign o_bds            =       bds;
     assign o_read_data_1    =       read_data_1;
     assign o_read_data_2    =       read_data_2;
     assign o_instr_imm      =       instr_imm;

@@ -16,6 +16,7 @@ module EX
         input [INST_SZ-1 : 0]           i_read_data_2_E,            // Read Data 2 (from reg mem)
         input [INST_SZ-1 : 0]           i_alu_result_M,             // Previous ALU Result (for Forwarding)
         input [INST_SZ-1 : 0]           i_read_data_W,              // Read Data (for Forwarding, from data mem)
+        input [INST_SZ-1 : 0]           i_branch_delay_slot_D,      // Branch Delay Slot
         input                           i_alu_src_MC,               // ALUSrc Control Line
         input                           i_reg_dst_MC,               // RegDst Control Line
         input                           i_jal_sel_MC,               // JalSel Control Line
@@ -31,6 +32,7 @@ module EX
         output [INST_SZ-1 : 0]          o_alu_result_E,             // ALU Result
         output [INST_SZ-1 : 0]          o_operand_b_E,              // Operand B (for Write Data)
         output [INST_SZ-1 : 0]          o_instr_rd_E,               // Instruction RD
+        output [INST_SZ-1 : 0]          o_branch_delay_slot_E,      // Branch Delay Slot
     );
 
     //! Signal Declaration
@@ -75,6 +77,8 @@ module EX
         (.i_alu_A(alu_a), .i_alu_B(alu_b),
         .i_alu_Op(alu_sel),
         .o_alu_Result(o_alu_result_E));
-
+    
+    //! Assignments
+    assign o_branch_delay_slot_E    =   i_branch_delay_slot_D;    
 
 endmodule

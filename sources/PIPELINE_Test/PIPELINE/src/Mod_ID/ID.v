@@ -23,11 +23,13 @@ module ID
         input                           i_reg_write_W,              // RegWrite Control Line
         input [REG_SZ-1 : 0]            i_write_register_D,         // Write Register
         input [INST_SZ-1 : 0]           i_write_data_D,             // Write Data
+        input [INST_SZ-1 : 0]           i_branch_delay_slot_F,      // Branch Delay Slot
         // Outputs
         output [INST_SZ-1 : 0]          o_jump_addr_D,              // Jump Address
         output [INST_SZ-1 : 0]          o_branch_addr_D,            // Branch Address
         output [INST_SZ-1 : 0]          o_read_data_1_D,            // Read Data 1 (from reg mem)
         output [INST_SZ-1 : 0]          o_read_data_2_D,            // Read Data 2 (from reg mem)
+        output [INST_SZ-1 : 0]          o_branch_delay_slot_D,      // Branch Delay Slot
         output                          o_pc_src_D,                 // PCSrc Control Line
         output [5 : 0]                  o_instr_op_D,               // Instruction Op Code (instr[31:26])
         output [5 : 0]                  o_instr_funct_D,            // Instruction Function (instr[5:0])
@@ -89,5 +91,8 @@ module ID
     assign shifted_imm = extended_imm << 2;
     // Adding shifted immediate to i_npc_D to get o_branch_addr_D
     assign o_branch_addr_D = shifted_imm + i_npc_D;
+
+    assign o_branch_delay_slot_D    =   i_branch_delay_slot_F;    
+
 
 endmodule

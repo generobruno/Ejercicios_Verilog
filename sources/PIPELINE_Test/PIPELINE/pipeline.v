@@ -54,7 +54,7 @@ module pipeline
         // Inputs
         .i_instruction(instruction_F), .i_npc(npc_F), .i_bds(branch_delay_slot_F),
         // Outputs
-        .o_instruction(instruction_D), .o_npc(npc_D), .o_bds(bds)
+        .o_instruction(instruction_D), .o_npc(npc_D), .o_bds(bds_D)
         );
 
     /**
@@ -70,10 +70,12 @@ module pipeline
         .i_forward_eq_a_FU(forward_eq_a_FU), .i_forward_eq_b_FU(forward_eq_b_FU), .i_alu_result_M(),
         .i_branch_MC(branch_MC), .i_equal_MC(equal_MC),
         .i_reg_write_M(), .i_write_register_D(), .i_write_data_D(),
+        .i_branch_delay_slot_F()
         // Outputs
         .o_jump_addr_D(), .o_branch_addr_D(), .o_read_data_1_D(), .o_read_data_2_D(),
         .o_pc_src_D(), .o_instr_op_D(), .o_instr_funct_D(), .o_instr_index_D(),
-        .o_instr_imm_D(), .o_instr_rs_D(), .o_instr_rt_D(), .o_instr_rd_D()
+        .o_instr_imm_D(), .o_instr_rs_D(), .o_instr_rt_D(), .o_instr_rd_D(),
+        .o_branch_delay_slot_D()
         );
 
     /**
@@ -86,16 +88,16 @@ module pipeline
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), .i_jal_sel(jal_sel_MC), 
         .i_jump(jump_MC), .i_jump_sel(jump_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
-        .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC),
+        .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC), .i_bds(),
         // Inputs
-        .i_read_data_1(), .i_read_data_2(),
+        .i_read_data_1(), .i_read_data_2()
         .i_instr_imm(), .i_instr_rt(), .i_instr_rd(), .i_instr_rs(),
         // Output Control Lines //TODO Agregar SXL/SXLV Control Line
         .o_alu_src(), .o_alu_op(), .o_reg_dst(), .o_jal_sel(), 
         .o_jump(), .o_jump_sel(), .o_mem_read(), .o_mem_write(), 
         .o_reg_write(), .o_mem_to_reg(), .o_bds_sel(),
         // Outputs
-        .o_read_data_1(), .o_read_data_2(),
+        .o_read_data_1(), .o_read_data_2(), .o_bds(),
         .o_instr_imm(), .o_instr_rt(), .o_instr_rd(), .o_instr_rs(),
         );
 
@@ -113,10 +115,12 @@ module pipeline
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src_MC(alu_src_MC), .i_reg_dst_MC(reg_dst_MC), .i_jal_sel_MC(jal_sel_MC),
         .i_alu_op_MC(alu_op_MC), .i_forward_a_FU(forward_a_FU), .i_forward_b_FU(forward_b_FU),
+        .i_branch_delay_slot_D(),
         // Outputs
         .o_jump_addr_D(), .o_read_data_1_D(), .o_read_data_2_D(),
         .o_pc_src_D(), .o_instr_op_D(), .o_instr_funct_D(), .o_instr_index_D(),
-        .o_instr_imm_D(), .o_instr_rs_D(), .o_instr_rt_D(), .o_instr_rd_D()
+        .o_instr_imm_D(), .o_instr_rs_D(), .o_instr_rt_D(), .o_instr_rd_D(),
+        .o_branch_delay_slot_E()
         );
 
     /**
@@ -128,13 +132,13 @@ module pipeline
         .i_clk(i_clk), .i_reset(i_reset), .i_enable(),
         // Input Control Lines 
         .i_jump(), .i_jump_sel(), .i_mem_read(), .i_mem_write(), 
-        .i_reg_write(), .i_mem_to_reg(), .i_bds_sel(),
+        .i_reg_write(), .i_mem_to_reg(), .i_bds_sel(), .i_bds(),
         // Inputs
         .i_alu_result(), .i_write_data(),
         .i_write_register(), .i_bds(),
         // Output Control Lines 
         .o_jump(), .o_jump_sel(), .o_mem_read(), .o_mem_write(), 
-        .o_reg_write(), .o_mem_to_reg(), .o_bds_sel(),
+        .o_reg_write(), .o_mem_to_reg(), .o_bds_sel(), .o_bds(),
         // Outputs
         .o_alu_result(), .o_write_data(),
         .o_write_register(), .o_bds(),
@@ -145,12 +149,16 @@ module pipeline
     **/
     MEM #(.INST_SZ(INST_SZ)) MemoryAccess
         (
+        // Sync Signals
+        .i_clk(i_clk), .i_reset(i_reset),
         // Inputs 
         .i_alu_result_E(), .i_operand_b_E(),
+        .i_branch_delay_slot_E(), .i_instr_rd_E(),
         // Input Control Lines 
         .i_mem_read_M(), .i_mem_write_M(),
         // Outputs
-        .o_alu_result_M(), .o_read_data_M(), .o_instr_rd_M()
+        .o_alu_result_M(), .o_read_data_M(), 
+        .o_instr_rd_M(), .o_branch_delay_slot_M()
         );
 
     /**
@@ -161,7 +169,7 @@ module pipeline
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset), .i_enable(),
         // Input Control Lines 
-        .i_reg_write(), .i_mem_to_reg(), .i_bds_sel(),
+        .i_reg_write(), .i_mem_to_reg(), .i_bds_sel(), .i_bds(),
         // Inputs
         .i_read_data(), .i_alu_result(),
         .i_write_register(), .i_bds(),
@@ -226,9 +234,9 @@ module pipeline
             .i_instr_rd_E(),
             .i_instr_rd_M(),
             // Output Control Lines
-            .o_stall_pc_HD(),              
-            .o_stall_if_id_HD(),            
-            .o_flush_id_ex_HD()             
+            .o_stall_pc_HD(stall_pc_HD),              
+            .o_stall_if_id_HD(stall_if_id_HD),            
+            .o_flush_id_ex_HD(flush_id_ex_HD)             
         );
 
     //  Forwarding Unit

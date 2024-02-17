@@ -15,28 +15,28 @@ module MEM_WB_reg
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
-        input wire                      i_read_data,                // Read Data
-        input wire                      i_alu_result,               // ALU Result
-        input wire                      i_write_register,           // Write Register
-        input wire                      i_bds,                      // BDS
+        input wire [INST_SZ-1 : 0]      i_read_data,                // Read Data
+        input wire [INST_SZ-1 : 0]      i_alu_result,               // ALU Result
+        input wire [4 : 0]              i_write_register,           // Write Register
+        input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
-        output wire                     o_read_data,                // Read Data
-        output wire                     o_alu_result,               // ALU Result
-        output wire                     o_write_register,           // Write Register
-        output wire                     o_bds,                      // BDS
+        output wire [INST_SZ-1 : 0]     o_read_data,                // Read Data
+        output wire [INST_SZ-1 : 0]     o_alu_result,               // ALU Result
+        output wire [4 : 0]             o_write_register,           // Write Register
+        output wire [INST_SZ-1 : 0]     o_bds,                      // BDS
     );
 
     //! Signal Definition
     reg reg_write;
     reg mem_to_reg;
     reg bds_sel;
-    reg read_data;
-    reg alu_result;
-    reg write_register;
-    reg bds;
+    reg [INST_SZ-1 : 0] read_data;
+    reg [INST_SZ-1 : 0] alu_result;
+    reg [4 : 0]         write_register;
+    reg [INST_SZ-1 : 0] bds;
 
     // Body
     always @(posedge i_clk) 

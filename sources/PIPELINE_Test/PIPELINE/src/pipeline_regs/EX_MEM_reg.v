@@ -19,10 +19,10 @@ module EX_MEM_reg
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
-        input wire                      i_alu_result,               // ALU Result
-        input wire                      i_write_data,               // Write Data
-        input wire                      i_write_register,           // Write Register
-        input wire                      i_bds,                      // BDS
+        input wire [INST_SZ-1 : 0]      i_alu_result,               // ALU Result
+        input wire [INST_SZ-1 : 0]      i_write_data,               // Write Data
+        input wire [INST_SZ-1 : 0]      i_write_register,           // Write Register
+        input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
         output wire                     o_jump,                     // Jump Control Line
         output wire                     o_jump_sel,                 // JumpSel Control Line
@@ -31,10 +31,10 @@ module EX_MEM_reg
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
-        output wire                     o_alu_result,               // ALU Result
-        output wire                     o_write_data,               // Write Data
-        output wire                     o_write_register,           // Write Register
-        output wire                     o_bds,                      // BDS
+        output wire [INST_SZ-1 : 0]     o_alu_result,               // ALU Result
+        output wire [INST_SZ-1 : 0]     o_write_data,               // Write Data
+        output wire [INST_SZ-1 : 0]     o_write_register,           // Write Register
+        output wire [INST_SZ-1 : 0]     o_bds,                      // BDS
     );
 
     //! Signal Definition
@@ -45,10 +45,10 @@ module EX_MEM_reg
     reg reg_write;                
     reg mem_to_reg;               
     reg bds_sel;                  
-    reg alu_result;               
-    reg write_data;               
-    reg write_register;
-    reg bds;
+    reg [INST_SZ-1 : 0] alu_result;               
+    reg [INST_SZ-1 : 0] write_data;               
+    reg [INST_SZ-1 : 0] write_register;
+    reg [INST_SZ-1 : 0] bds;
 
     // Body
     always @(posedge i_clk) 
