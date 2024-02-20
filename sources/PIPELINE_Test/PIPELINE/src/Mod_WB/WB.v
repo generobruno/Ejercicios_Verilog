@@ -5,7 +5,7 @@
 module WB
     #(
         // Parameters
-        parameter INST_SZ = 32,
+        parameter INST_SZ = 32
     )
     (
         // Inputs
@@ -15,7 +15,7 @@ module WB
         input                           i_mem_to_reg_W,             // MemToReg Control Line
         input                           i_bds_sel_W,                // BDSSel Control Line
         // Outputs
-        output [INST_SZ-1 : 0]          o_write_data_W,             // Write Data
+        output [INST_SZ-1 : 0]          o_write_data_W              // Write Data
     );
 
     //! Instantiations

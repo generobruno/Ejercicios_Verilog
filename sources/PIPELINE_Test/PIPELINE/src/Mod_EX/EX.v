@@ -31,14 +31,15 @@ module EX
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_E,             // ALU Result
         output [INST_SZ-1 : 0]          o_operand_b_E,              // Operand B (for Write Data)
-        output [INST_SZ-1 : 0]          o_instr_rd_E,               // Instruction RD
-        output [INST_SZ-1 : 0]          o_branch_delay_slot_E,      // Branch Delay Slot
+        output [INST_SZ-1 : 0]          o_instr_rd_E,               // Instruction RD (for Write Register)
+        output [INST_SZ-1 : 0]          o_branch_delay_slot_E       // Branch Delay Slot
     );
 
     //! Signal Declaration
     wire [INST_SZ-1 : 0]                alu_a;
     wire [INST_SZ-1 : 0]                alu_b;
     wire [ALU_SEL-1 : 0]                alu_sel;
+    wire [INST_SZ-1 : 0]                o_reg_dst_mpx;
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) reg_dst_mpx

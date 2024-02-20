@@ -2,18 +2,19 @@
 
 **/
 
-module ALUControl
+module AluControl
     #(
         // Parameters
         parameter ALU_OP    = 3,
-        parameter FUNCT     = 6
+        parameter FUNCT     = 6,
+        parameter INST_SZ   = 32
     )
     (
         // Inputs
         input [FUNCT-1 : 0]             i_instr_funct_E,            // Instruction Function
         input [ALU_OP-1 : 0]            i_alu_op_MC,                // ALUOp Control Line
         // Outputs
-        output [INST_SZ-1 : 0]          o_alu_sel_AC,               // ALUSel Control Line
+        output reg [INST_SZ-1 : 0]      o_alu_sel_AC                // ALUSel Control Line
     );
 
     // ALU Operation parameters
@@ -38,14 +39,13 @@ module ALUControl
     always @(*) 
     begin
         case(i_alu_op_MC)
-            R_TYPE:         o_alu_sel_AC = i_instr_funct_E;
-            LOAD_STORE:     o_alu_sel_AC = ADD;
-            I_TYPE_ADDI:    o_alu_sel_AC = ADD;
-            I_TYPE_ANDI:    o_alu_sel_AC = AND;
-            I_TYPE_ORI:     o_alu_sel_AC = OR;
-            I_TYPE_XORI:    o_alu_sel_AC = XOR;
-            I_TYPE_LUI:     o_alu_sel_AC = SRA; // TODO REVISAR
-            I_TYPE_SLTI:    o_alu_sel_AC = SLT;
+            R_TYPE:                         o_alu_sel_AC = i_instr_funct_E;
+            LOAD_STORE, I_TYPE_ADDI:        o_alu_sel_AC = ADD;
+            I_TYPE_ANDI:                    o_alu_sel_AC = AND;
+            I_TYPE_ORI:                     o_alu_sel_AC = OR;
+            I_TYPE_XORI:                    o_alu_sel_AC = XOR;
+            I_TYPE_LUI:                     o_alu_sel_AC = SRA; // TODO REVISAR
+            I_TYPE_SLTI:                    o_alu_sel_AC = SLT;
         endcase
     end
 

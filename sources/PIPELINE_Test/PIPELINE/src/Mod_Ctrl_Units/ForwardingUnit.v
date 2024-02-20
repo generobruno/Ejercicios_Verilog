@@ -22,7 +22,7 @@ module ForwardingUnit
         output [FORW_EQ-1 : 0]           o_forward_eq_a_FU,         // Forwarding Eq A Control Line
         output [FORW_EQ-1 : 0]           o_forward_eq_b_FU,         // Forwarding Eq B Control Line
         output [FORW_ALU-1 : 0]          o_forward_a_FU,            // Forwarding A Control Line
-        output [FORW_ALU-1 : 0]          o_forward_b_FU,            // Forwarding B Control Line
+        output [FORW_ALU-1 : 0]          o_forward_b_FU             // Forwarding B Control Line
     );
 
     //! Signal Declaration

@@ -24,6 +24,8 @@ module register_mem
 
     //! Signal Declaration
     reg [B-1 : 0]   regs [2**W-1 : 0];
+    reg [B-1 : 0]   aux_1;
+    reg [B-1 : 0]   aux_2;
 
     // Initial Registers Values
     initial 
@@ -41,8 +43,12 @@ module register_mem
     end
     always @(negedge i_clk) // Read Cycle
     begin
-        o_read_data_1 <= regs[i_read_reg_1];
-        o_read_data_2 <= regs[i_read_reg_2];
+        aux_1 <= regs[i_read_reg_1];
+        aux_2 <= regs[i_read_reg_2];
     end
+    
+    //! Assignments
+    assign o_read_data_1 = aux_1;
+    assign o_read_data_2 = aux_2;
 
 endmodule

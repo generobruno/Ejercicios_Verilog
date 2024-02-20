@@ -12,7 +12,7 @@ module mpx_3to1
         input wire [N-1 : 0]    input_a,        // Input 1
         input wire [N-1 : 0]    input_b,        // Input 2
         input wire [N-1 : 0]    input_c,        // Input 3
-        input wire              i_select,       // Control Line
+        input wire [1 : 0]      i_select,       // Control Line
         // Output
         output wire [N-1 : 0]   o_output        // Output Line 
     );

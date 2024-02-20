@@ -15,8 +15,8 @@ module ID
         input                           i_reset,                    // Reset
         input [INST_SZ-1 : 0]           i_instruction_D,            // Instruction Fetched
         input [INST_SZ-1 : 0]           i_npc_D,                    // NPC
-        input [FORW_EQ-1 : 0]           i_forward_eq_a_FU,          // Forwarding Eq A Control Line
-        input [FORW_EQ-1 : 0]           i_forward_eq_b_FU,          // Forwarding Eq B Control Line
+        input                           i_forward_eq_a_FU,          // Forwarding Eq A Control Line
+        input                           i_forward_eq_b_FU,          // Forwarding Eq B Control Line
         input [INST_SZ-1 : 0]           i_alu_result_M,             // Previous ALU Result (for Eq Forward)
         input                           i_branch_MC,                // Branch Control Line
         input                           i_equal_MC,                 // Equal Control Line
@@ -45,6 +45,8 @@ module ID
     wire comparison;
     wire [INST_SZ-1:0] extended_imm;
     wire [INST_SZ-1:0] shifted_imm;
+    wire [INST_SZ-1:0] read_data_1;
+    wire [INST_SZ-1:0] read_data_2;
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) forw_eq_a_mpx

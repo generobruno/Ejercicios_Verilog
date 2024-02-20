@@ -18,7 +18,7 @@ module IF_ID_reg
         // Outputs
         output wire [INST_SZ-1 : 0]     o_instruction,              // Instruction Fetched
         output wire [INST_SZ-1 : 0]     o_npc,                      // NPC
-        output wire [INST_SZ-1 : 0]     o_bds,                      // Branch Delay Slot
+        output wire [INST_SZ-1 : 0]     o_bds                       // Branch Delay Slot
     );
 
     //! Signal Definition

@@ -5,7 +5,7 @@
 module MEM
     #(
         // Parameters
-        parameter INST_SZ = 32,
+        parameter INST_SZ = 32
     )
     (
         // Inputs

@@ -14,7 +14,7 @@ module pc
         input wire                      i_enable,                   // Enable
         input [PC_SZ-1 : 0]             i_pc,                       // New PC
         // Outputs
-        output [PC_SZ-1 : 0]            o_pc,                       // Output PC
+        output [PC_SZ-1 : 0]            o_pc                        // Output PC
     );
 
     //! Signal Declaration

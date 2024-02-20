@@ -5,6 +5,7 @@
 module HazardDetectionUnit
     #(
         // Parameters
+        parameter       INPUT_SZ = 5
     )
     (
         // Inputs
@@ -12,11 +13,11 @@ module HazardDetectionUnit
         input                           i_mem_read_E,               // MemRead from EX
         input                           i_reg_write_E,              // RegWrite from EX
         input                           i_branch_D,                 // Branch from ID
-        input [4 : 0]                   i_instr_rs_D,               // Instruction RS from ID
-        input [4 : 0]                   i_instr_rt_D,               // Instruction RT from ID
-        input [4 : 0]                   i_instr_rt_E,               // Instruction RT from EX
-        input [4 : 0]                   i_instr_rd_E,               // Instruction RD from EX
-        input [4 : 0]                   i_instr_rd_M,               // Instruction RD from MEM
+        input [INPUT_SZ-1 : 0]          i_instr_rs_D,               // Instruction RS from ID
+        input [INPUT_SZ-1 : 0]          i_instr_rt_D,               // Instruction RT from ID
+        input [INPUT_SZ-1 : 0]          i_instr_rt_E,               // Instruction RT from EX
+        input [INPUT_SZ-1 : 0]          i_instr_rd_E,               // Instruction RD from EX
+        input [INPUT_SZ-1 : 0]          i_instr_rd_M,               // Instruction RD from MEM
         // Outputs
         output                          o_stall_pc_HD,              // Stall PC Control Line
         output                          o_stall_if_id_HD,           // Stall_IF/ID Control Line

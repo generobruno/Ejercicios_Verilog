@@ -12,7 +12,7 @@ module comparator
         input wire [INST_SZ-1 : 0]      i_read_data_1,              // Read Data 1
         input wire [INST_SZ-1 : 0]      i_read_data_2,              // Read Data 2
         // Outputs
-        output wire                     o_comparison,               // Output PC
+        output wire                     o_comparison                // Output PC
     );
 
     //! Signal Declaration
@@ -32,6 +32,6 @@ module comparator
     end
 
     //! Assignments
-    assign o_comparison = result
+    assign o_comparison = result;
 
 endmodule

@@ -5,7 +5,7 @@
 module pc_adder
     #(
         // Parameters
-        parameter   PC_SZ   =   32,     // Number of bits
+        parameter   PC_SZ   =   32      // Number of bits
     )
     (
         // Inputs

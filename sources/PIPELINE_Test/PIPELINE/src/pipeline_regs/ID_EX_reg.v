@@ -48,7 +48,7 @@ module ID_EX_reg
         output wire [INST_SZ-1 : 0]     o_instr_imm,                // Instruction Immediate (instr[15:0] extended with sign)
         output wire [4 : 0]             o_instr_rt,                 // Instruction rt (instr[20:16])
         output wire [4 : 0]             o_instr_rd,                 // Instruction rd (instr[15:11])
-        output wire [4 : 0]             o_instr_rs,                 // Instruction rs (instr[25:21])
+        output wire [4 : 0]             o_instr_rs                  // Instruction rs (instr[25:21])
     );
 
     //! Signal Definition

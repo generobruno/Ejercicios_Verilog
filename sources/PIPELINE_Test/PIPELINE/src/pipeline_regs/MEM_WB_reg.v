@@ -26,7 +26,7 @@ module MEM_WB_reg
         output wire [INST_SZ-1 : 0]     o_read_data,                // Read Data
         output wire [INST_SZ-1 : 0]     o_alu_result,               // ALU Result
         output wire [4 : 0]             o_write_register,           // Write Register
-        output wire [INST_SZ-1 : 0]     o_bds,                      // BDS
+        output wire [INST_SZ-1 : 0]     o_bds                       // BDS
     );
 
     //! Signal Definition
