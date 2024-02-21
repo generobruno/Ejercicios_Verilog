@@ -5,8 +5,8 @@
 module ForwardingUnit
     #(
         // Parameters
-        parameter FORW_EQ = 2,
-        parameter FORW_ALU = 3
+        parameter FORW_EQ = 1,
+        parameter FORW_ALU = 2
     )
     (
         // Inputs

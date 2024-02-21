@@ -14,7 +14,7 @@ module AluControl
         input [FUNCT-1 : 0]             i_instr_funct_E,            // Instruction Function
         input [ALU_OP-1 : 0]            i_alu_op_MC,                // ALUOp Control Line
         // Outputs
-        output reg [INST_SZ-1 : 0]      o_alu_sel_AC                // ALUSel Control Line
+        output reg [FUNCT-1 : 0]        o_alu_sel_AC                // ALUSel Control Line
     );
 
     // ALU Operation parameters

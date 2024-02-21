@@ -7,7 +7,7 @@ module ID
         // Parameters
         parameter INST_SZ = 32,
         parameter REG_SZ = 5,
-        parameter FORW_EQ = 2
+        parameter FORW_EQ = 1
     )
     (
         // Inputs

@@ -346,6 +346,6 @@ module MainControlUnit
     assign o_jump_sel_MC    = jump_sel;
     assign o_reg_write_MC   = reg_write;
     assign o_bds_sel_MC     = bds_sel;
-    assign o_mem_to_reg_M   = mem_to_reg; 
+    assign o_mem_to_reg_MC  = mem_to_reg; 
 
 endmodule

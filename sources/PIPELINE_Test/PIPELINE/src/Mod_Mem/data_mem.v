@@ -26,13 +26,30 @@ module data_mem
 
     // TODO Manejar distintos tamaños de mem
 
-    // Body
+    // Body //TODO REVISAR
     always @(posedge i_clk) 
     begin
         if(i_mem_write)
             begin
                 // Write Operation
-                array_reg[i_addr] <= i_data;
+                case(i_addr[1:0])
+                    2'b00:
+                    begin
+                        array_reg[i_addr] <= i_data;
+                    end
+                    2'b01:
+                    begin
+
+                    end
+                    2'b10:
+                    begin
+
+                    end
+                    2'b11:
+                    begin
+
+                    end
+                endcase
             end
         else if(i_mem_read)
             begin

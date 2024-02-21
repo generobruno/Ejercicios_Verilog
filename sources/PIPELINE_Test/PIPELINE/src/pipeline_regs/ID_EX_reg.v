@@ -66,7 +66,7 @@ module ID_EX_reg
     reg [INST_SZ-1 : 0]     bds;               
     reg [INST_SZ-1 : 0]     read_data_1;              
     reg [INST_SZ-1 : 0]     read_data_2;              
-    reg [INST_SZ-1 : 0]     instr_imm;                
+    reg [INST_SZ-1 : 0]     instr_imm; //TODO REVISAR               
     reg [4 : 0]             instr_rt;                 
     reg [4 : 0]             instr_rd;                 
     reg [4 : 0]             instr_rs;                 

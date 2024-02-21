@@ -20,8 +20,8 @@ module MEM
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_M,             // ALU Result
         output [INST_SZ-1 : 0]          o_read_data_M,              // Read Data (from data mem)
-        output [INST_SZ-1 : 0]          o_branch_delay_slot_M,      // Branch Delay Slot
-        output [4 : 0]                  o_instr_rd_M                // Instruction RD  (instr[15:11])
+        output [INST_SZ-1 : 0]          o_branch_delay_slot_M      // Branch Delay Slot
+        //output [4 : 0]                  o_instr_rd_M                // Instruction RD  (instr[15:11])
     );
 
     //! Instantiation

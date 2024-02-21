@@ -10,8 +10,8 @@ module pipeline
         parameter OPCODE_SZ     =   6,
         parameter FUNCT_SZ      =   6,
         parameter REG_SZ        =   5,
-        parameter FORW_EQ       =   2,
-        parameter FORW_ALU      =   3,
+        parameter FORW_EQ       =   1,
+        parameter FORW_ALU      =   2,
         parameter ALU_OP        =   3,
         parameter FUNCT         =   6
     )
@@ -208,7 +208,6 @@ module pipeline
     **/
     wire [INST_SZ-1 : 0]          read_data_M;              
     wire [INST_SZ-1 : 0]          bds_M;
-    wire [4 : 0]                  instr_rd_M;
 
     MEM #(.INST_SZ(INST_SZ)) MemoryAccess
         (
@@ -220,15 +219,15 @@ module pipeline
         // Input Control Lines 
         .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM),
         // Outputs
-        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), 
-        .o_instr_rd_M(instr_rd_M), .o_branch_delay_slot_M(bds_M)
+        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_branch_delay_slot_M(bds_M)
         );
 
     /**
                                 MEM/WB REGISTER
     **/               
     wire                     mem_to_reg_MEM_WB;               
-    wire                     bds_sel_MEM_WB;                
+    wire                     bds_sel_MEM_WB; 
+    wire [4 : 0]             instr_rd_M;               
     wire [INST_SZ-1 : 0]     read_data_MEM_WB;    
     wire [INST_SZ-1 : 0]     alu_result_MEM_WB;
     wire [INST_SZ-1 : 0]     bds_MEM_WB;     
