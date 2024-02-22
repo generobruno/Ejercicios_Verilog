@@ -13,7 +13,7 @@ module instruction_mem
     (
         // Inputs
         input wire                      i_clk,                      // Clock
-        input wire                      i_reset,                    // Reset
+        //input wire                      i_reset,                    // Reset
         input wire                      i_write,                    // Write Control Line
         input [PC-1 : 0]                i_addr,                     // Address (Program Counter)
         input [B-1 : 0]                 i_data,                     // Instructions to write

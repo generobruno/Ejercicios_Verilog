@@ -12,7 +12,7 @@ module ID
     (
         // Inputs
         input                           i_clk,                      // Clock
-        input                           i_reset,                    // Reset
+        //input                           i_reset,                    // Reset
         input [INST_SZ-1 : 0]           i_instruction_D,            // Instruction Fetched
         input [INST_SZ-1 : 0]           i_npc_D,                    // NPC
         input                           i_forward_eq_a_FU,          // Forwarding Eq A Control Line
@@ -31,9 +31,6 @@ module ID
         output [INST_SZ-1 : 0]          o_read_data_2_D,            // Read Data 2 (from reg mem)
         output [INST_SZ-1 : 0]          o_branch_delay_slot_D,      // Branch Delay Slot
         output                          o_pc_src_D,                 // PCSrc Control Line
-        output [5 : 0]                  o_instr_op_D,               // Instruction Op Code (instr[31:26])
-        output [5 : 0]                  o_instr_funct_D,            // Instruction Function (instr[5:0])
-        output [25 : 0]                 o_instr_index_D,            // Instruction Index (instr[25:0])
         output [15 : 0]                 o_instr_imm_D,              // Instruction Immediate (instr[15:0])
         output [4 : 0]                  o_instr_rs_D,               // Instruction RS (instr[25:21]) 
         output [4 : 0]                  o_instr_rt_D,               // Instruction RT (instr[20:16])
@@ -72,16 +69,13 @@ module ID
         .o_read_data_1(read_data_1), .o_read_data_2(read_data_2));
 
     //! Assignments
-    assign o_instr_op_D         =      i_instruction_D[31 : 26]; 
-    assign o_instr_funct_D      =      i_instruction_D[5 : 0]; 
-    assign o_instr_index_D      =      i_instruction_D[25 : 0]; 
     assign o_instr_imm_D        =      i_instruction_D[15 : 0]; 
     assign o_instr_rs_D         =      i_instruction_D[25 : 21]; 
     assign o_instr_rt_D         =      i_instruction_D[20 : 16]; 
     assign o_instr_rd_D         =      i_instruction_D[15 : 11]; 
 
     // Shift instruction index to get jump address
-    assign o_jump_addr_D = {i_npc_D[31:28], o_instr_index_D << 2};
+    assign o_jump_addr_D = {i_npc_D[31:28], {i_instruction_D[25 : 0] << 2} ,{2{1'b0}}}; //TODO Revisar bien
 
     // Decide if branch or not
     assign xnor_result = ~(comparison ^ i_equal_MC);

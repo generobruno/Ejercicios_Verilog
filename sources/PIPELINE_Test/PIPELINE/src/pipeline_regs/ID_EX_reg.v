@@ -16,8 +16,6 @@ module ID_EX_reg
         input wire [2 : 0]              i_alu_op,                   // ALUOp Control Line
         input wire                      i_reg_dst,                  // RegDst Control Line
         input wire                      i_jal_sel,                  // JALSel Control Line //TODO Agregar SXL/SXLV Control line
-        input wire                      i_jump,                     // Jump Control Line
-        input wire                      i_jump_sel,                 // JumpSel Control Line
         input wire                      i_mem_read,                 // MemRead Control Line
         input wire                      i_mem_write,                // MemWrite Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
@@ -35,8 +33,6 @@ module ID_EX_reg
         output wire [2 : 0]             o_alu_op,                   // ALUOp Control Line
         output wire                     o_reg_dst,                  // RegDst Control Line
         output wire                     o_jal_sel,                  // JALSel Control Line //TODO Agregar SXL/SXLV Control line
-        output wire                     o_jump,                     // Jump Control Line
-        output wire                     o_jump_sel,                 // JumpSel Control Line
         output wire                     o_mem_read,                 // MemRead Control Line
         output wire                     o_mem_write,                // MemWrite Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
@@ -55,9 +51,7 @@ module ID_EX_reg
     reg                     alu_src;                  
     reg [2 : 0]             alu_op;                   
     reg                     reg_dst;                  
-    reg                     jal_sel;                   //TODO Agregar SXL/SXLV Control line
-    reg                     jump;                     
-    reg                     jump_sel;                 
+    reg                     jal_sel;                   //TODO Agregar SXL/SXLV Control line               
     reg                     mem_read;                 
     reg                     mem_write;                
     reg                     reg_write;                
@@ -80,8 +74,6 @@ module ID_EX_reg
             alu_op         <=       0;
             reg_dst        <=       0;
             jal_sel        <=       0;        //TODO Agregar SXL/SXLV Control line          
-            jump           <=       0;
-            jump_sel       <=       0;
             mem_read       <=       0;
             mem_write      <=       0;
             reg_write      <=       0;
@@ -101,8 +93,6 @@ module ID_EX_reg
             alu_op         <=       i_alu_op;
             reg_dst        <=       i_reg_dst;
             jal_sel        <=       i_jal_sel;        //TODO Agregar SXL/SXLV Control line          
-            jump           <=       i_jump;
-            jump_sel       <=       i_jump_sel;
             mem_read       <=       i_mem_read;
             mem_write      <=       i_mem_write;
             reg_write      <=       i_reg_write;
@@ -125,8 +115,6 @@ module ID_EX_reg
     assign o_alu_op         =       alu_op;
     assign o_reg_dst        =       reg_dst;
     assign o_jal_sel        =       jal_sel;                  
-    assign o_jump           =       jump;
-    assign o_jump_sel       =       jump_sel;
     assign o_mem_read       =       mem_read;
     assign o_mem_write      =       mem_write;
     assign o_reg_write      =       reg_write;

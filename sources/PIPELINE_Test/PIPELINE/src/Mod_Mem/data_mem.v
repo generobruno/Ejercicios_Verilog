@@ -31,30 +31,13 @@ module data_mem
     begin
         if(i_mem_write)
             begin
-                // Write Operation
-                case(i_addr[1:0])
-                    2'b00:
-                    begin
-                        array_reg[i_addr] <= i_data;
-                    end
-                    2'b01:
-                    begin
-
-                    end
-                    2'b10:
-                    begin
-
-                    end
-                    2'b11:
-                    begin
-
-                    end
-                endcase
+                // Write Operation (Aligned)
+                array_reg[i_addr>>2] <= i_data;
             end
         else if(i_mem_read)
             begin
-                // Read Operation
-                read_reg <= array_reg[i_addr];
+                // Read Operation (Aligned)
+                read_reg <= array_reg[i_addr<<2];
             end
         else
             begin

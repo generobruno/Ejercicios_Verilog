@@ -99,11 +99,11 @@ module MainControlUnit
                                 alu_src     =   1'b0;
                                 alu_op      =   3'b010;
                                 branch      =   1'b0;
-                                //equal       =   1'b;
+                                equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
                                 jump        =   1'b0;
-                                //jump_sel    =   1'b;
+                                jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
@@ -115,11 +115,11 @@ module MainControlUnit
                                 alu_src     =   1'b1;
                                 alu_op      =   3'b010;
                                 branch      =   1'b0;
-                                //equal       =   1'b;
+                                equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
                                 jump        =   1'b0;
-                                //jump_sel    =   1'b;
+                                jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
@@ -132,52 +132,68 @@ module MainControlUnit
                                 alu_src     =   1'b1;
                                 alu_op      =   3'b010;
                                 branch      =   1'b0;
-                                //equal       =   1'b;
+                                equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
                                 jump        =   1'b0;
-                                //jump_sel    =   1'b;
+                                jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
                             end
                             JR:                 // Jump Register Instruction
                             begin
-                                //reg_dst     =   1'b;   
-                                //jal_sel     =   1'b;
-                                //alu_src     =   1'b;
-                                //alu_op      =   3'b;
-                                //branch      =   1'b;
-                                //equal       =   1'b;
-                                //mem_read    =   1'b;
-                                //mem_write   =   1'b;
-                                //jump        =   1'b;
+                                reg_dst     =   1'b0; // X
+                                jal_sel     =   1'b0; // X
+                                alu_src     =   1'b0; // X
+                                alu_op      =   3'b000; // X
+                                branch      =   1'b0; // X
+                                equal       =   1'b0; // X
+                                mem_read    =   1'b0; // X
+                                mem_write   =   1'b0; // X
+                                jump        =   1'b0; // X
                                 jump_sel    =   1'b1;
-                                //reg_write   =   1'b;
+                                reg_write   =   1'b0; // X
                                 bds_sel     =   1'b0;
-                                //mem_to_reg  =   1'b;
+                                mem_to_reg  =   1'b0; // X
                             end
                             JALR:               // Jump and Link Register Instruction
                             begin
                                 reg_dst     =   1'b1;   
                                 jal_sel     =   1'b0;
-                                //alu_src     =   1'b;
-                                //alu_op      =   3'b;
-                                //branch      =   1'b;
-                                //equal       =   1'b;
-                                //mem_read    =   1'b;
-                                //mem_write   =   1'b;
-                                //jump        =   1'b;
+                                alu_src     =   1'b0;
+                                alu_op      =   3'b000;
+                                branch      =   1'b0;
+                                equal       =   1'b0;
+                                mem_read    =   1'b0;
+                                mem_write   =   1'b0;
+                                jump        =   1'b0;
                                 jump_sel    =   1'b1;
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b1;
+                                mem_to_reg  =   1'b0;
+                            end
+                            default:
+                            begin
+                                reg_dst     =   1'b0;
+                                jal_sel     =   1'b0;
+                                alu_src     =   1'b0;
+                                alu_op      =   3'b000;
+                                branch      =   1'b0;
+                                equal       =   1'b0;
+                                mem_read    =   1'b0;
+                                mem_write   =   1'b0;
+                                jump        =   1'b0;
+                                jump_sel    =   1'b0;
+                                reg_write   =   1'b0;
+                                bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
                             end
                         endcase
                     end
                     BEQ:                // Branch if Equal Instruction
                     begin
-                        //reg_dst     =   1'b;   
+                        reg_dst     =   1'b0; //X   
                         jal_sel     =   1'b0;
                         alu_src     =   1'b0;
                         alu_op      =   3'b110;
@@ -186,14 +202,14 @@ module MainControlUnit
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
                         jump        =   1'b0;
-                        //jump_sel    =   1'b;
+                        jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        //mem_to_reg  =   1'b;
+                        mem_to_reg  =   1'b0; //X
                     end
                     BNE:                // Branch if Not Equal Instruction
                     begin
-                        //reg_dst     =   1'b;   
+                        reg_dst     =   1'b0; //X   
                         jal_sel     =   1'b0;
                         alu_src     =   1'b0;
                         alu_op      =   3'b110;
@@ -202,42 +218,58 @@ module MainControlUnit
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
                         jump        =   1'b0;
-                        //jump_sel    =   1'b;
+                        jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        //mem_to_reg  =   1'b;
+                        mem_to_reg  =   1'b0; //X
                     end
                     J:                  // Jump Instruction
                     begin
-                        //reg_dst     =   1'b;   
-                        //jal_sel     =   1'b;
-                        //alu_src     =   1'b;
-                        //alu_op      =   3'b;
-                        //branch      =   1'b;
-                        //equal       =   1'b;
-                        //mem_read    =   1'b;
-                        //mem_write   =   1'b;
+                        reg_dst     =   1'b0; //X   
+                        jal_sel     =   1'b0; //X
+                        alu_src     =   1'b0; //X
+                        alu_op      =   3'b0; //X
+                        branch      =   1'b0; //X
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b0; //X
+                        mem_write   =   1'b0; //X
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
-                        //reg_write   =   1'b;
+                        reg_write   =   1'b0; //X
                         bds_sel     =   1'b0;
-                        //mem_to_reg  =   1'b;
+                        mem_to_reg  =   1'b0; //X
                     end
                     JAL:                // Jump and Link Instruction
                     begin
-                        //reg_dst     =   1'b;   
+                        reg_dst     =   1'b0; //X   
                         jal_sel     =   1'b1;
-                        //alu_src     =   1'b;
-                        //alu_op      =   3'b;
-                        //branch      =   1'b;
-                        //equal       =   1'b;
-                        //mem_read    =   1'b;
-                        //mem_write   =   1'b;
+                        alu_src     =   1'b0; //X
+                        alu_op      =   3'b0; //X
+                        branch      =   1'b0; //X
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b0; //X
+                        mem_write   =   1'b0; //X
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
-                        //reg_write   =   1'b;
+                        reg_write   =   1'b0; //X
                         bds_sel     =   1'b1;
-                        //mem_to_reg  =   1'b;
+                        mem_to_reg  =   1'b0; //X
+                    end
+                    default:
+                    begin
+                        reg_dst     =   1'b0;
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b0;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0;
+                        mem_read    =   1'b0;
+                        mem_write   =   1'b0;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0;
+                        reg_write   =   1'b0;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b0;
                     end
                 endcase
             end
@@ -248,30 +280,30 @@ module MainControlUnit
                 alu_src     =   1'b1;
                 alu_op      =   3'b000;
                 branch      =   1'b0;
-                //equal       =   1'b;
+                equal       =   1'b0; //X
                 mem_read    =   1'b1;
                 mem_write   =   1'b0;
                 jump        =   1'b0;
-                //jump_sel    =   1'b;
+                jump_sel    =   1'b0; //X
                 reg_write   =   1'b1;
                 bds_sel     =   1'b0;
                 mem_to_reg  =   1'b1;            
             end
             STORE:              // Store Instructions
             begin
-                //reg_dst     =   1'b;   
+                reg_dst     =   1'b0; //X   
                 jal_sel     =   1'b0;
                 alu_src     =   1'b1;
                 alu_op      =   3'b000;
                 branch      =   1'b0;
-                //equal       =   1'b;
+                equal       =   1'b0; //X
                 mem_read    =   1'b0;
                 mem_write   =   1'b1;
                 jump        =   1'b0;
-                //jump_sel    =   1'b;
+                jump_sel    =   1'b0; //X
                 reg_write   =   1'b0;
                 bds_sel     =   1'b0;
-                //mem_to_reg  =   1'b;            
+                mem_to_reg  =   1'b0; //X            
             end
             IMM:                // Immediate Instruction
             begin
@@ -279,11 +311,11 @@ module MainControlUnit
                 jal_sel     =   1'b0;
                 alu_src     =   1'b1;
                 branch      =   1'b0;
-                //equal       =   1'b;
+                equal       =   1'b0; //X
                 mem_read    =   1'b0;
                 mem_write   =   1'b0;
                 jump        =   1'b0;
-                //jump_sel    =   1'b;
+                jump_sel    =   1'b0; //X
                 reg_write   =   1'b1;
                 bds_sel     =   1'b0;
                 mem_to_reg  =   1'b0;
@@ -312,6 +344,8 @@ module MainControlUnit
                     begin
                         alu_op      =   3'b111;
                     end
+                    default:
+                        alu_op      =   3'b000;
                 endcase            
             end
             default:            // Default Op

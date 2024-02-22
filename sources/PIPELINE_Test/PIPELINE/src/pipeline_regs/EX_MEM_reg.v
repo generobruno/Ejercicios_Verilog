@@ -12,8 +12,6 @@ module EX_MEM_reg
         input wire                      i_clk,                      // Clock
         input wire                      i_reset,                    // Reset
         input wire                      i_enable,                   // Write Control Line
-        input wire                      i_jump,                     // Jump Control Line
-        input wire                      i_jump_sel,                 // JumpSel Control Line
         input wire                      i_mem_read,                 // MemRead Control Line
         input wire                      i_mem_write,                // MemWrite Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
@@ -24,8 +22,6 @@ module EX_MEM_reg
         input wire [INST_SZ-1 : 0]      i_write_register,           // Write Register
         input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
-        output wire                     o_jump,                     // Jump Control Line
-        output wire                     o_jump_sel,                 // JumpSel Control Line
         output wire                     o_mem_read,                 // MemRead Control Line
         output wire                     o_mem_write,                // MemWrite Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
@@ -37,9 +33,7 @@ module EX_MEM_reg
         output wire [INST_SZ-1 : 0]     o_bds                       // BDS
     );
 
-    //! Signal Definition
-    reg jump;                     
-    reg jump_sel;                 
+    //! Signal Definition                
     reg mem_read;                 
     reg mem_write;                
     reg reg_write;                
@@ -54,9 +48,7 @@ module EX_MEM_reg
     always @(posedge i_clk) 
     begin
         if(i_reset)
-        begin
-            jump            <=      0;                                          
-            jump_sel        <=      0;                                  
+        begin                                 
             mem_read        <=      0;                                  
             mem_write       <=      0;                                
             reg_write       <=      0;                                
@@ -69,9 +61,7 @@ module EX_MEM_reg
 
         end
         else if(i_enable)
-        begin
-            jump            <=      i_jump;                                          
-            jump_sel        <=      i_jump_sel;                                  
+        begin                                
             mem_read        <=      i_mem_read;                                  
             mem_write       <=      i_mem_write;                                
             reg_write       <=      i_reg_write;                                
@@ -86,8 +76,6 @@ module EX_MEM_reg
     end
 
     //! Assignments
-    assign o_jump               =       jump;
-    assign o_jump_sel           =       jump_sel;
     assign o_mem_read           =       mem_read;
     assign o_mem_write          =       mem_write;
     assign o_reg_write          =       reg_write;

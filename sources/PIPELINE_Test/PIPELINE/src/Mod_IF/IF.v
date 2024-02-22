@@ -60,7 +60,7 @@ module IF
         .o_pc(o_npc_F), .o_bds(o_branch_delay_slot_F));
 
     instruction_mem #(.B(INST_SZ), .W(), .PC(PC_SZ))
-        (.i_clk(i_clk), .i_reset(i_reset),
+        (.i_clk(i_clk),
         .i_write(i_write), .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
         .o_data(o_instruction_F));
 

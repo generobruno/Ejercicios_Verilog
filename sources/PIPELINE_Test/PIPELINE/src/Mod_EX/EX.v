@@ -24,15 +24,14 @@ module EX
         input [FORW_ALU-1 : 0]          i_forward_a_FU,             // Forwarding A Control Line
         input [FORW_ALU-1 : 0]          i_forward_b_FU,             // Forwarding B Control Line
         input [INST_SZ-1 : 0]           i_instr_imm_D,              // Instruction Immediate (instr[15:0]) //TODO Recordar que entran 32 bits por extenderse con signo
-        input [4 : 0]                   i_instr_rs_D,               // Instruction RS (instr[25:21]) 
+        //input [4 : 0]                   i_instr_rs_D,               // Instruction RS (instr[25:21]) 
         input [4 : 0]                   i_instr_rt_D,               // Instruction RT (instr[20:16])
         input [4 : 0]                   i_instr_rd_D,               // Instruction RD (instr[15:11])
 
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_E,             // ALU Result
         output [INST_SZ-1 : 0]          o_operand_b_E,              // Operand B (for Write Data)
-        output [INST_SZ-1 : 0]          o_instr_rd_E,               // Instruction RD (for Write Register)
-        output [INST_SZ-1 : 0]          o_branch_delay_slot_E       // Branch Delay Slot
+        output [INST_SZ-1 : 0]          o_instr_rd_E                // Instruction RD (for Write Register)
     );
 
     //! Signal Declaration
@@ -77,9 +76,6 @@ module EX
     alu #(.N(INST_SZ), .NSel(ALU_SEL)) alu
         (.i_alu_A(alu_a), .i_alu_B(alu_b),
         .i_alu_Op(alu_sel),
-        .o_alu_Result(o_alu_result_E));
-    
-    //! Assignments
-    assign o_branch_delay_slot_E    =   i_branch_delay_slot_D;    
+        .o_alu_Result(o_alu_result_E));   
 
 endmodule
