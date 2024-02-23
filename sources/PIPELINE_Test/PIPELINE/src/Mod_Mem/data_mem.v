@@ -37,7 +37,7 @@ module data_mem
         else if(i_mem_read)
             begin
                 // Read Operation (Aligned)
-                read_reg <= array_reg[i_addr<<2];
+                read_reg <= array_reg[i_addr>>2];
             end
         else
             begin

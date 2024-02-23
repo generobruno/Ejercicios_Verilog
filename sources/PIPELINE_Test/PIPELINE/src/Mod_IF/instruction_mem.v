@@ -25,13 +25,13 @@ module instruction_mem
     // TODO Registros para debug
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
 
-    // Body //TODO REVISAR
+    // Body //TODO REVISAR -> el clk se deberia usar para debuggear, pero las insts las selecciona el pc en otro caso
     always @(posedge i_clk) 
     begin
         if(i_write)
             begin
                 // Write Operation
-                array_reg[i_addr] <= i_data;
+                array_reg[i_addr>>2] <= i_data;
             end 
     end
 

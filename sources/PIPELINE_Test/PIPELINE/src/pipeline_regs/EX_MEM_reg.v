@@ -19,7 +19,7 @@ module EX_MEM_reg
         input wire                      i_bds_sel,                  // BDSSel Control Line
         input wire [INST_SZ-1 : 0]      i_alu_result,               // ALU Result
         input wire [INST_SZ-1 : 0]      i_write_data,               // Write Data
-        input wire [INST_SZ-1 : 0]      i_write_register,           // Write Register
+        input wire [4 : 0]              i_write_register,           // Write Register
         input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
         output wire                     o_mem_read,                 // MemRead Control Line
@@ -29,7 +29,7 @@ module EX_MEM_reg
         output wire                     o_bds_sel,                  // BDSSel Control Line
         output wire [INST_SZ-1 : 0]     o_alu_result,               // ALU Result
         output wire [INST_SZ-1 : 0]     o_write_data,               // Write Data
-        output wire [INST_SZ-1 : 0]     o_write_register,           // Write Register
+        output wire [4 : 0]             o_write_register,           // Write Register
         output wire [INST_SZ-1 : 0]     o_bds                       // BDS
     );
 

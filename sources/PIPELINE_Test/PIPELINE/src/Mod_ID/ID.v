@@ -23,15 +23,13 @@ module ID
         input                           i_reg_write_W,              // RegWrite Control Line
         input [REG_SZ-1 : 0]            i_write_register_D,         // Write Register
         input [INST_SZ-1 : 0]           i_write_data_D,             // Write Data
-        input [INST_SZ-1 : 0]           i_branch_delay_slot_F,      // Branch Delay Slot
         // Outputs
         output [INST_SZ-1 : 0]          o_jump_addr_D,              // Jump Address
         output [INST_SZ-1 : 0]          o_branch_addr_D,            // Branch Address
         output [INST_SZ-1 : 0]          o_read_data_1_D,            // Read Data 1 (from reg mem)
         output [INST_SZ-1 : 0]          o_read_data_2_D,            // Read Data 2 (from reg mem)
-        output [INST_SZ-1 : 0]          o_branch_delay_slot_D,      // Branch Delay Slot
         output                          o_pc_src_D,                 // PCSrc Control Line
-        output [15 : 0]                 o_instr_imm_D,              // Instruction Immediate (instr[15:0])
+        output [INST_SZ-1 : 0]          o_instr_imm_D,              // Instruction Immediate (instr[15:0])
         output [4 : 0]                  o_instr_rs_D,               // Instruction RS (instr[25:21]) 
         output [4 : 0]                  o_instr_rt_D,               // Instruction RT (instr[20:16])
         output [4 : 0]                  o_instr_rd_D                // Instruction RD (instr[15:11])
@@ -69,11 +67,6 @@ module ID
         .o_read_data_1(read_data_1), .o_read_data_2(read_data_2));
 
     //! Assignments
-    assign o_instr_imm_D        =      i_instruction_D[15 : 0]; 
-    assign o_instr_rs_D         =      i_instruction_D[25 : 21]; 
-    assign o_instr_rt_D         =      i_instruction_D[20 : 16]; 
-    assign o_instr_rd_D         =      i_instruction_D[15 : 11]; 
-
     // Shift instruction index to get jump address
     assign o_jump_addr_D = {i_npc_D[31:28], {i_instruction_D[25 : 0] << 2} ,{2{1'b0}}}; //TODO Revisar bien
 
@@ -82,13 +75,16 @@ module ID
     assign o_pc_src_D = xnor_result & i_branch_MC;
 
     // Sign extension of o_instr_imm_D to INST_SZ length
-    assign extended_imm = {{(INST_SZ-16){o_instr_imm_D[15]}}, o_instr_imm_D};
+    assign extended_imm = {{INST_SZ-16{i_instruction_D[15]}}, i_instruction_D[15:0]}; //TODO Revisar bien
+    assign o_instr_imm_D        =      extended_imm; 
+
     // Left shift extended immediate by 2 bits
     assign shifted_imm = extended_imm << 2;
     // Adding shifted immediate to i_npc_D to get o_branch_addr_D
-    assign o_branch_addr_D = shifted_imm + i_npc_D;
+    assign o_branch_addr_D      =      shifted_imm + i_npc_D;
 
-    assign o_branch_delay_slot_D    =   i_branch_delay_slot_F;    
-
+    assign o_instr_rs_D         =      i_instruction_D[25 : 21]; 
+    assign o_instr_rt_D         =      i_instruction_D[20 : 16]; 
+    assign o_instr_rd_D         =      i_instruction_D[15 : 11]; 
 
 endmodule

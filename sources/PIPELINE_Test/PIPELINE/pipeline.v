@@ -14,6 +14,7 @@ module pipeline
         parameter FORW_EQ       =   1,
         parameter FORW_ALU      =   2,
         parameter ALU_OP        =   3,
+        parameter ALU_SEL       =   6,
         parameter FUNCT         =   6
     )
     (
@@ -73,11 +74,11 @@ module pipeline
     /**
                                 INSTRUCTION DECODE
     **/   
-    wire [INST_SZ-1 : 0]          bds_E;
     wire [INST_SZ-1 : 0]          alu_result_M;
     wire [REG_SZ-1 : 0]           write_register_MEM_WB;
+    wire [INST_SZ-1 : 0]          alu_result_EX_MEM;     
     wire [INST_SZ-1 : 0]          write_data_W;
-    wire [15 : 0]                 instr_imm_D;              
+    wire [INST_SZ-1 : 0]          instr_imm_D;              
     wire [4 : 0]                  instr_rs_D;                
     wire [4 : 0]                  instr_rt_D;                
     wire [4 : 0]                  instr_rd_D;
@@ -89,16 +90,15 @@ module pipeline
         // Inputs
         .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID),
         // Input Control Lines
-        .i_forward_eq_a_FU(forward_eq_a_FU), .i_forward_eq_b_FU(forward_eq_b_FU), .i_alu_result_M(alu_result_M),
+        .i_forward_eq_a_FU(forward_eq_a_FU), .i_forward_eq_b_FU(forward_eq_b_FU), .i_alu_result_M(alu_result_EX_MEM),
         .i_branch_MC(branch_MC), .i_equal_MC(equal_MC), //TODO Cambiar nombre write_register_D a write_register_MEM_WB y write_data a write_data_W?
         .i_reg_write_W(reg_write_MEM_WB), .i_write_register_D(write_register_MEM_WB), .i_write_data_D(write_data_W),
-        .i_branch_delay_slot_F(bds_IF_ID),
         // Outputs
         .o_jump_addr_D(jump_addr_D), .o_branch_addr_D(branch_addr_D), 
         .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),
         .o_pc_src_D(pc_src_D), .o_instr_imm_D(instr_imm_D), 
         .o_instr_rs_D(instr_rs_D), .o_instr_rt_D(instr_rt_D), 
-        .o_instr_rd_D(instr_rd_D), .o_branch_delay_slot_D(bds_E)
+        .o_instr_rd_D(instr_rd_D)
         );
 
     /**
@@ -133,7 +133,7 @@ module pipeline
         .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
         .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC),
         // Inputs
-        .i_bds(bds_E), .i_read_data_1(read_data_1), .i_read_data_2(read_data_2),
+        .i_bds(bds_IF_ID), .i_read_data_1(read_data_1), .i_read_data_2(read_data_2),
         .i_instr_imm(instr_imm_D), .i_instr_rt(instr_rt_D), .i_instr_rd(instr_rd_D), .i_instr_rs(instr_rs_D),
         // Output Control Lines //TODO Agregar SXL/SXLV Control Line
         .o_alu_src(alu_src_ID_EX), .o_alu_op(alu_op_ID_EX), .o_reg_dst(reg_dst_ID_EX), .o_jal_sel(jal_sel_ID_EX), 
@@ -150,19 +150,18 @@ module pipeline
     **/
     wire [INST_SZ-1 : 0]          alu_result_E;
     wire [INST_SZ-1 : 0]          write_data_E;              
-    wire [INST_SZ-1 : 0]          write_register_E;
+    wire [4 : 0]                  write_register_E;
     wire [FORW_ALU-1 : 0]         forward_a_FU;
     wire [FORW_ALU-1 : 0]         forward_b_FU;             
 
 
-    EX #(.INST_SZ(INST_SZ), .ALU_OP(), .FORW_ALU(), .ALU_SEL()) ExecuteInstruction
+    EX #(.INST_SZ(INST_SZ), .ALU_OP(ALU_OP), .FORW_ALU(FORW_ALU), .ALU_SEL(ALU_SEL)) ExecuteInstruction
         (
         // Inputs 
         .i_read_data_1_E(read_data_1_ID_EX), .i_read_data_2_E(read_data_2_ID_EX),
-        .i_alu_result_M(alu_result_M), .i_read_data_W(write_data_W), //TODO Esto deberia ser despues o antes de los mpx de wb?
+        .i_alu_result_M(alu_result_EX_MEM), .i_read_data_W(write_data_W), //TODO Esto deberia ser despues o antes de los mpx de wb?
         .i_instr_imm_D(instr_imm_ID_EX),
         .i_instr_rt_D(instr_rt_ID_EX), .i_instr_rd_D(instr_rd_ID_EX),
-        .i_branch_delay_slot_D(bds_ID_EX),
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src_MC(alu_src_ID_EX), .i_reg_dst_MC(reg_dst_ID_EX), .i_jal_sel_MC(jal_sel_ID_EX),
         .i_alu_op_MC(alu_op_ID_EX), .i_forward_a_FU(forward_a_FU), .i_forward_b_FU(forward_b_FU),
@@ -179,9 +178,8 @@ module pipeline
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
     wire                     bds_sel_EX_MEM;               
-    wire [INST_SZ-1 : 0]     alu_result_EX_MEM;     
     wire [INST_SZ-1 : 0]     write_data_EX_MEM;     
-    wire [INST_SZ-1 : 0]     write_register_EX_MEM; 
+    wire [4 : 0]             write_register_EX_MEM; 
     wire [INST_SZ-1 : 0]     bds_EX_MEM;         
 
     EX_MEM_reg #(.INST_SZ(INST_SZ)) EX_MEM
@@ -193,7 +191,7 @@ module pipeline
         .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), .i_bds_sel(bds_sel_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
-        .i_write_register(write_register_E), .i_bds(bds_E),
+        .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
         .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
         .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), .o_bds_sel(bds_sel_EX_MEM),
@@ -206,7 +204,6 @@ module pipeline
                                 MEMORY ACCESS
     **/
     wire [INST_SZ-1 : 0]          read_data_M;              
-    wire [INST_SZ-1 : 0]          bds_M;
 
     MEM #(.INST_SZ(INST_SZ), .MEM_SZ(MEM_SZ)) MemoryAccess
         (
@@ -214,11 +211,10 @@ module pipeline
         .i_clk(i_clk),
         // Inputs 
         .i_alu_result_E(alu_result_EX_MEM), .i_operand_b_E(write_data_EX_MEM),
-        .i_branch_delay_slot_E(bds_EX_MEM),
         // Input Control Lines 
         .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM),
         // Outputs
-        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_branch_delay_slot_M(bds_M)
+        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M)
         );
 
     /**
@@ -239,7 +235,7 @@ module pipeline
         .i_bds_sel(bds_sel_EX_MEM),
         // Inputs
         .i_read_data(read_data_M), .i_alu_result(alu_result_M),
-        .i_write_register(write_register_EX_MEM[15:11]), .i_bds(bds_M),
+        .i_write_register(write_register_EX_MEM), .i_bds(bds_EX_MEM),
         // Output Control Lines 
         .o_reg_write(reg_write_MEM_WB), .o_mem_to_reg(mem_to_reg_MEM_WB), .o_bds_sel(bds_sel_MEM_WB),
         // Outputs
@@ -299,7 +295,7 @@ module pipeline
             .i_instr_rt_D(instr_rt_D),
             .i_instr_rt_E(instr_rt_ID_EX),
             .i_instr_rd_E(instr_rd_ID_EX),
-            .i_instr_rd_M(write_register_EX_MEM[15:11]),
+            .i_instr_rd_M(write_register_EX_MEM),
             // Output Control Lines
             .o_stall_pc_HD(stall_pc_HD),              
             .o_stall_if_id_HD(stall_if_id_HD),            
@@ -314,7 +310,7 @@ module pipeline
             .i_instr_rt_D(instr_rt_D),
             .i_instr_rt_E(instr_rt_ID_EX),
             .i_instr_rs_E(instr_rs_ID_EX),
-            .i_instr_rd_M(write_register_EX_MEM[15:11]),
+            .i_instr_rd_M(write_register_EX_MEM),
             .i_instr_rd_W(write_register_MEM_WB),
             .i_reg_write_M(reg_write_EX_MEM),
             .i_reg_write_W(reg_write_MEM_WB),
