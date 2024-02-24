@@ -24,9 +24,9 @@ module data_mem
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
     reg [B-1 : 0]   read_reg;
 
-    // TODO Manejar distintos tamaños de mem
+    // TODO Manejar distintos tamaños de mem y leer valor de memoria para debug
 
-    // Body //TODO REVISAR
+    // Body
     always @(posedge i_clk) 
     begin
         if(i_mem_write)
@@ -42,7 +42,7 @@ module data_mem
         else
             begin
                 // Default
-                read_reg <= {B {1'b0}};
+                read_reg <= array_reg[i_addr>>2];
             end   
     end
 

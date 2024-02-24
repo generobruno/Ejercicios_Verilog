@@ -25,7 +25,7 @@ module instruction_mem
     // TODO Registros para debug
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
 
-    // Body //TODO REVISAR -> el clk se deberia usar para debuggear, pero las insts las selecciona el pc en otro caso
+    // Body //TODO REVISAR -> el clk se deberia usar para debuggear y cargar insts, pero las insts las selecciona el pc en otro caso
     always @(posedge i_clk) 
     begin
         if(i_write)
@@ -35,7 +35,7 @@ module instruction_mem
             end 
     end
 
-    //! Assignments
+    //! Assignments //TODO Ver como enmascarar i_addr para seleccionar la instr
     assign o_data = array_reg[i_addr >> 2];
 
 endmodule

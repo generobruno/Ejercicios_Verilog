@@ -30,7 +30,7 @@ module register_mem
     // Initial Registers Values
     initial 
     begin
-        regs[0] = 0; // TODO Declarar todos los regs?
+        regs[0] = 32'h00000000; 
     end
 
     // Body
