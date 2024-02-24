@@ -14,7 +14,7 @@ module MainControlUnit
         input [OPCODE_SZ-1 : 0]         i_instr_op_D,               // Instruction Op Code -> inst[31:26]
         input [FUNCT_SZ-1 : 0]          i_instr_funct_D,            // Instruction Function -> inst[5:0]
         // Output
-        output [2 : 0]                  o_alu_op_MC,                // ALUOp0 Control Line
+        output [2 : 0]                  o_alu_op_MC,                // ALUOp Control Line
         output                          o_reg_dst_MC,               // RegDst Control Line
         output                          o_jal_sel_MC,               // JALSel Control Line
         output                          o_alu_src_MC,               // ALUSrc Control Line
@@ -228,7 +228,7 @@ module MainControlUnit
                         reg_dst     =   1'b0; //X   
                         jal_sel     =   1'b0; //X
                         alu_src     =   1'b0; //X
-                        alu_op      =   3'b0; //X
+                        alu_op      =   3'b000; //X
                         branch      =   1'b0; //X
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
@@ -244,7 +244,7 @@ module MainControlUnit
                         reg_dst     =   1'b0; //X   
                         jal_sel     =   1'b1;
                         alu_src     =   1'b0; //X
-                        alu_op      =   3'b0; //X
+                        alu_op      =   3'b000; //X
                         branch      =   1'b0; //X
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
