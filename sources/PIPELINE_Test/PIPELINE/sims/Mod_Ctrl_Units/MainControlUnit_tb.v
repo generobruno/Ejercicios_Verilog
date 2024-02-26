@@ -22,7 +22,7 @@ module MainControlUnit_tb();
 
     // Declarations
     reg [INST_SZ-1 : 0] i_instruction_IF_ID;
-    wire alu_op_MC;
+    wire [2:0] alu_op_MC;
     wire reg_dst_MC;
     wire jal_sel_MC;
     wire alu_src_MC;

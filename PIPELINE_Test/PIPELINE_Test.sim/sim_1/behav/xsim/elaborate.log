@@ -5,7 +5,6 @@ Running: /home/bruno/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --d
 Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 3 for port 'o_alu_op_MC' [/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_Ctrl_Units/MainControlUnit_tb.v:46]
 Completed static elaboration
 Starting simulation data flow analysis
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/MainControlUnit.v" Line 6. Module MainControlUnit doesn't have a timescale but at least one module in design has a timescale.
