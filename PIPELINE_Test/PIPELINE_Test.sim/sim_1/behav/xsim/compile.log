@@ -1,4 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/MainControlUnit.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module MainControlUnit
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_Ctrl_Units/MainControlUnit_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module MainControlUnit_tb

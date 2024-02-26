@@ -1,7 +1,6 @@
 `timescale 1ns/1ps
 
 module MainControlUnit_tb();
-    //TODO REVISAR QUE PASA CON ALU_OP
     // Parameters
     localparam INST_SZ = 32;
     localparam OPCODE_SZ = 6;
