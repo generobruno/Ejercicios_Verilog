@@ -1,0 +1,701 @@
+Time resolution is 1 ps
+Time:                10000
+Inputs:
+i_instruction   =          0
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =          x
+o_branch_delay_slot_F =          x
+o_instruction_F =          x
+Time:                30000
+Inputs:
+i_instruction   =          0
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =          4
+o_branch_delay_slot_F =          8
+o_instruction_F =          x
+Time:                50000
+Inputs:
+i_instruction   =          1
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =          8
+o_branch_delay_slot_F =         12
+o_instruction_F =          x
+Time:                70000
+Inputs:
+i_instruction   =          2
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         12
+o_branch_delay_slot_F =         16
+o_instruction_F =          x
+Time:                90000
+Inputs:
+i_instruction   =          3
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         16
+o_branch_delay_slot_F =         20
+o_instruction_F =          x
+Time:               110000
+Inputs:
+i_instruction   =          4
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         20
+o_branch_delay_slot_F =         24
+o_instruction_F =          x
+Time:               130000
+Inputs:
+i_instruction   =          5
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         24
+o_branch_delay_slot_F =         28
+o_instruction_F =          x
+Time:               150000
+Inputs:
+i_instruction   =          6
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         28
+o_branch_delay_slot_F =         32
+o_instruction_F =          x
+Time:               170000
+Inputs:
+i_instruction   =          7
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         32
+o_branch_delay_slot_F =         36
+o_instruction_F =          x
+Time:               190000
+Inputs:
+i_instruction   =          8
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         36
+o_branch_delay_slot_F =         40
+o_instruction_F =          x
+Time:               210000
+Inputs:
+i_instruction   =          9
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         40
+o_branch_delay_slot_F =         44
+o_instruction_F =          x
+Time:               230000
+Inputs:
+i_instruction   =         10
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         44
+o_branch_delay_slot_F =         48
+o_instruction_F =          x
+Time:               250000
+Inputs:
+i_instruction   =         11
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         48
+o_branch_delay_slot_F =         52
+o_instruction_F =          x
+Time:               270000
+Inputs:
+i_instruction   =         12
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         52
+o_branch_delay_slot_F =         56
+o_instruction_F =          x
+Time:               290000
+Inputs:
+i_instruction   =         13
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         56
+o_branch_delay_slot_F =         60
+o_instruction_F =          x
+Time:               310000
+Inputs:
+i_instruction   =         14
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         60
+o_branch_delay_slot_F =         64
+o_instruction_F =          x
+Time:               330000
+Inputs:
+i_instruction   =         15
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         64
+o_branch_delay_slot_F =         68
+o_instruction_F =          x
+Time:               350000
+Inputs:
+i_instruction   =         16
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         68
+o_branch_delay_slot_F =         72
+o_instruction_F =          x
+Time:               370000
+Inputs:
+i_instruction   =         17
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         72
+o_branch_delay_slot_F =         76
+o_instruction_F =          x
+Time:               390000
+Inputs:
+i_instruction   =         18
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         76
+o_branch_delay_slot_F =         80
+o_instruction_F =          x
+Time:               410000
+Inputs:
+i_instruction   =         19
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         80
+o_branch_delay_slot_F =         84
+o_instruction_F =          x
+Time:               430000
+Inputs:
+i_instruction   =         20
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         84
+o_branch_delay_slot_F =         88
+o_instruction_F =          x
+Time:               450000
+Inputs:
+i_instruction   =         21
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         88
+o_branch_delay_slot_F =         92
+o_instruction_F =          x
+Time:               470000
+Inputs:
+i_instruction   =         22
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         92
+o_branch_delay_slot_F =         96
+o_instruction_F =          x
+Time:               490000
+Inputs:
+i_instruction   =         23
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         96
+o_branch_delay_slot_F =        100
+o_instruction_F =          x
+Time:               510000
+Inputs:
+i_instruction   =         24
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        100
+o_branch_delay_slot_F =        104
+o_instruction_F =          x
+Time:               530000
+Inputs:
+i_instruction   =         25
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        104
+o_branch_delay_slot_F =        108
+o_instruction_F =          x
+Time:               550000
+Inputs:
+i_instruction   =         26
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        108
+o_branch_delay_slot_F =        112
+o_instruction_F =          x
+Time:               570000
+Inputs:
+i_instruction   =         27
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        112
+o_branch_delay_slot_F =        116
+o_instruction_F =          x
+Time:               590000
+Inputs:
+i_instruction   =         28
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        116
+o_branch_delay_slot_F =        120
+o_instruction_F =          x
+Time:               610000
+Inputs:
+i_instruction   =         29
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        120
+o_branch_delay_slot_F =        124
+o_instruction_F =          x
+Time:               630000
+Inputs:
+i_instruction   =         30
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        124
+o_branch_delay_slot_F =        128
+o_instruction_F =          x
+Time:               650000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        128
+o_branch_delay_slot_F =        132
+o_instruction_F =          x
+Time:               670000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        132
+o_branch_delay_slot_F =        136
+o_instruction_F =          x
+Time:               690000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        136
+o_branch_delay_slot_F =        140
+o_instruction_F =          x
+Time:               710000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        140
+o_branch_delay_slot_F =        144
+o_instruction_F =          x
+Time:               730000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        144
+o_branch_delay_slot_F =        148
+o_instruction_F =          x
+Time:               750000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        148
+o_branch_delay_slot_F =        152
+o_instruction_F =          x
+Time:               770000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 1
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =        152
+o_branch_delay_slot_F =        156
+o_instruction_F =          x
+Time:               790000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         34
+o_branch_delay_slot_F =         38
+o_instruction_F =          7
+Time:               810000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 1
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         38
+o_branch_delay_slot_F =         42
+o_instruction_F =          8
+Time:               830000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         24
+o_branch_delay_slot_F =         28
+o_instruction_F =          5
+Time:               850000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 1
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         28
+o_branch_delay_slot_F =         32
+o_instruction_F =          6
+Time:               870000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         14
+o_branch_delay_slot_F =         18
+o_instruction_F =          2
+Time:               890000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         18
+o_branch_delay_slot_F =         22
+o_instruction_F =          3
+Time:               910000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         22
+o_branch_delay_slot_F =         26
+o_instruction_F =          4
+Time:               930000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         26
+o_branch_delay_slot_F =         30
+o_instruction_F =          5
+Time:               950000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 0
+Outputs:
+o_npc_F         =         30
+o_branch_delay_slot_F =         34
+o_instruction_F =          6
+Time:               970000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 1
+Outputs:
+o_npc_F         =         34
+o_branch_delay_slot_F =         38
+o_instruction_F =          7
+Time:               990000
+Inputs:
+i_instruction   =         31
+i_branch_addr_D =         30
+i_jump_addr_D   =         20
+i_rs_addr_D     =         10
+i_pc_src_D      = 0
+i_jump_D        = 0
+i_jump_sel_D    = 0
+i_stall_pc_HD   = 1
+Outputs:
+o_npc_F         =         34
+o_branch_delay_slot_F =         38
+o_instruction_F =          7

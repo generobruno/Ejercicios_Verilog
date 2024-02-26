@@ -29,6 +29,8 @@ module pipeline
     //! Signal Declaration
     // TODO Declarar registros para debuggear
 
+    // TODO Revisar si es necesario inicializar en 0 valores de control
+
     //! Instantiations
     /**
                                 INSTUCTION FETCH
@@ -49,7 +51,7 @@ module pipeline
         .i_instruction_F(i_instruction), .i_branch_addr_D(branch_addr_D), 
         .i_jump_addr_D(jump_addr_D), .i_rs_addr_D(read_data_1),
         // Input Control Lines 
-        .i_pc_src_D(pc_src_D), .i_jump_D(jump_MC), .i_jump_sel_D(jump_sel_MC), .i_stall_pc_HD(stall_pc_HD),
+        .i_pc_src_D(pc_src_D), .i_jump_D(jump_MC), .i_jump_sel_D(jump_sel_MC), .i_stall_pc_HD(!stall_pc_HD),
         // Outputs
         .o_npc_F(npc_F), .o_branch_delay_slot_F(branch_delay_slot_F), .o_instruction_F(instruction_F)
         );
