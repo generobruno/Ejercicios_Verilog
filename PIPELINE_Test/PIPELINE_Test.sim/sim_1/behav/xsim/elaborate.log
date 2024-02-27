@@ -1,33 +1,28 @@
 Vivado Simulator v2023.1.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: /home/bruno/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot IF_tb_behav xil_defaultlib.IF_tb xil_defaultlib.glbl -log elaborate.log 
+Running: /home/bruno/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot ID_tb_behav xil_defaultlib.ID_tb xil_defaultlib.glbl -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
 Starting simulation data flow analysis
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/IF.v" Line 5. Module IF doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v" Line 5. Module ID doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/pc.v" Line 5. Module pc doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/pc_adder.v" Line 5. Module pc_adder doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/instruction_mem.v" Line 5. Module instruction_mem doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/IF.v" Line 5. Module IF doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/comparator.v" Line 5. Module comparator doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" Line 5. Module register_mem doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v" Line 5. Module ID doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" Line 5. Module mpx_2to1 doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/pc.v" Line 5. Module pc doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/pc_adder.v" Line 5. Module pc_adder doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/instruction_mem.v" Line 5. Module instruction_mem doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/comparator.v" Line 5. Module comparator doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" Line 5. Module register_mem doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
 Compiling module xil_defaultlib.mpx_2to1
-Compiling module xil_defaultlib.pc
-Compiling module xil_defaultlib.pc_adder
-Compiling module xil_defaultlib.instruction_mem
-Compiling module xil_defaultlib.IF
-Compiling module xil_defaultlib.IF_tb
+Compiling module xil_defaultlib.comparator
+Compiling module xil_defaultlib.register_mem
+Compiling module xil_defaultlib.ID
+Compiling module xil_defaultlib.ID_tb
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot IF_tb_behav
+Built simulation snapshot ID_tb_behav

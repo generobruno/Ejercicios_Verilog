@@ -29,6 +29,8 @@ module pipeline
     //! Signal Declaration
     // TODO Declarar registros para debuggear
 
+    // TODO Revisar si es necesario inicializar en 0 valores de control
+
     //! Instantiations
     /**
                                 INSTUCTION FETCH
@@ -49,7 +51,7 @@ module pipeline
         .i_instruction_F(i_instruction), .i_branch_addr_D(branch_addr_D), 
         .i_jump_addr_D(jump_addr_D), .i_rs_addr_D(read_data_1),
         // Input Control Lines 
-        .i_pc_src_D(pc_src_D), .i_jump_D(jump_MC), .i_jump_sel_D(jump_sel_MC), .i_stall_pc_HD(stall_pc_HD),
+        .i_pc_src_D(pc_src_D), .i_jump_D(jump_MC), .i_jump_sel_D(jump_sel_MC), .i_stall_pc_HD(!stall_pc_HD),
         // Outputs
         .o_npc_F(npc_F), .o_branch_delay_slot_F(branch_delay_slot_F), .o_instruction_F(instruction_F)
         );
@@ -86,7 +88,7 @@ module pipeline
     ID #(.INST_SZ(INST_SZ), .REG_SZ(REG_SZ), .FORW_EQ(FORW_EQ)) InstructionDecode
         (
         // Sync Signals
-        .i_clk(i_clk),
+        .i_clk(i_clk), .i_reset(i_reset),
         // Inputs
         .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID),
         // Input Control Lines
@@ -96,7 +98,7 @@ module pipeline
         .i_write_register_D(write_register_MEM_WB), .i_write_data_D(write_data_W),
         // Outputs
         .o_jump_addr_D(jump_addr_D), .o_branch_addr_D(branch_addr_D), 
-        .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),
+        .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),   
         .o_pc_src_D(pc_src_D), .o_instr_imm_D(instr_imm_D), 
         .o_instr_rs_D(instr_rs_D), .o_instr_rt_D(instr_rt_D), 
         .o_instr_rd_D(instr_rd_D)

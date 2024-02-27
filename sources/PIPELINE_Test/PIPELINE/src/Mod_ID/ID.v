@@ -12,7 +12,7 @@ module ID
     (
         // Inputs
         input                           i_clk,                      // Clock
-        //input                           i_reset,                    // Reset
+        input                           i_reset,                    // Reset
         input [INST_SZ-1 : 0]           i_instruction_D,            // Instruction Fetched
         input [INST_SZ-1 : 0]           i_npc_D,                    // NPC
         input                           i_forward_eq_a_FU,          // Forwarding Eq A Control Line
@@ -59,8 +59,8 @@ module ID
         .i_read_data_2(o_read_data_2_D),
         .o_comparison(comparison));
 
-    register_mem #(.B(INST_SZ), .W()) register_mem
-        (.i_clk(i_clk), //TODO Reset?
+    register_mem #(.B(INST_SZ), .W(REG_SZ)) register_mem
+        (.i_clk(i_clk), .i_reset(i_reset),
         .i_reg_write_MC(i_reg_write_W),
         .i_read_reg_1(i_instruction_D[25 : 21]), .i_read_reg_2(i_instruction_D[20 : 16]),
         .i_write_register(i_write_register_D), .i_write_data(i_write_data_D),

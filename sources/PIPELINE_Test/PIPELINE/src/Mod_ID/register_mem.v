@@ -12,6 +12,7 @@ module register_mem
     (
         // Inputs
         input wire                      i_clk,                      // Clock
+        input wire                      i_reset,                    // Reset
         input wire                      i_reg_write_MC,             // RegWrite Control Line
         input wire [W-1 : 0]            i_read_reg_1,               // Read Register 1
         input wire [W-1 : 0]            i_read_reg_2,               // Read Register 2
@@ -36,7 +37,11 @@ module register_mem
     // Body
     always @(posedge i_clk) // Write Cycle
     begin
-        if(i_reg_write_MC)
+        if(i_reset)
+        begin
+            regs[0] = 32'h00000000; //TODO regs[0] siempre es 0 -> no permitir que se cambie
+        end
+        else if(i_reg_write_MC)
         begin
             regs[i_write_register] <= i_write_data;
         end

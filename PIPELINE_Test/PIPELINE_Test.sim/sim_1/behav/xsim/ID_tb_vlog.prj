@@ -1,0 +1,13 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_ID/comparator.v" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/sims/Mod_ID/ID_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
