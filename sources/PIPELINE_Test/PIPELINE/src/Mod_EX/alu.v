@@ -12,6 +12,7 @@ module alu
     (
         // Inputs
         input [N-1 : 0]        i_alu_A, i_alu_B,       // ALU Operands 
+        input [4 : 0]          i_shamt,
         input [NSel-1 : 0]     i_alu_Op,               // ALU Operation
         // Outputs
         output wire [N-1 : 0]    o_alu_Result          // ALU Result
@@ -39,6 +40,9 @@ module alu
     reg [N-1 : 0]    alu_Result;          // ALU Result
     assign o_alu_Result = alu_Result;
 
+    wire [N-1 : 0] ext_shamt;
+    assign ext_shamt = {{N-5{1'b0}}, i_shamt}; 
+
     // Body
     always @(*)
     begin
@@ -51,13 +55,13 @@ module alu
             AND     : alu_Result = i_alu_A & i_alu_B;
             OR      : alu_Result = i_alu_A | i_alu_B;
             XOR     : alu_Result = i_alu_A ^ i_alu_B;
-            SRA     : alu_Result = $signed(i_alu_A) >>> i_alu_B;
-            SRL     : alu_Result = i_alu_A >> i_alu_B;
+            SRA     : alu_Result = $signed(i_alu_B) >>> ext_shamt;
+            SRL     : alu_Result = i_alu_B >> ext_shamt;
             NOR     : alu_Result = ~ (i_alu_A | i_alu_B);
-            SLL     : alu_Result = i_alu_A << i_alu_B;                  //TODO i_alu_B debe ser inst[10:6] para las Shift ops
-            SLLV    : alu_Result = i_alu_A << i_alu_B;
-            SRLV    : alu_Result = i_alu_A >> i_alu_B;
-            SRAV    : alu_Result = $signed(i_alu_A) >>> i_alu_B;
+            SLL     : alu_Result = i_alu_B << ext_shamt;
+            SLLV    : alu_Result = i_alu_B << i_alu_A;
+            SRLV    : alu_Result = i_alu_B >> i_alu_A;
+            SRAV    : alu_Result = $signed(i_alu_B) >>> i_alu_A;
             SLT     : alu_Result = $signed(i_alu_A) < $signed(i_alu_B);
             default : alu_Result = {N {1'b0}};
         endcase

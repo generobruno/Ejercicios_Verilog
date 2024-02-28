@@ -112,7 +112,7 @@ module MainControlUnit
                             begin
                                 reg_dst     =   1'b1;   
                                 jal_sel     =   1'b0;
-                                alu_src     =   1'b1;
+                                alu_src     =   1'b0;
                                 alu_op      =   3'b010;
                                 branch      =   1'b0;
                                 equal       =   1'b0; // X
@@ -129,7 +129,7 @@ module MainControlUnit
                             begin //TODO Agregar MPX en outputs, regs, aca y en los otros shift
                                 reg_dst     =   1'b1;   
                                 jal_sel     =   1'b0;
-                                alu_src     =   1'b1;
+                                alu_src     =   1'b0;
                                 alu_op      =   3'b010;
                                 branch      =   1'b0;
                                 equal       =   1'b0; // X
