@@ -31,9 +31,13 @@ module EX_tb();
 
     reg [INST_SZ-1 : 0] seed;
     reg [INST_SZ-1 : 0] expected_res;    
-    reg [4 : 0]         reg_instr_rt;   
+    reg [4 : 0]         reg_instr_rt;
+    reg [4 : 0]         reg_instr_rs;   
     reg [4 : 0]         reg_instr_rd;   
     reg [4 : 0]         reg_sa;  
+    reg [4 : 0]         reg_base;
+    reg [15 : 0]        reg_offset;
+    reg [15 : 0]        reg_immediate;
 
     // Instantiations
     EX #(.INST_SZ(INST_SZ), .ALU_OP(ALU_OP), .FORW_ALU(FORW_ALU), .ALU_SEL(ALU_SEL)) ExecuteInstruction
@@ -64,9 +68,9 @@ module EX_tb();
         //! SLL Test
         // Control Lines
         reg_dst = 1'b1;
-        alu_op = 3'b010;
-        alu_src = 1'b0;
         jal_sel = 1'b0;
+        alu_src = 1'b0;
+        alu_op = 3'b010;
         forward_a = 1'b0;
         forward_b = 1'b0;
 
@@ -97,18 +101,147 @@ module EX_tb();
         end
 
         //! ADDU Test
+        // Control Lines
+        reg_dst = 1'b1;
+        jal_sel = 1'b0;
+        alu_src = 1'b0;
+        alu_op = 3'b010;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
 
+        // Inputs
+        reg_instr_rt = $random(seed) % 32;
+        reg_instr_rs = $random(seed) % 32;   
+        reg_instr_rd = $random(seed) % 32;   
+        read_data_1 = $random(seed) & 32'hFFFFFFFF;
+        read_data_2 = $random(seed) & 32'hFFFFFFFF;
+
+        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, 6'b100001};
+
+        #100;
+
+        // Result Check
+        expected_res = read_data_1 + read_data_2;
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nADDU DID NOT PASS!!!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nADDU PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
 
         //! LW Test
+        // Control Lines
+        reg_dst = 1'b0;
+        jal_sel = 1'b0;
+        alu_src = 1'b1;
+        alu_op = 3'b000;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
 
+        // Inputs
+        reg_base = $random(seed) & 16'hFFFF;
+        reg_instr_rt = $random(seed) & 5'b11111;
+        reg_offset = $random(seed) & 5'b11111;
+        read_data_1 = $random(seed);
+
+        i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
+
+        #100;
+
+        // Result Check
+        expected_res = read_data_1 + reg_offset;
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nLW DID NOT PASS!!!");
+            $display("Expected Result: %b (%d)", expected_res, expected_res);
+            $display("Actual Result: %b (%d)\n", o_alu_result, o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nLW PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
 
         //! SW Test
+        // Control Lines
+        reg_dst = 1'b0;
+        jal_sel = 1'b0;
+        alu_src = 1'b1;
+        alu_op = 3'b000;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
 
+        // Inputs
+        reg_base = $random(seed) & 16'hFFFF;
+        reg_instr_rt = $random(seed) & 5'b11111;
+        reg_offset = $random(seed) & 5'b11111;
+        read_data_1 = $random(seed);
+
+        i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
+
+        #100;
+
+        // Result Check
+        expected_res = read_data_1 + reg_offset;
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nSW DID NOT PASS!!!");
+            $display("Expected Result: %b (%d)", expected_res, expected_res);
+            $display("Actual Result: %b (%d)\n", o_alu_result, o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nSW PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
 
         //! ADDI Test
+        // Control Lines
+        reg_dst = 1'b0;
+        jal_sel = 1'b0;
+        alu_src = 1'b1;
+        alu_op = 3'b000;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
 
+        // Inputs
+        reg_instr_rs = $random(seed) % 32;   
+        read_data_1 = $random(seed) & 32'hFFFFFFFF;
+        reg_immediate = $random(seed) & 16'hFFFF;
 
-        //! BEQ Test 
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #100;
+
+        // Result Check
+        expected_res = $signed(read_data_1) + $signed(reg_immediate); //TODO Revisar si deben ser signed
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nADDI DID NOT PASS!!!");
+            $display("Expected Result: %b (%d)", expected_res, expected_res);
+            $display("Actual Result: %b (%d)\n", o_alu_result, o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nADDI PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
+
+        //! BEQ Test
+        //TODO Hacer BEQ TEST, Otro Immediate, y chequear otros outputs
 
         $stop;
     end
@@ -118,6 +251,5 @@ module EX_tb();
     assign instr_rd = i_instruction[20:16];
     assign sa = i_instruction[10:6];
     assign instr_imm = {{INST_SZ-16{i_instruction[15]}}, i_instruction[15:0]}; 
-
 
 endmodule
