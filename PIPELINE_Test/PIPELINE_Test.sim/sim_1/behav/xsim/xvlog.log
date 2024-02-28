@@ -1,10 +1,4 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module ID
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/comparator.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module comparator
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mpx_2to1
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module register_mem
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_ID/ID_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module ID_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/instruction_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module instruction_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_IF/instruction_mem_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module instruction_mem_tb
