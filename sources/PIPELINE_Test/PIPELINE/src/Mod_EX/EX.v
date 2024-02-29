@@ -73,7 +73,7 @@ module EX
 
     alu #(.N(INST_SZ), .NSel(ALU_SEL)) alu
         (.i_alu_A(alu_a), .i_alu_B(alu_b), .i_shamt(i_instr_imm_D[10:6]),
-        .i_alu_Op(alu_sel),
+        .i_alu_Op(alu_sel), .i_alu_op_MC(i_alu_op_MC),
         .o_alu_Result(o_alu_result_E));   
 
 endmodule

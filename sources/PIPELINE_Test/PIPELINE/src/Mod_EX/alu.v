@@ -1,12 +1,8 @@
-/**
-    Arithmetic-Logic Unit
-    ALU parametrizable
-**/
-
 module alu
     #(
         // Parameters
         parameter N = 32,                               // ALU Size
+        parameter ALU_OP = 3,
         parameter NSel = 6                              // ALU Op Size
     )
     (
@@ -14,6 +10,7 @@ module alu
         input [N-1 : 0]        i_alu_A, i_alu_B,       // ALU Operands 
         input [4 : 0]          i_shamt,
         input [NSel-1 : 0]     i_alu_Op,               // ALU Operation
+        input [ALU_OP-1 : 0]   i_alu_op_MC,            // ALUOp Control Line
         // Outputs
         output wire [N-1 : 0]    o_alu_Result          // ALU Result
     );
@@ -35,6 +32,10 @@ module alu
     localparam SRAV =       6'b000111;      // Shift Word Right Arithmetic Variable
     localparam SLT  =       6'b101010;      // Set on Less Than
 
+    localparam I_TYPE_ANDI  =   3'b001;         // ANDI
+    localparam I_TYPE_ORI   =   3'b011;         // ORI
+    localparam I_TYPE_XORI  =   3'b100;         // XORI
+    localparam I_TYPE_LUI   =   3'b101;         // LUI
 
     // Register aux
     reg [N-1 : 0]    alu_Result;          // ALU Result
@@ -43,26 +44,39 @@ module alu
     wire [N-1 : 0] ext_shamt;
     assign ext_shamt = {{N-5{1'b0}}, i_shamt}; 
 
-    // Body
+    wire [N-1 : 0] zero_ext_imm;
+    assign zero_ext_imm = {{N-16{1'b0}}, i_alu_B[15:0]};
+
+    reg [N-1 : 0] alu_b; // Input to ALU operation
+
+    // Select alu_b based on the control signal i_alu_op_MC
+    always @(*) //TODO Revisar si esto esta bien o es mejor hacer un modulo de control
+    begin
+        case(i_alu_op_MC)
+            I_TYPE_ANDI, I_TYPE_ORI, I_TYPE_XORI, I_TYPE_LUI: alu_b = zero_ext_imm;
+            default: alu_b = i_alu_B;
+        endcase
+    end
+
+    // Make Operation depending on ALU Op
     always @(*)
     begin
-        //! Make Operation depending on ALU Op
         case(i_alu_Op)
-            ADD     : alu_Result = $signed(i_alu_A) + $signed(i_alu_B);
-            SUB     : alu_Result = $signed(i_alu_A) - $signed(i_alu_B);
-            ADDU    : alu_Result = i_alu_A + i_alu_B;
-            SUBU    : alu_Result = i_alu_A - i_alu_B;
-            AND     : alu_Result = i_alu_A & i_alu_B;
-            OR      : alu_Result = i_alu_A | i_alu_B;
-            XOR     : alu_Result = i_alu_A ^ i_alu_B;
-            SRA     : alu_Result = $signed(i_alu_B) >>> ext_shamt;
-            SRL     : alu_Result = i_alu_B >> ext_shamt;
-            NOR     : alu_Result = ~ (i_alu_A | i_alu_B);
-            SLL     : alu_Result = i_alu_B << ext_shamt;
-            SLLV    : alu_Result = i_alu_B << i_alu_A;
-            SRLV    : alu_Result = i_alu_B >> i_alu_A;
-            SRAV    : alu_Result = $signed(i_alu_B) >>> i_alu_A;
-            SLT     : alu_Result = $signed(i_alu_A) < $signed(i_alu_B);
+            ADD     : alu_Result = $signed(i_alu_A) + $signed(alu_b);
+            SUB     : alu_Result = $signed(i_alu_A) - $signed(alu_b);
+            ADDU    : alu_Result = i_alu_A + alu_b;
+            SUBU    : alu_Result = i_alu_A - alu_b;
+            AND     : alu_Result = i_alu_A & alu_b;
+            OR      : alu_Result = i_alu_A | alu_b;
+            XOR     : alu_Result = i_alu_A ^ alu_b;
+            SRA     : alu_Result = $signed(alu_b) >>> ext_shamt;
+            SRL     : alu_Result = alu_b >> ext_shamt;
+            NOR     : alu_Result = ~ (i_alu_A | alu_b);
+            SLL     : alu_Result = alu_b << ext_shamt;
+            SLLV    : alu_Result = alu_b << i_alu_A;
+            SRLV    : alu_Result = alu_b >> i_alu_A;
+            SRAV    : alu_Result = $signed(alu_b) >>> i_alu_A;
+            SLT     : alu_Result = $signed(i_alu_A) < $signed(alu_b);
             default : alu_Result = {N {1'b0}};
         endcase
     end

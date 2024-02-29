@@ -47,7 +47,7 @@ module EX_tb();
         .i_alu_result_M(alu_result), .i_read_data_W(read_data),
         .i_instr_imm_D(instr_imm), .i_instr_rt_D(instr_rt), 
         .i_instr_rd_D(instr_rd),
-        // Input Control Lines //TODO Agregar SXL/SXLV Control Line
+        // Input Control Lines //TODO Agregar SXL/SXLV Control Line?
         .i_alu_src_MC(alu_src), .i_reg_dst_MC(reg_dst), .i_jal_sel_MC(jal_sel),
         .i_alu_op_MC(alu_op), .i_forward_a_FU(forward_a), .i_forward_b_FU(forward_b),
         // Outputs 
@@ -65,7 +65,7 @@ module EX_tb();
         alu_result = {INST_SZ{1'b0}};
         read_data = {INST_SZ{1'b0}};
 
-        //! SLL Test
+        //! SLL Test (SHIFT INSTUCTIONS)
         // Control Lines
         reg_dst = 1'b1;
         jal_sel = 1'b0;
@@ -100,7 +100,7 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
-        //! ADDU Test
+        //! ADDU Test (3 OPERAND ALU INSTRUCTIONS)
         // Control Lines
         reg_dst = 1'b1;
         jal_sel = 1'b0;
@@ -136,7 +136,7 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
-        //! LW Test
+        //! LW Test (LOAD INSTRUCTIONS)
         // Control Lines
         reg_dst = 1'b0;
         jal_sel = 1'b0;
@@ -171,7 +171,7 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
-        //! SW Test
+        //! SW Test (STORE INSTRUCTIONS)
         // Control Lines
         reg_dst = 1'b0;
         jal_sel = 1'b0;
@@ -206,7 +206,7 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
-        //! ADDI Test
+        //! ADDI Test (ALU WITH IMM INSTRUCTIONS)
         // Control Lines
         reg_dst = 1'b0;
         jal_sel = 1'b0;
@@ -240,8 +240,39 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
-        //! BEQ Test
-        //TODO Hacer BEQ TEST, Otro Immediate, y chequear otros outputs
+        //! ANDI Test (ALU WITH IMM LOGICAL INSTS)
+        // Control Lines
+        reg_dst = 1'b0;
+        jal_sel = 1'b0;
+        alu_src = 1'b1;
+        alu_op = 3'b001;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
+
+        // Inputs
+        reg_instr_rs = $random(seed) % 32;   
+        read_data_1 = $random(seed) & 32'hFFFF_FFFF;
+        reg_immediate = $random(seed) & 16'hFFFF;
+
+        i_instruction = {6'b001100, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #100;
+
+        // Result Check
+        expected_res = read_data_1 & reg_immediate; 
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nANDI DID NOT PASS!!!");
+            $display("Expected Result: %b (%d)", expected_res, expected_res);
+            $display("Actual Result: %b (%d)\n", o_alu_result, o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nANDI PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
 
         $stop;
     end
