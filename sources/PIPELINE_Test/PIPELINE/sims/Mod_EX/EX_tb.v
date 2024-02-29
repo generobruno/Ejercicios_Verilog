@@ -82,7 +82,7 @@ module EX_tb();
 
         i_instruction = {6'b000000, 5'b00000, reg_instr_rt, reg_instr_rd, reg_sa, 6'b000000};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = read_data_2 << reg_sa;
@@ -118,7 +118,7 @@ module EX_tb();
 
         i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, 6'b100001};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = read_data_1 + read_data_2;
@@ -153,7 +153,7 @@ module EX_tb();
 
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = read_data_1 + reg_offset;
@@ -188,7 +188,7 @@ module EX_tb();
 
         i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = read_data_1 + reg_offset;
@@ -222,7 +222,7 @@ module EX_tb();
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = $signed(read_data_1) + $signed(reg_immediate); //TODO Revisar si deben ser signed
@@ -256,7 +256,7 @@ module EX_tb();
 
         i_instruction = {6'b001100, reg_instr_rs, reg_instr_rt, reg_immediate};
 
-        #100;
+        #10;
 
         // Result Check
         expected_res = read_data_1 & reg_immediate; 
