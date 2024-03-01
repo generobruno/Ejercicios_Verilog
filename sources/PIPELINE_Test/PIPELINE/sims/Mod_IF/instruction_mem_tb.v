@@ -9,6 +9,7 @@ module instruction_mem_tb();
 
     // Declarations
     reg i_clk;
+    reg i_enable;
     reg i_write;
     reg [INST_SZ-1 : 0] i_instruction;
     reg [PC_SZ-1 : 0] i_addr;
@@ -20,7 +21,7 @@ module instruction_mem_tb();
     // Instantiations
     instruction_mem #(.B(INST_SZ), .W(W), .PC(PC_SZ)) inst_mem
         (.i_clk(i_clk),
-        .i_write(i_write), .i_addr(i_addr), .i_data(i_instruction),
+        .i_write(i_write & ~i_enable), .i_addr(i_addr), .i_data(i_instruction),
         .o_data(o_instruction));
 
     // Clock Generation
@@ -33,6 +34,7 @@ module instruction_mem_tb();
     initial 
     begin
         i_clk = 1'b0;
+        i_enable = 1'b0;
         i_write = 1'b0;
         i_instruction = {INST_SZ{1'b0}};
         i_addr = {PC_SZ{1'b0}};
@@ -51,6 +53,7 @@ module instruction_mem_tb();
         i_addr = {W{1'b0}}; 
         i_instruction = {INST_SZ{1'b0}};
         i_write = 1'b0; // Disable write
+        i_enable = 1'b1;
 
         // Read Registers Test
         $display("\nRead Instructions Test\n");

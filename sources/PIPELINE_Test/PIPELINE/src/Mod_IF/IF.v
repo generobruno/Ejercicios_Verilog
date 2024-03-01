@@ -13,6 +13,7 @@ module IF
         input                           i_clk,                      // Clock
         input                           i_reset,                    // Reset
         input                           i_write,                    // Write Memory Control Line
+        input                           i_enable,                   // Enable Execution
         input [INST_SZ-1 : 0]           i_instruction_F,            // Saved Instruction
         input [INST_SZ-1 : 0]           i_branch_addr_D,            // Branch Address
         input [INST_SZ-1 : 0]           i_jump_addr_D,              // Jump Address
@@ -51,7 +52,7 @@ module IF
         .o_output(o_jump_sel_mpx));
 
     pc #(.PC_SZ(PC_SZ)) prog_counter
-        (.i_clk(i_clk), .i_reset(i_reset), .i_enable(i_stall_pc_HD),
+        (.i_clk(i_clk), .i_reset(i_reset), .i_enable(i_stall_pc_HD & i_enable),
         .i_pc(o_jump_sel_mpx), 
         .o_pc(instr_addr));
 
@@ -61,7 +62,8 @@ module IF
 
     instruction_mem #(.B(INST_SZ), .W(), .PC(PC_SZ)) inst_mem
         (.i_clk(i_clk),
-        .i_write(i_write), .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
+        .i_write(i_write & ~i_enable), 
+        .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
         .o_data(o_instruction_F));
 
 endmodule

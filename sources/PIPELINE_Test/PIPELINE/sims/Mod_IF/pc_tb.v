@@ -9,13 +9,14 @@ module pc_tb();
     reg i_clk;
     reg i_reset;
     reg i_stall_pc_HD;
+    reg i_enable;
     reg [PC_SZ-1 : 0] i_pc;
     wire [PC_SZ-1 : 0] o_pc;
     integer i;
 
     // Instantiations
     pc #(.PC_SZ(PC_SZ)) prog_counter
-        (.i_clk(i_clk), .i_reset(i_reset), .i_enable(!i_stall_pc_HD),
+        (.i_clk(i_clk), .i_reset(i_reset), .i_enable(!i_stall_pc_HD & i_enable),
         .i_pc(i_pc), 
         .o_pc(o_pc));
 
@@ -29,6 +30,7 @@ module pc_tb();
     initial 
     begin
         i_clk = 1'b0;
+        i_enable = 1'b1;
         i_pc = {PC_SZ{1'b0}};
         i_stall_pc_HD = 1'b0;
 

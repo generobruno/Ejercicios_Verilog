@@ -22,8 +22,10 @@ module pipeline
         input                           i_clk,                      // Clock
         input                           i_reset,                    // Reset
         input                           i_write,                    // Write Memory Control Line
+        input                           i_enable,                   // Enable Execution
         input [INST_SZ-1 : 0]           i_instruction               // Saved Instruction
         // Outputs
+        // TODO Agregar i_enable, o_regs (mem_sel), o_pc, o_mem, o_halt
     );
 
     //! Signal Declaration
@@ -46,7 +48,7 @@ module pipeline
     IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ)) InstructionFetch
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write),
+        .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write), .i_enable(i_enable),
         // Inputs
         .i_instruction_F(i_instruction), .i_branch_addr_D(branch_addr_D), 
         .i_jump_addr_D(jump_addr_D), .i_rs_addr_D(read_data_1),
@@ -66,7 +68,7 @@ module pipeline
     IF_ID_reg #(.INST_SZ(INST_SZ)) IF_ID
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset | pc_src_D | jump_MC | jump_sel_MC ), .i_enable(!stall_if_id_HD),
+        .i_clk(i_clk), .i_reset(i_reset | pc_src_D | jump_MC | jump_sel_MC ), .i_enable(!stall_if_id_HD & i_enable),
         // Inputs
         .i_instruction(instruction_F), .i_npc(npc_F), .i_bds(branch_delay_slot_F),
         // Outputs
@@ -129,7 +131,7 @@ module pipeline
     ID_EX_reg #(.INST_SZ(INST_SZ)) ID_EX
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset | flush_id_ex_HD), .i_enable(),
+        .i_clk(i_clk), .i_reset(i_reset | flush_id_ex_HD), .i_enable(i_enable),
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), 
         .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
@@ -189,7 +191,7 @@ module pipeline
     EX_MEM_reg #(.INST_SZ(INST_SZ)) EX_MEM
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset), .i_enable(),
+        .i_clk(i_clk), .i_reset(i_reset), .i_enable(i_enable),
         // Input Control Lines 
         .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
         .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
@@ -235,7 +237,7 @@ module pipeline
     MEM_WB_reg #(.INST_SZ(INST_SZ)) MEM_WB
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset), .i_enable(),
+        .i_clk(i_clk), .i_reset(i_reset), .i_enable(i_enable),
         // Input Control Lines 
         .i_reg_write(reg_write_EX_MEM), .i_mem_to_reg(mem_to_reg_EX_MEM), 
         .i_bds_sel(bds_sel_EX_MEM),
