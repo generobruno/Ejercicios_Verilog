@@ -12,6 +12,7 @@ module ID_EX_reg
         input wire                      i_clk,                      // Clock
         input wire                      i_reset,                    // Reset
         input wire                      i_enable,                   // Write Control Line
+        input wire                      i_halt,                     // Halt Control Line
         input wire                      i_alu_src,                  // ALUSrc Control Line
         input wire [2 : 0]              i_alu_op,                   // ALUOp Control Line
         input wire                      i_reg_dst,                  // RegDst Control Line
@@ -29,6 +30,7 @@ module ID_EX_reg
         input wire [4 : 0]              i_instr_rd,                 // Instruction rd (instr[15:11])
         input wire [4 : 0]              i_instr_rs,                 // Instruction rs (instr[25:21])
         // Outputs  
+        output wire                     o_halt,                     // Halt Control Line
         output wire                     o_alu_src,                  // ALUSrc Control Line
         output wire [2 : 0]             o_alu_op,                   // ALUOp Control Line
         output wire                     o_reg_dst,                  // RegDst Control Line
@@ -48,6 +50,7 @@ module ID_EX_reg
     );
 
     //! Signal Definition
+    reg                     halt;
     reg                     alu_src;                  
     reg [2 : 0]             alu_op;                   
     reg                     reg_dst;                  
@@ -70,6 +73,7 @@ module ID_EX_reg
     begin
         if(i_reset)
         begin
+            halt           <=       0;
             alu_src        <=       0;
             alu_op         <=       0;
             reg_dst        <=       0;
@@ -89,6 +93,7 @@ module ID_EX_reg
         end
         else if(i_enable)
         begin
+            halt           <=       i_halt;
             alu_src        <=       i_alu_src;
             alu_op         <=       i_alu_op;
             reg_dst        <=       i_reg_dst;
@@ -126,6 +131,7 @@ module ID_EX_reg
     assign o_instr_imm      =       instr_imm;
     assign o_instr_rt       =       instr_rt;
     assign o_instr_rd       =       instr_rd;                 
-    assign o_instr_rs       =       instr_rs;                 
+    assign o_instr_rs       =       instr_rs; 
+    assign o_halt           =       halt;                
 
 endmodule

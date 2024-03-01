@@ -26,7 +26,8 @@ module MainControlUnit
         output                          o_jump_sel_MC,              // JumpSel Control Line
         output                          o_reg_write_MC,             // RegWrite Control Line
         output                          o_bds_sel_MC,               // BDSSel Control Line
-        output                          o_mem_to_reg_MC             // MemToReg Control Line
+        output                          o_mem_to_reg_MC,            // MemToReg Control Line
+        output                          o_halt_MC                   // Halt Control Line
     );
 
     //! Local Parameters
@@ -67,6 +68,8 @@ module MainControlUnit
     localparam JR       =       6'b001000;      // Jump Register
     localparam JALR     =       6'b001001;      // Jump and Link Register
 
+    localparam HALT     =       6'b111111;           // HALT Instruction
+
     //! Signal Declaration
     reg [2:0] alu_op;
     reg reg_dst;
@@ -81,6 +84,7 @@ module MainControlUnit
     reg reg_write;
     reg bds_sel;
     reg mem_to_reg;
+    reg halt;
 
     // Body
     always @(*) 
@@ -107,6 +111,7 @@ module MainControlUnit
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
+                                halt        =   1'b0;
                             end
                             SRA, SRL, SLL:      // Shift Instructions
                             begin
@@ -123,6 +128,7 @@ module MainControlUnit
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
+                                halt        =   1'b0;
 
                             end
                             SRAV, SRLV, SLLV:   // Shift Variable Instructions
@@ -140,6 +146,7 @@ module MainControlUnit
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
+                                halt        =   1'b0;
                             end
                             JR:                 // Jump Register Instruction
                             begin
@@ -156,6 +163,7 @@ module MainControlUnit
                                 reg_write   =   1'b0; // X
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0; // X
+                                halt        =   1'b0;
                             end
                             JALR:               // Jump and Link Register Instruction
                             begin
@@ -172,6 +180,24 @@ module MainControlUnit
                                 reg_write   =   1'b1;
                                 bds_sel     =   1'b1;
                                 mem_to_reg  =   1'b0;
+                                halt        =   1'b0;
+                            end
+                            HALT:
+                            begin
+                                reg_dst     =   1'b0; // X   
+                                jal_sel     =   1'b0; // X
+                                alu_src     =   1'b0; // X
+                                alu_op      =   3'b000; // X
+                                branch      =   1'b0; // X
+                                equal       =   1'b0; // X
+                                mem_read    =   1'b0; // X
+                                mem_write   =   1'b0; // X
+                                jump        =   1'b0; // X
+                                jump_sel    =   1'b0; // X
+                                reg_write   =   1'b0; // X
+                                bds_sel     =   1'b0; // X
+                                mem_to_reg  =   1'b0; // X
+                                halt        =   1'b1;
                             end
                             default:
                             begin
@@ -188,6 +214,7 @@ module MainControlUnit
                                 reg_write   =   1'b0;
                                 bds_sel     =   1'b0;
                                 mem_to_reg  =   1'b0;
+                                halt        =   1'b0;
                             end
                         endcase
                     end
@@ -206,6 +233,7 @@ module MainControlUnit
                         reg_write   =   1'b0;
                         bds_sel     =   1'b0;
                         mem_to_reg  =   1'b0; //X
+                        halt        =   1'b0;
                     end
                     BNE:                // Branch if Not Equal Instruction
                     begin
@@ -222,6 +250,7 @@ module MainControlUnit
                         reg_write   =   1'b0;
                         bds_sel     =   1'b0;
                         mem_to_reg  =   1'b0; //X
+                        halt        =   1'b0;
                     end
                     J:                  // Jump Instruction
                     begin
@@ -238,6 +267,7 @@ module MainControlUnit
                         reg_write   =   1'b0; //X
                         bds_sel     =   1'b0;
                         mem_to_reg  =   1'b0; //X
+                        halt        =   1'b0;
                     end
                     JAL:                // Jump and Link Instruction
                     begin
@@ -254,6 +284,7 @@ module MainControlUnit
                         reg_write   =   1'b0; //X
                         bds_sel     =   1'b1;
                         mem_to_reg  =   1'b0; //X
+                        halt        =   1'b0;
                     end
                     default:
                     begin
@@ -270,6 +301,7 @@ module MainControlUnit
                         reg_write   =   1'b0;
                         bds_sel     =   1'b0;
                         mem_to_reg  =   1'b0;
+                        halt        =   1'b0;
                     end
                 endcase
             end
@@ -287,7 +319,8 @@ module MainControlUnit
                 jump_sel    =   1'b0; //X
                 reg_write   =   1'b1;
                 bds_sel     =   1'b0;
-                mem_to_reg  =   1'b1;            
+                mem_to_reg  =   1'b1;        
+                halt        =   1'b0;    
             end
             STORE:              // Store Instructions
             begin
@@ -303,7 +336,8 @@ module MainControlUnit
                 jump_sel    =   1'b0; //X
                 reg_write   =   1'b0;
                 bds_sel     =   1'b0;
-                mem_to_reg  =   1'b0; //X            
+                mem_to_reg  =   1'b0; //X 
+                halt        =   1'b0;      
             end
             IMM:                // Immediate Instruction
             begin
@@ -319,6 +353,7 @@ module MainControlUnit
                 reg_write   =   1'b1;
                 bds_sel     =   1'b0;
                 mem_to_reg  =   1'b0;
+                halt        =   1'b0;
                 case(i_instr_op_D[3:0])
                     ADDI:
                     begin
@@ -363,6 +398,7 @@ module MainControlUnit
                 reg_write   =   1'b0;
                 bds_sel     =   1'b0;
                 mem_to_reg  =   1'b0;
+                halt        =   1'b0;
             end
         endcase    
     end
@@ -381,5 +417,6 @@ module MainControlUnit
     assign o_reg_write_MC   = reg_write;
     assign o_bds_sel_MC     = bds_sel;
     assign o_mem_to_reg_MC  = mem_to_reg; 
+    assign o_halt_MC        = halt;
 
 endmodule

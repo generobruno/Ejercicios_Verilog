@@ -26,8 +26,9 @@ module pipeline
         input [INST_SZ-1 : 0]           i_instruction,              // Saved Instruction
         // Outputs
         output [PC_SZ-1 : 0]            o_pc,                       // Output PC
-        output [INST_SZ-1 : 0]          o_data                      // Output Memory
-        // TODO Agregar o_regs (mem_sel), o_mem, o_halt
+        output [INST_SZ-1 : 0]          o_data,                     // Output Memory
+        output                          o_halt                      // Halt Control Line
+        // TODO Agregar o_regs (mem_sel), o_mem
     );
 
     //! Signal Declaration
@@ -119,7 +120,8 @@ module pipeline
     wire [REG_SZ-1 : 0]      instr_rd_ID_EX;                 
     wire [REG_SZ-1 : 0]      instr_rs_ID_EX;
     wire [ALU_OP-1 : 0]      alu_op_MC;
-    wire [ALU_OP-1 : 0]      alu_op_ID_EX; 
+    wire [ALU_OP-1 : 0]      alu_op_ID_EX;
+    wire                     halt_ID_EX; 
     wire                     alu_src_ID_EX;      
     wire                     reg_dst_ID_EX;   
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
@@ -129,13 +131,14 @@ module pipeline
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
     wire                     flush_id_ex_HD;
+    wire                     halt_MC;
 
     ID_EX_reg #(.INST_SZ(INST_SZ)) ID_EX
         (
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset | flush_id_ex_HD), .i_enable(i_enable),
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
-        .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), 
+        .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), .i_halt(halt_MC),
         .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
         .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC),
         // Inputs
@@ -143,7 +146,7 @@ module pipeline
         .i_read_data_2(read_data_2), .i_instr_imm(instr_imm_D), 
         .i_instr_rt(instr_rt_D), .i_instr_rd(instr_rd_D), .i_instr_rs(instr_rs_D),
         // Output Control Lines //TODO Agregar SXL/SXLV Control Line
-        .o_alu_src(alu_src_ID_EX), .o_alu_op(alu_op_ID_EX), .o_reg_dst(reg_dst_ID_EX), 
+        .o_alu_src(alu_src_ID_EX), .o_alu_op(alu_op_ID_EX), .o_reg_dst(reg_dst_ID_EX), .o_halt(halt_ID_EX), 
         .o_jal_sel(jal_sel_ID_EX), .o_mem_read(mem_read_ID_EX), .o_mem_write(mem_write_ID_EX), 
         .o_reg_write(reg_write_ID_EX), .o_mem_to_reg(mem_to_reg_ID_EX), .o_bds_sel(bds_sel_ID_EX),
         // Outputs
@@ -188,7 +191,8 @@ module pipeline
     wire                     mem_write_EX_MEM;               
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
-    wire                     bds_sel_EX_MEM;                  
+    wire                     bds_sel_EX_MEM;   
+    wire                     halt_EX_MEM;               
 
     EX_MEM_reg #(.INST_SZ(INST_SZ)) EX_MEM
         (
@@ -197,14 +201,14 @@ module pipeline
         // Input Control Lines 
         .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
         .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
-        .i_bds_sel(bds_sel_ID_EX),
+        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
         .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
         .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
         .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), 
-        .o_bds_sel(bds_sel_EX_MEM),
+        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM),
         // Outputs
         .o_alu_result(alu_result_EX_MEM), .o_write_data(write_data_EX_MEM),
         .o_write_register(write_register_EX_MEM), .o_bds(bds_EX_MEM)
@@ -234,7 +238,7 @@ module pipeline
     wire [INST_SZ-1 : 0]     alu_result_MEM_WB;
     wire [INST_SZ-1 : 0]     bds_MEM_WB; 
     wire                     mem_to_reg_MEM_WB;               
-    wire                     bds_sel_MEM_WB;     
+    wire                     bds_sel_MEM_WB; 
 
     MEM_WB_reg #(.INST_SZ(INST_SZ)) MEM_WB
         (
@@ -242,13 +246,13 @@ module pipeline
         .i_clk(i_clk), .i_reset(i_reset), .i_enable(i_enable),
         // Input Control Lines 
         .i_reg_write(reg_write_EX_MEM), .i_mem_to_reg(mem_to_reg_EX_MEM), 
-        .i_bds_sel(bds_sel_EX_MEM),
+        .i_bds_sel(bds_sel_EX_MEM), .i_halt(halt_EX_MEM),
         // Inputs
         .i_read_data(read_data_M), .i_alu_result(alu_result_M),
         .i_write_register(write_register_EX_MEM), .i_bds(bds_EX_MEM),
         // Output Control Lines 
         .o_reg_write(reg_write_MEM_WB), .o_mem_to_reg(mem_to_reg_MEM_WB), 
-        .o_bds_sel(bds_sel_MEM_WB),
+        .o_bds_sel(bds_sel_MEM_WB), .o_halt(o_halt),
         // Outputs
         .o_read_data(read_data_MEM_WB), .o_alu_result(alu_result_MEM_WB),
         .o_write_register(write_register_MEM_WB), .o_bds(bds_MEM_WB)
@@ -291,7 +295,8 @@ module pipeline
             .o_jump_sel_MC(jump_sel_MC),
             .o_reg_write_MC(reg_write_MC),
             .o_bds_sel_MC(bds_sel_MC),
-            .o_mem_to_reg_MC(mem_to_reg_MC)
+            .o_mem_to_reg_MC(mem_to_reg_MC),
+            .o_halt_MC(halt_MC)
         );
 
     //  Hazard Detection Unit

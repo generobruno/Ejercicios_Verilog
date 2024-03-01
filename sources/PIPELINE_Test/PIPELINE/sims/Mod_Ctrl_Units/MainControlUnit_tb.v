@@ -18,6 +18,7 @@ module MainControlUnit_tb();
     localparam JAL      = 32'b000011_00000000000000000000000000;
     localparam JR       = 32'b000000_00001_000000000000000_001000;
     localparam JALR     = 32'b000000_00001_00000_00000_001001;
+    localparam HALT     = 32'b000000_00000_00000_00000_111111;
 
     // Declarations
     reg [INST_SZ-1 : 0] i_instruction_IF_ID;
@@ -34,6 +35,7 @@ module MainControlUnit_tb();
     wire reg_write_MC;
     wire bds_sel_MC;
     wire mem_to_reg_MC;
+    wire halt_MC;
 
     // Instantiations
     MainControlUnit #(.OPCODE_SZ(OPCODE_SZ), .FUNCT_SZ(FUNCT_SZ)) MainControlUnit
@@ -54,7 +56,8 @@ module MainControlUnit_tb();
             .o_jump_sel_MC(jump_sel_MC),
             .o_reg_write_MC(reg_write_MC),
             .o_bds_sel_MC(bds_sel_MC),
-            .o_mem_to_reg_MC(mem_to_reg_MC)
+            .o_mem_to_reg_MC(mem_to_reg_MC),
+            .o_halt_MC(halt_MC)
         );
     
     // Task
@@ -94,13 +97,17 @@ module MainControlUnit_tb();
         // JALR Instrucion
         i_instruction_IF_ID = JALR;
         #10;
+        // HALT Instruction
+        i_instruction_IF_ID = HALT;
+        #10;
+
         $finish;          
     end
 
     always @(*)
     begin
-        $display("INSTRUCTION: %b \n reg_dst=%d, jal_sel=%d, alu_src=%d, alu_op=%b, branch=%d, equal=%d, mem_read=%d, mem_write=%d, jump=%d, jump_sel=%d, reg_write=%d, bds_sel=%d, mem_to_reg=%d", 
-        i_instruction_IF_ID, reg_dst_MC, jal_sel_MC, alu_src_MC, alu_op_MC, branch_MC, equal_MC, mem_read_MC, mem_write_MC, jump_MC, jump_sel_MC, reg_write_MC, bds_sel_MC, mem_to_reg_MC);
+        $display("INSTRUCTION: %b \n reg_dst=%d, jal_sel=%d, alu_src=%d, alu_op=%b, branch=%d, equal=%d, mem_read=%d, mem_write=%d, jump=%d, jump_sel=%d, reg_write=%d, bds_sel=%d, mem_to_reg=%d, halt=%d", 
+        i_instruction_IF_ID, reg_dst_MC, jal_sel_MC, alu_src_MC, alu_op_MC, branch_MC, equal_MC, mem_read_MC, mem_write_MC, jump_MC, jump_sel_MC, reg_write_MC, bds_sel_MC, mem_to_reg_MC, halt_MC);
     end
 
 endmodule

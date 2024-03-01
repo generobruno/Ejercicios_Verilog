@@ -24,6 +24,7 @@ module pipeline_tb();
 
     wire [INST_SZ-1 : 0]          o_pc;
     wire [INST_SZ-1 : 0]          o_data;
+    wire                          o_halt;
 
     reg [INST_SZ-1 : 0] seed;
     reg [INST_SZ-1 : 0] expected_res;    
@@ -43,7 +44,7 @@ module pipeline_tb();
         .i_write(i_write), .i_enable(i_enable),
         .i_instruction(i_instruction),
         // Outputs
-        .o_pc(o_pc), .o_data(o_data)
+        .o_pc(o_pc), .o_data(o_data), .o_halt(o_halt)
         );
 
     // Clock Generation
@@ -58,7 +59,7 @@ module pipeline_tb();
         i_clk = 1'b0;
         i_enable = 1'b0;
         i_reset = 1'b0;
-        i_write = 1'b0;
+        i_write = 1'b1;
         i_instruction = {INST_SZ{1'b0}};
 
         seed = 123456;
@@ -89,11 +90,23 @@ module pipeline_tb();
         #(T*2);
 
         //! HALT
+        i_instruction = 32'b000000_00000_00000_00000_111111;
         
+        #(T*2);
+        
+        $display("LOADING PROGRAM...");
 
+        i_write = 1'b0;
         i_enable = 1'b1;
         
-        //$stop;
+        $display("RUNNING...");
+
+        // Wait for HALT
+        @(posedge o_halt);
+        
+        $display("PROGRAM FINISHED.");
+        
+        $stop;
     end
 
 endmodule
