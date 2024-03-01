@@ -23,9 +23,11 @@ module pipeline
         input                           i_reset,                    // Reset
         input                           i_write,                    // Write Memory Control Line
         input                           i_enable,                   // Enable Execution
-        input [INST_SZ-1 : 0]           i_instruction               // Saved Instruction
+        input [INST_SZ-1 : 0]           i_instruction,              // Saved Instruction
         // Outputs
-        // TODO Agregar i_enable, o_regs (mem_sel), o_pc, o_mem, o_halt
+        output [PC_SZ-1 : 0]            o_pc,                       // Output PC
+        output [INST_SZ-1 : 0]          o_data                      // Output Memory
+        // TODO Agregar o_regs (mem_sel), o_mem, o_halt
     );
 
     //! Signal Declaration
@@ -55,7 +57,7 @@ module pipeline
         // Input Control Lines 
         .i_pc_src_D(pc_src_D), .i_jump_D(jump_MC), .i_jump_sel_D(jump_sel_MC), .i_stall_pc_HD(!stall_pc_HD),
         // Outputs
-        .o_npc_F(npc_F), .o_branch_delay_slot_F(branch_delay_slot_F), .o_instruction_F(instruction_F)
+        .o_pc(o_pc), .o_npc_F(npc_F), .o_branch_delay_slot_F(branch_delay_slot_F), .o_instruction_F(instruction_F)
         );
 
     /**
@@ -222,7 +224,7 @@ module pipeline
         // Input Control Lines 
         .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM),
         // Outputs
-        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M)
+        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_data)
         );
 
     /**

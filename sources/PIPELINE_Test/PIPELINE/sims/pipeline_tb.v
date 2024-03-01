@@ -18,8 +18,12 @@ module pipeline_tb();
     // Declarations
     reg i_clk;
     reg i_reset;
+    reg i_enable;
     reg i_write;
     reg [INST_SZ-1 : 0]           i_instruction;
+
+    wire [INST_SZ-1 : 0]          o_pc;
+    wire [INST_SZ-1 : 0]          o_data;
 
     reg [INST_SZ-1 : 0] seed;
     reg [INST_SZ-1 : 0] expected_res;    
@@ -36,8 +40,10 @@ module pipeline_tb();
         (
         // Inputs 
         .i_clk(i_clk), .i_reset(i_reset),
-        .i_write(i_write),
-        .i_instruction(i_instruction)
+        .i_write(i_write), .i_enable(i_enable),
+        .i_instruction(i_instruction),
+        // Outputs
+        .o_pc(o_pc), .o_data(o_data)
         );
 
     // Clock Generation
@@ -50,6 +56,7 @@ module pipeline_tb();
     initial 
     begin
         i_clk = 1'b0;
+        i_enable = 1'b0;
         i_reset = 1'b0;
         i_write = 1'b0;
         i_instruction = {INST_SZ{1'b0}};
@@ -81,7 +88,12 @@ module pipeline_tb();
 
         #(T*2);
 
-        $stop;
+        //! HALT
+        
+
+        i_enable = 1'b1;
+        
+        //$stop;
     end
 
 endmodule

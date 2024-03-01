@@ -23,6 +23,7 @@ module IF
         input                           i_jump_sel_D,               // JumpSel Control Line
         input                           i_stall_pc_HD,              // StallPC Control Line
         // Outputs
+        output [INST_SZ-1 : 0]          o_pc,                       // PC Out
         output [INST_SZ-1 : 0]          o_npc_F,                    // NPC
         output [INST_SZ-1 : 0]          o_branch_delay_slot_F,      // Branch Delay Slot
         output [INST_SZ-1 : 0]          o_instruction_F             // Instruction Fetched
@@ -65,5 +66,8 @@ module IF
         .i_write(i_write & ~i_enable), 
         .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
         .o_data(o_instruction_F));
+
+    //! Assignments
+    assign o_pc = instr_addr;
 
 endmodule

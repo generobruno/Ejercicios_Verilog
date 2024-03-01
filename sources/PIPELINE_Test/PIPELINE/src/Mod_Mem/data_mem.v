@@ -17,6 +17,7 @@ module data_mem
         input [W-1 : 0]                 i_addr,                     // Address
         input [B-1 : 0]                 i_data,                     // Data to Write
         // Outputs
+        output [B-1 : 0]                o_debug_mem,                // Data to send to debugger
         output [B-1 : 0]                o_data                      // Data to Read
     );
 
@@ -48,5 +49,6 @@ module data_mem
 
     //! Assignments
     assign o_data = read_reg;
+    assign o_debug_mem = read_reg;
 
 endmodule
