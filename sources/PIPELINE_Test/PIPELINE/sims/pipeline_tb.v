@@ -99,7 +99,7 @@ module pipeline_tb();
         //! LW - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
-        reg_offset = 16'h0005;
+        reg_offset = 16'h0007;
         reg_instr_rt = 5'b00011;
 
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};

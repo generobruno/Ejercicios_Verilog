@@ -11,6 +11,7 @@ module IF_tb();
     reg i_clk;
     reg i_reset;
     reg i_write;
+    reg i_enable;
     reg stall_pc_HD;
     reg [INST_SZ-1 : 0] i_instruction;
     reg [INST_SZ-1 : 0] branch_addr_D;
@@ -25,10 +26,10 @@ module IF_tb();
     reg [INST_SZ-1 : 0] inst_test;
 
     // Instantiations
-    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ)) InstructionFetch
+    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ), .MEM_SZ(W)) InstructionFetch
         (
         // Sync Signals
-        .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write),
+        .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write), .i_enable(i_enable),
         // Inputs
         .i_instruction_F(i_instruction), .i_branch_addr_D(branch_addr_D), 
         .i_jump_addr_D(jump_addr_D), .i_rs_addr_D(read_data_1),
@@ -48,9 +49,11 @@ module IF_tb();
     initial 
     begin
         i_clk = 1'b0;
+        i_enable = 1'b0;    
         i_instruction = {INST_SZ{1'b0}};
         inst_test =  {INST_SZ{1'b0}};
         stall_pc_HD = 1'b0;
+
         i_write = 1'b0;
         pc_src_D = 1'b0;
         jump_MC = 1'b0;
@@ -65,13 +68,15 @@ module IF_tb();
         i_reset = 1'b0;
 
         // Test uploading insts (full mem)
+        i_write = 1'b1;
         for (i = 0; i < 2**W; i = i + 1) begin
             i_instruction = inst_test;
             inst_test = inst_test + 1;
-            i_write = 1'b1;
             #(T*2);
-            i_write = 1'b0;
         end
+
+        i_enable = 1'b1;
+        i_write = 1'b0;
 
         #100;
 
@@ -102,7 +107,7 @@ module IF_tb();
 
     always @(posedge i_clk)
     begin
-        $display("Time: %t", $time);
+        $display("\nTime: %t", $time);
         $display("Inputs:");
         $display("i_instruction   = %d", i_instruction);
         $display("i_branch_addr_D = %d", branch_addr_D);
@@ -115,7 +120,7 @@ module IF_tb();
         $display("Outputs:");
         $display("o_npc_F         = %d", npc);
         $display("o_branch_delay_slot_F = %d", bds);
-        $display("o_instruction_F = %d", instruction_F);
+        $display("o_instruction_F = %d\n", instruction_F);
     end
 
 endmodule

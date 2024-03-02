@@ -378,38 +378,18 @@ module pipeline_verbose_tb();
         #(T*2);
         i_reset = 1'b0;
 
-        //! SW - Store Test: mem[base+offset] <- rt
-        // Inputs
-        reg_base = 5'b00000;
-        reg_offset = 16'h0005;
-        reg_instr_rt = 5'b00011;
-
-        i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
-
-        #(T*2);
-
-        //! LW - Load Test: rt <- mem[base+offset]
-        // Inputs
-        reg_base = 5'b00000;
-        reg_offset = 16'h0005;
-        reg_instr_rt = 5'b00011;
-
-        i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
-
-        #(T*2);
-
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
         reg_instr_rs = 5'b0000;
         reg_instr_rt = 5'b00011;
         reg_instr_rd = 5'b01010;
 
-        i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
+        //i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
 
         #(T*2);
 
         //! HALT
-        //i_instruction = 32'b000000_00000_00000_00000_111111;
+        i_instruction = 32'b000000_00000_00000_00000_111111;
         
         #(T*2);
         

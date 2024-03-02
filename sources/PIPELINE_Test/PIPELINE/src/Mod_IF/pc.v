@@ -33,6 +33,11 @@ module pc
         end    
     end
 
+    initial 
+    begin
+        prog_counter <= 0;    
+    end
+
     //! Assignments
     assign o_pc = prog_counter;
 

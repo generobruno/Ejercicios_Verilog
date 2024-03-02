@@ -48,7 +48,7 @@ module pipeline
     wire [INST_SZ-1 : 0] read_data_1;
     wire [INST_SZ-1 : 0] read_data_2;
 
-    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ)) InstructionFetch
+    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ), .MEM_SZ(MEM_SZ)) InstructionFetch
         (
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write), .i_enable(i_enable),
