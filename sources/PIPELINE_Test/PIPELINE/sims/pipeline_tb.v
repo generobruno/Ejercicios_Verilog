@@ -1,4 +1,4 @@
-`timescale 1ns/10ps
+`timescale 1ns/1ps
 
 module pipeline_tb();
     // Parameters
@@ -8,12 +8,29 @@ module pipeline_tb();
     localparam OPCODE_SZ     =   6;
     localparam FUNCT_SZ      =   6;
     localparam REG_SZ        =   5;
-    localparam MEM_SZ        =   5;
+    localparam MEM_SZ        =   10;
     localparam FORW_EQ       =   1;
     localparam FORW_ALU      =   2;
     localparam ALU_OP        =   3;
     localparam ALU_SEL       =   6;
     localparam FUNCT         =   6;
+
+    // Operation Parameters
+    localparam ADDU =           6'b100001;      // Add Word Unsigned 
+    localparam SUBU =           6'b100011;      // Subtract Word Unsigned
+    localparam AND  =           6'b100100;      // Logical bitwise AND 
+    localparam OR   =           6'b100101;      // Logical bitwise OR
+    localparam XOR  =           6'b100110;      // Logical bitwise XOR
+    localparam NOR  =           6'b100111;      // Logical bitwise NOR
+    localparam SLT  =           6'b101010;      // Set on Less Than
+    localparam SRA  =           6'b000011;      // Shift Word Right Arithmetic
+    localparam SRL  =           6'b000010;      // Shift Word Right Logic
+    localparam SLL  =           6'b000000;      // Shift Word Left Logic
+    localparam SLLV =           6'b000100;      // Shift Word Left Logic Variable
+    localparam SRLV =           6'b000110;      // Shift Word Right Logic Variable
+    localparam SRAV =           6'b000111;      // Shift Word Right Arithmetic Variable
+    localparam JR       =       6'b001000;      // Jump Register
+    localparam JALR     =       6'b001001;      // Jump and Link Register
 
     // Declarations
     reg i_clk;
@@ -69,7 +86,7 @@ module pipeline_tb();
         #(T*2);
         i_reset = 1'b0;
 
-        //! SW: Store Test: mem[base+offset] <- rt
+        //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0005;
@@ -79,13 +96,23 @@ module pipeline_tb();
 
         #(T*2);
 
-        //! LW: Load Test: rt <- mem[base+offset]
+        //! LW - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0005;
         reg_instr_rt = 5'b00011;
 
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
+
+        #(T*2);
+
+        //! ADDU - Add Test: rd <- rs + rt
+        // Inputs
+        reg_instr_rs = 5'b0000;
+        reg_instr_rt = 5'b00011;
+        reg_instr_rd = 5'b01010;
+
+        i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
 
         #(T*2);
 
@@ -97,6 +124,8 @@ module pipeline_tb();
         $display("LOADING PROGRAM...");
 
         i_write = 1'b0;
+        i_instruction = {INST_SZ{1'b0}};
+        #100;
         i_enable = 1'b1;
         
         $display("RUNNING...");

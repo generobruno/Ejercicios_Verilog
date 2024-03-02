@@ -14,6 +14,7 @@ module data_mem_tb();
     reg                           mem_write;              
 
     wire [INST_SZ-1 : 0]          o_read_data;
+    wire [INST_SZ-1 : 0]          o_debug_mem;
 
     integer i;
 
@@ -22,7 +23,7 @@ module data_mem_tb();
         (.i_clk(i_clk), 
         .i_mem_read(mem_read), .i_mem_write(mem_write),
         .i_addr(alu_result[MEM_SZ-1:0]), .i_data(write_data), //TODO Que parte de alu_result se usa?
-        .o_data(o_read_data));
+        .o_data(o_read_data), .o_debug_mem(o_debug_mem));
     
     // Clock Generation
     always
@@ -67,6 +68,7 @@ module data_mem_tb();
             else
             begin
                 $display("Data loaded: %d from %b", o_read_data, alu_result[MEM_SZ-1:0]);
+                $display("DEBUG DATA: %d from %b", o_debug_mem, alu_result[MEM_SZ-1:0]);
             end
         end
         mem_read = 1'b0;

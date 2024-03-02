@@ -10,7 +10,7 @@ module pipeline
         parameter OPCODE_SZ     =   6,
         parameter FUNCT_SZ      =   6,
         parameter REG_SZ        =   5,
-        parameter MEM_SZ        =   5,
+        parameter MEM_SZ        =   10,
         parameter FORW_EQ       =   1,
         parameter FORW_ALU      =   2,
         parameter ALU_OP        =   3,
