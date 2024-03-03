@@ -38,6 +38,7 @@ module pipeline_tb();
     reg i_enable;
     reg i_write;
     reg [INST_SZ-1 : 0]           i_instruction;
+    reg [REG_SZ-1 : 0]            i_debug_addr;
 
     wire [INST_SZ-1 : 0]          o_pc;
     wire [INST_SZ-1 : 0]          o_data;
@@ -60,6 +61,7 @@ module pipeline_tb();
         .i_clk(i_clk), .i_reset(i_reset),
         .i_write(i_write), .i_enable(i_enable),
         .i_instruction(i_instruction),
+        .i_debug_addr(i_debug_addr),
         // Outputs
         .o_pc(o_pc), .o_data(o_data), .o_halt(o_halt)
         );
@@ -86,11 +88,23 @@ module pipeline_tb();
         #(T*2);
         i_reset = 1'b0;
 
+        //! ADDI - Add Immediate Test: rt <- rs + imm
+        // Inputs
+        reg_instr_rs = 5'b0000;
+        reg_immediate = 16'h0002;
+        reg_instr_rt = 5'b00010;
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0005;
-        reg_instr_rt = 5'b00011;
+        reg_instr_rt = 5'b00000;
+
+        i_debug_addr = reg_offset[REG_SZ-1:0];
 
         i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
 
@@ -109,7 +123,7 @@ module pipeline_tb();
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
         reg_instr_rs = 5'b0000;
-        reg_instr_rt = 5'b00011;
+        reg_instr_rt = 5'b00010;
         reg_instr_rd = 5'b01010;
 
         i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};

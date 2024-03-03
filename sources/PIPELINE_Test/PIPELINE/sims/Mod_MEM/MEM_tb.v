@@ -79,7 +79,25 @@ module MEM_tb();
                 $display("DEBUG DATA: %d from %b", o_debug_mem, alu_result[MEM_SZ-1:0]);
             end
         end
+
         mem_read = 1'b0;
+
+        // Debug Data -> Independent of mem_read
+        $display("\nTESTING DEBUG DATA:");
+        for(i = 0; i < 10; i = i + 1)
+        begin
+            alu_result = i * 4; // Address
+            #(T*2);
+            if (o_read_data != i)
+            begin
+                $display("Incorrect Data: %d - (%b) address", o_read_data, i[MEM_SZ-1:0]);
+            end 
+            else
+            begin
+                $display("Data loaded: %d from %b", o_read_data, alu_result[MEM_SZ-1:0]);
+                $display("DEBUG DATA: %d from %b", o_debug_mem, alu_result[MEM_SZ-1:0]);
+            end
+        end
 
         $display("TESTS PASSED!");
 

@@ -24,6 +24,7 @@ module pipeline
         input                           i_write,                    // Write Memory Control Line
         input                           i_enable,                   // Enable Execution
         input [INST_SZ-1 : 0]           i_instruction,              // Saved Instruction
+        input [REG_SZ-1 : 0]            i_debug_addr,               // Debug Memory Address
         // Outputs
         output [PC_SZ-1 : 0]            o_pc,                       // Output PC
         output [INST_SZ-1 : 0]          o_data,                     // Output Memory
@@ -126,7 +127,9 @@ module pipeline
     wire                     reg_dst_ID_EX;   
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
     wire                     mem_read_ID_EX;  
-    wire                     mem_write_ID_EX; 
+    wire                     mem_write_ID_EX;
+    wire [1 : 0]             bhw_MC;
+    wire [1 : 0]             bhw_ID_EX; 
     wire                     reg_write_ID_EX; 
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
@@ -139,7 +142,7 @@ module pipeline
         .i_clk(i_clk), .i_reset(i_reset | flush_id_ex_HD), .i_enable(i_enable),
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), .i_halt(halt_MC),
-        .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
+        .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), .i_bhw(bhw_MC),
         .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC),
         // Inputs
         .i_bds(bds_IF_ID), .i_read_data_1(read_data_1), 
@@ -147,7 +150,7 @@ module pipeline
         .i_instr_rt(instr_rt_D), .i_instr_rd(instr_rd_D), .i_instr_rs(instr_rs_D),
         // Output Control Lines //TODO Agregar SXL/SXLV Control Line
         .o_alu_src(alu_src_ID_EX), .o_alu_op(alu_op_ID_EX), .o_reg_dst(reg_dst_ID_EX), .o_halt(halt_ID_EX), 
-        .o_jal_sel(jal_sel_ID_EX), .o_mem_read(mem_read_ID_EX), .o_mem_write(mem_write_ID_EX), 
+        .o_jal_sel(jal_sel_ID_EX), .o_mem_read(mem_read_ID_EX), .o_mem_write(mem_write_ID_EX), .o_bhw(bhw_ID_EX),
         .o_reg_write(reg_write_ID_EX), .o_mem_to_reg(mem_to_reg_ID_EX), .o_bds_sel(bds_sel_ID_EX),
         // Outputs
         .o_read_data_1(read_data_1_ID_EX), .o_read_data_2(read_data_2_ID_EX), 
@@ -188,7 +191,8 @@ module pipeline
     wire [INST_SZ-1 : 0]     bds_EX_MEM;
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
     wire                     mem_read_EX_MEM;               
-    wire                     mem_write_EX_MEM;               
+    wire                     mem_write_EX_MEM;
+    wire [1 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
     wire                     bds_sel_EX_MEM;   
@@ -201,14 +205,14 @@ module pipeline
         // Input Control Lines 
         .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
         .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
-        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX),
+        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
         .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
         .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
         .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), 
-        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM),
+        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
         // Outputs
         .o_alu_result(alu_result_EX_MEM), .o_write_data(write_data_EX_MEM),
         .o_write_register(write_register_EX_MEM), .o_bds(bds_EX_MEM)
@@ -219,14 +223,15 @@ module pipeline
     **/
     wire [INST_SZ-1 : 0]          read_data_M;              
 
-    MEM #(.INST_SZ(INST_SZ), .MEM_SZ(MEM_SZ)) MemoryAccess
+    MEM #(.INST_SZ(INST_SZ)) MemoryAccess
         (
         // Sync Signals
         .i_clk(i_clk),
         // Inputs 
         .i_alu_result_E(alu_result_EX_MEM), .i_operand_b_E(write_data_EX_MEM),
+        .i_debug_addr(i_debug_addr),
         // Input Control Lines 
-        .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM),
+        .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
         // Outputs
         .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_data)
         );
@@ -291,6 +296,7 @@ module pipeline
             .o_equal_MC(equal_MC),
             .o_mem_read_MC(mem_read_MC),
             .o_mem_write_MC(mem_write_MC),
+            .o_bhw_MC(bhw_MC),
             .o_jump_MC(jump_MC),
             .o_jump_sel_MC(jump_sel_MC),
             .o_reg_write_MC(reg_write_MC),

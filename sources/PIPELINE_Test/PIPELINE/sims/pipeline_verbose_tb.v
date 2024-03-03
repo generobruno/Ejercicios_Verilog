@@ -378,13 +378,13 @@ module pipeline_verbose_tb();
         #(T*2);
         i_reset = 1'b0;
 
-        //! ADDU - Add Test: rd <- rs + rt
+        //! ADDI - Add Immediate Test: rt <- rs + imm
         // Inputs
         reg_instr_rs = 5'b0000;
-        reg_instr_rt = 5'b00011;
-        reg_instr_rd = 5'b01010;
+        reg_immediate = 16'h0002;
+        reg_instr_rt = 5'b00010;
 
-        //i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
         #(T*2);
 
@@ -408,6 +408,7 @@ module pipeline_verbose_tb();
         $display("PROGRAM FINISHED.");
         
         $stop;
+
     end
 
 endmodule

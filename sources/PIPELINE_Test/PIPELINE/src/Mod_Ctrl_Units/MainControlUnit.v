@@ -22,6 +22,7 @@ module MainControlUnit
         output                          o_equal_MC,                 // Equal Control Line
         output                          o_mem_read_MC,              // MemRead Control Line
         output                          o_mem_write_MC,             // MemWrite Control Line
+        output [1 : 0]                  o_bhw_MC,                   // Memory Size Control Line
         output                          o_jump_MC,                  // Jump Control Line
         output                          o_jump_sel_MC,              // JumpSel Control Line
         output                          o_reg_write_MC,             // RegWrite Control Line
@@ -47,6 +48,11 @@ module MainControlUnit
     localparam XORI     =       3'b110;         //      XOR Immediate
     localparam LUI      =       3'b111;         //      Load Upper Immediate
     localparam SLTI     =       3'b010;         //      SLT Immediate
+
+    // BHW Load-Store
+    localparam BYTE     =       3'b000;         // Load-Store Byte
+    localparam HALFWORD =       3'b001;         // Load-Store HalfWord
+    localparam WORD     =       3'b011;         // Load-Store Word
 
     // ALU Operations Function Fields
     localparam ADDU =           6'b100001;      // Add Word Unsigned 
@@ -79,6 +85,7 @@ module MainControlUnit
     reg equal;
     reg mem_read;
     reg mem_write;
+    reg [1:0] bhw;
     reg jump;
     reg jump_sel;
     reg reg_write;
@@ -106,6 +113,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
+                                bhw         =   2'b11;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -123,6 +131,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
+                                bhw         =   2'b11;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -141,6 +150,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
+                                bhw         =   2'b11;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -158,6 +168,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0; // X
                                 mem_write   =   1'b0; // X
+                                bhw         =   2'b11;
                                 jump        =   1'b0; // X
                                 jump_sel    =   1'b1;
                                 reg_write   =   1'b0; // X
@@ -175,6 +186,7 @@ module MainControlUnit
                                 equal       =   1'b0;
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
+                                bhw         =   2'b11;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b1;
                                 reg_write   =   1'b1;
@@ -192,6 +204,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0; // X
                                 mem_write   =   1'b0; // X
+                                bhw         =   2'b11;
                                 jump        =   1'b0; // X
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b0; // X
@@ -209,6 +222,7 @@ module MainControlUnit
                                 equal       =   1'b0;
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
+                                bhw         =   2'b11;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0;
                                 reg_write   =   1'b0;
@@ -228,6 +242,7 @@ module MainControlUnit
                         equal       =   1'b1;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
+                        bhw         =   2'b11;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
@@ -245,6 +260,7 @@ module MainControlUnit
                         equal       =   1'b0;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
+                        bhw         =   2'b11;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
@@ -262,6 +278,7 @@ module MainControlUnit
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
                         mem_write   =   1'b0; //X
+                        bhw         =   2'b11;
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b0; //X
@@ -279,6 +296,7 @@ module MainControlUnit
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
                         mem_write   =   1'b0; //X
+                        bhw         =   2'b11;
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b0; //X
@@ -296,6 +314,7 @@ module MainControlUnit
                         equal       =   1'b0;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
+                        bhw         =   2'b11;
                         jump        =   1'b0;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b0;
@@ -305,39 +324,159 @@ module MainControlUnit
                     end
                 endcase
             end
-            LOAD:               // Load Instructions
+            LOAD:               // Load Instructions            
             begin
-                reg_dst     =   1'b0;   
-                jal_sel     =   1'b0;
-                alu_src     =   1'b1;
-                alu_op      =   3'b000;
-                branch      =   1'b0;
-                equal       =   1'b0; //X
-                mem_read    =   1'b1;
-                mem_write   =   1'b0;
-                jump        =   1'b0;
-                jump_sel    =   1'b0; //X
-                reg_write   =   1'b1;
-                bds_sel     =   1'b0;
-                mem_to_reg  =   1'b1;        
-                halt        =   1'b0;    
+                case (i_instr_op_D[3:0]) // Bits 3 a 0
+                    BYTE:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b00;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end
+                    HALFWORD:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b01;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end
+                    WORD:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b11;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end 
+                    default:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b11;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end 
+                endcase   
             end
             STORE:              // Store Instructions
             begin
-                reg_dst     =   1'b0; //X   
-                jal_sel     =   1'b0;
-                alu_src     =   1'b1;
-                alu_op      =   3'b000;
-                branch      =   1'b0;
-                equal       =   1'b0; //X
-                mem_read    =   1'b0;
-                mem_write   =   1'b1;
-                jump        =   1'b0;
-                jump_sel    =   1'b0; //X
-                reg_write   =   1'b0;
-                bds_sel     =   1'b0;
-                mem_to_reg  =   1'b0; //X 
-                halt        =   1'b0;      
+                case (i_instr_op_D[3:0]) // Bits 3 a 0
+                    BYTE:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b00;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end
+                    HALFWORD:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b01;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end
+                    WORD:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b11;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1;        
+                        halt        =   1'b0; 
+                    end 
+                    default:
+                    begin
+                        reg_dst     =   1'b0;   
+                        jal_sel     =   1'b0;
+                        alu_src     =   1'b1;
+                        alu_op      =   3'b000;
+                        branch      =   1'b0;
+                        equal       =   1'b0; //X
+                        mem_read    =   1'b1;
+                        mem_write   =   1'b0;
+                        bhw         =   2'b11;
+                        jump        =   1'b0;
+                        jump_sel    =   1'b0; //X
+                        reg_write   =   1'b1;
+                        bds_sel     =   1'b0;
+                        mem_to_reg  =   1'b1; 
+                        halt        =   1'b0; 
+                    end 
+                endcase    
             end
             IMM:                // Immediate Instruction
             begin
@@ -348,6 +487,7 @@ module MainControlUnit
                 equal       =   1'b0; //X
                 mem_read    =   1'b0;
                 mem_write   =   1'b0;
+                bhw         =   2'b11;
                 jump        =   1'b0;
                 jump_sel    =   1'b0; //X
                 reg_write   =   1'b1;
@@ -393,6 +533,7 @@ module MainControlUnit
                 equal       =   1'b0;
                 mem_read    =   1'b0;
                 mem_write   =   1'b0;
+                bhw         =   2'b11;
                 jump        =   1'b0;
                 jump_sel    =   1'b0;
                 reg_write   =   1'b0;
@@ -412,6 +553,7 @@ module MainControlUnit
     assign o_equal_MC       = equal;
     assign o_mem_read_MC    = mem_read;
     assign o_mem_write_MC   = mem_write;
+    assign o_bhw_MC         = bhw;
     assign o_jump_MC        = jump;
     assign o_jump_sel_MC    = jump_sel;
     assign o_reg_write_MC   = reg_write;
