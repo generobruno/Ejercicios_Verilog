@@ -34,6 +34,16 @@ module data_mem
     //! Signal Declaration
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
     reg [B-1 : 0]   read_reg;
+    integer i;
+
+    // Initial Registers Values
+    initial 
+    begin
+        // Initialize all regs to 0
+        for (i = 0; i < 2**W; i = i + 1) begin
+            array_reg[i] = {B{1'b0}};
+        end
+    end
 
     // Signed Byte Data
     wire [BYTE_SZ-1 : 0] byte_data = {i_data[B-1], i_data[BYTE_SZ-2 : 0]};
@@ -104,6 +114,6 @@ module data_mem
 
     //! Assignments
     assign o_data = read_reg;
-    assign o_debug_mem = array_reg[i_debug_addr>>2];
+    assign o_debug_mem = array_reg[i_debug_addr];
 
 endmodule

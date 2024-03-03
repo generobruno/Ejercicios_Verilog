@@ -54,6 +54,8 @@ module pipeline_tb();
     reg [15 : 0]        reg_offset;
     reg [15 : 0]        reg_immediate;
 
+    integer i;
+
     // Instantiations
     pipeline #() Pipeline
         (
@@ -101,10 +103,10 @@ module pipeline_tb();
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
-        reg_offset = 16'h0005;
-        reg_instr_rt = 5'b00000;
+        reg_offset = 16'h0002;
+        reg_instr_rt = 5'b00010;
 
-        i_debug_addr = reg_offset[REG_SZ-1:0];
+        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset
 
         i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
 
@@ -113,8 +115,10 @@ module pipeline_tb();
         //! LW - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
-        reg_offset = 16'h0007;
-        reg_instr_rt = 5'b00011;
+        reg_offset = 16'h0002;
+        reg_instr_rt = 5'b00010;
+
+        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset
 
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
 
@@ -148,6 +152,16 @@ module pipeline_tb();
         @(posedge o_halt);
         
         $display("PROGRAM FINISHED.");
+
+        $display("\nDisplaying Memory Data:");
+        for(i = 0; i < 5**2; i = i + 1)
+        begin
+            i_debug_addr = i; // Address
+            #(T*2);
+            $display("DEBUG DATA: %d from %b", o_data, i_debug_addr[MEM_SZ-1:0]);
+        end
+
+        $display("\nTESTS PASSED!");
         
         $stop;
     end

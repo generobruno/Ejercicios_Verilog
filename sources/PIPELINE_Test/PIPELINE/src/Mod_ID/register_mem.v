@@ -27,11 +27,19 @@ module register_mem
     reg [B-1 : 0]   regs [2**W-1 : 0];
     reg [B-1 : 0]   aux_1;
     reg [B-1 : 0]   aux_2;
+    integer i;
 
     // Initial Registers Values
     initial 
     begin
-        regs[0] = 32'h00000000; 
+        // Initialize all regs to 0
+        for (i = 0; i < 2**W; i = i + 1) begin
+            regs[i] = 32'h00000000;
+        end
+
+        // Initialize aux_1 and aux_2 to 0
+        aux_1 = 32'h00000000;
+        aux_2 = 32'h00000000;
     end
 
     // Body

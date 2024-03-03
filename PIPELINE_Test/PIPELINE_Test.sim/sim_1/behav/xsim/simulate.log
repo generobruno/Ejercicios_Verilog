@@ -1,0 +1,34 @@
+Time resolution is 1 ps
+LOADING PROGRAM...
+RUNNING...
+PROGRAM FINISHED.
+
+Displaying Memory Data:
+DEBUG DATA:          0 from xxxxx00000
+DEBUG DATA:          0 from xxxxx00001
+DEBUG DATA:          0 from xxxxx00010
+DEBUG DATA:          0 from xxxxx00011
+DEBUG DATA:          0 from xxxxx00100
+DEBUG DATA:          0 from xxxxx00101
+DEBUG DATA:          0 from xxxxx00110
+DEBUG DATA:          0 from xxxxx00111
+DEBUG DATA:          0 from xxxxx01000
+DEBUG DATA:          0 from xxxxx01001
+DEBUG DATA:          0 from xxxxx01010
+DEBUG DATA:          0 from xxxxx01011
+DEBUG DATA:          0 from xxxxx01100
+DEBUG DATA:          0 from xxxxx01101
+DEBUG DATA:          0 from xxxxx01110
+DEBUG DATA:          0 from xxxxx01111
+DEBUG DATA:          0 from xxxxx10000
+DEBUG DATA:          0 from xxxxx10001
+DEBUG DATA:          0 from xxxxx10010
+DEBUG DATA:          0 from xxxxx10011
+DEBUG DATA:          0 from xxxxx10100
+DEBUG DATA:          0 from xxxxx10101
+DEBUG DATA:          0 from xxxxx10110
+DEBUG DATA:          0 from xxxxx10111
+DEBUG DATA:          0 from xxxxx11000
+
+TESTS PASSED!
+$stop called at time : 1510 ns : File "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_tb.v" Line 167

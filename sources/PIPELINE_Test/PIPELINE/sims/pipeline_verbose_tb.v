@@ -38,6 +38,7 @@ module pipeline_verbose_tb();
     reg i_enable;
     reg i_write;
     reg [INST_SZ-1 : 0]           i_instruction;
+    reg [REG_SZ-1 : 0]            i_debug_addr;
 
     wire [INST_SZ-1 : 0]          o_pc;
     wire [INST_SZ-1 : 0]          o_data;
@@ -53,6 +54,8 @@ module pipeline_verbose_tb();
     reg [15 : 0]        reg_offset;
     reg [15 : 0]        reg_immediate;
 
+    //*******************************************************************************************************
+
     //! Instantiations
     /**
                                 INSTUCTION FETCH
@@ -65,7 +68,7 @@ module pipeline_verbose_tb();
     wire [INST_SZ-1 : 0] read_data_1;
     wire [INST_SZ-1 : 0] read_data_2;
 
-    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ)) InstructionFetch
+    IF #(.INST_SZ(INST_SZ), .PC_SZ(PC_SZ), .MEM_SZ(MEM_SZ)) InstructionFetch
         (
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset), .i_write(i_write), .i_enable(i_enable),
@@ -143,7 +146,9 @@ module pipeline_verbose_tb();
     wire                     reg_dst_ID_EX;   
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
     wire                     mem_read_ID_EX;  
-    wire                     mem_write_ID_EX; 
+    wire                     mem_write_ID_EX;
+    wire [1 : 0]             bhw_MC;
+    wire [1 : 0]             bhw_ID_EX; 
     wire                     reg_write_ID_EX; 
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
@@ -156,7 +161,7 @@ module pipeline_verbose_tb();
         .i_clk(i_clk), .i_reset(i_reset | flush_id_ex_HD), .i_enable(i_enable),
         // Input Control Lines //TODO Agregar SXL/SXLV Control Line
         .i_alu_src(alu_src_MC), .i_alu_op(alu_op_MC), .i_reg_dst(reg_dst_MC), .i_halt(halt_MC),
-        .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), 
+        .i_jal_sel(jal_sel_MC), .i_mem_read(mem_read_MC), .i_mem_write(mem_write_MC), .i_bhw(bhw_MC),
         .i_reg_write(reg_write_MC), .i_mem_to_reg(mem_to_reg_MC), .i_bds_sel(bds_sel_MC),
         // Inputs
         .i_bds(bds_IF_ID), .i_read_data_1(read_data_1), 
@@ -164,7 +169,7 @@ module pipeline_verbose_tb();
         .i_instr_rt(instr_rt_D), .i_instr_rd(instr_rd_D), .i_instr_rs(instr_rs_D),
         // Output Control Lines //TODO Agregar SXL/SXLV Control Line
         .o_alu_src(alu_src_ID_EX), .o_alu_op(alu_op_ID_EX), .o_reg_dst(reg_dst_ID_EX), .o_halt(halt_ID_EX), 
-        .o_jal_sel(jal_sel_ID_EX), .o_mem_read(mem_read_ID_EX), .o_mem_write(mem_write_ID_EX), 
+        .o_jal_sel(jal_sel_ID_EX), .o_mem_read(mem_read_ID_EX), .o_mem_write(mem_write_ID_EX), .o_bhw(bhw_ID_EX),
         .o_reg_write(reg_write_ID_EX), .o_mem_to_reg(mem_to_reg_ID_EX), .o_bds_sel(bds_sel_ID_EX),
         // Outputs
         .o_read_data_1(read_data_1_ID_EX), .o_read_data_2(read_data_2_ID_EX), 
@@ -205,7 +210,8 @@ module pipeline_verbose_tb();
     wire [INST_SZ-1 : 0]     bds_EX_MEM;
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
     wire                     mem_read_EX_MEM;               
-    wire                     mem_write_EX_MEM;               
+    wire                     mem_write_EX_MEM;
+    wire [1 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
     wire                     bds_sel_EX_MEM;   
@@ -218,14 +224,14 @@ module pipeline_verbose_tb();
         // Input Control Lines 
         .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
         .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
-        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX),
+        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
         .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
         .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
         .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), 
-        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM),
+        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
         // Outputs
         .o_alu_result(alu_result_EX_MEM), .o_write_data(write_data_EX_MEM),
         .o_write_register(write_register_EX_MEM), .o_bds(bds_EX_MEM)
@@ -236,14 +242,15 @@ module pipeline_verbose_tb();
     **/
     wire [INST_SZ-1 : 0]          read_data_M;              
 
-    MEM #(.INST_SZ(INST_SZ), .MEM_SZ(MEM_SZ)) MemoryAccess
+    MEM #(.INST_SZ(INST_SZ)) MemoryAccess
         (
         // Sync Signals
         .i_clk(i_clk),
         // Inputs 
         .i_alu_result_E(alu_result_EX_MEM), .i_operand_b_E(write_data_EX_MEM),
+        .i_debug_addr(i_debug_addr),
         // Input Control Lines 
-        .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM),
+        .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
         // Outputs
         .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_data)
         );
@@ -308,6 +315,7 @@ module pipeline_verbose_tb();
             .o_equal_MC(equal_MC),
             .o_mem_read_MC(mem_read_MC),
             .o_mem_write_MC(mem_write_MC),
+            .o_bhw_MC(bhw_MC),
             .o_jump_MC(jump_MC),
             .o_jump_sel_MC(jump_sel_MC),
             .o_reg_write_MC(reg_write_MC),
@@ -354,6 +362,7 @@ module pipeline_verbose_tb();
             .o_forward_b_FU(forward_b_FU)
         );
 
+
     //*******************************************************************************************
 
     // Clock Generation
@@ -385,6 +394,18 @@ module pipeline_verbose_tb();
         reg_instr_rt = 5'b00010;
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! SW - Store Test: mem[base+offset] <- rt
+        // Inputs
+        reg_base = 5'b00000;
+        reg_offset = 16'h0005;
+        reg_instr_rt = 5'b00000;
+
+        i_debug_addr = 5'b00101; // GPR[rt] (read_data_1) + offset
+
+        i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
 

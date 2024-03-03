@@ -1,6 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Mem/MEM.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module MEM
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Mem/data_mem.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module data_mem
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_MEM/MEM_tb.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module MEM_tb

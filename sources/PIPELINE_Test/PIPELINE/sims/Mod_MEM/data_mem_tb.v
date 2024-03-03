@@ -81,7 +81,7 @@ module data_mem_tb();
         $display("\nTESTING DEBUG DATA:");
         for(i = 0; i < 10; i = i + 1)
         begin
-            debug_addr = i * 4; // Address
+            debug_addr = i; // Address
             #(T*2);
             if (o_debug_mem != i)
             begin
