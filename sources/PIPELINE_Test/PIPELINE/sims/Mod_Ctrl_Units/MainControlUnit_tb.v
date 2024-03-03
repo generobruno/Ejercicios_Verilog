@@ -30,6 +30,7 @@ module MainControlUnit_tb();
     wire equal_MC;
     wire mem_read_MC;
     wire mem_write_MC;
+    wire [1:0] bhw_MC;
     wire jump_MC;
     wire jump_sel_MC;
     wire reg_write_MC;
@@ -52,6 +53,7 @@ module MainControlUnit_tb();
             .o_equal_MC(equal_MC),
             .o_mem_read_MC(mem_read_MC),
             .o_mem_write_MC(mem_write_MC),
+            .o_bhw_MC(bhw_MC),
             .o_jump_MC(jump_MC),
             .o_jump_sel_MC(jump_sel_MC),
             .o_reg_write_MC(reg_write_MC),
@@ -106,8 +108,8 @@ module MainControlUnit_tb();
 
     always @(*)
     begin
-        $display("INSTRUCTION: %b \n reg_dst=%d, jal_sel=%d, alu_src=%d, alu_op=%b, branch=%d, equal=%d, mem_read=%d, mem_write=%d, jump=%d, jump_sel=%d, reg_write=%d, bds_sel=%d, mem_to_reg=%d, halt=%d", 
-        i_instruction_IF_ID, reg_dst_MC, jal_sel_MC, alu_src_MC, alu_op_MC, branch_MC, equal_MC, mem_read_MC, mem_write_MC, jump_MC, jump_sel_MC, reg_write_MC, bds_sel_MC, mem_to_reg_MC, halt_MC);
+        $display("INSTRUCTION: %b \n reg_dst=%d, jal_sel=%d, alu_src=%d, alu_op=%b, branch=%d, equal=%d, mem_read=%d, mem_write=%d, bhw=%d, jump=%d, jump_sel=%d, reg_write=%d, bds_sel=%d, mem_to_reg=%d, halt=%d", 
+        i_instruction_IF_ID, reg_dst_MC, jal_sel_MC, alu_src_MC, alu_op_MC, branch_MC, equal_MC, mem_read_MC, mem_write_MC, bhw_MC, jump_MC, jump_sel_MC, reg_write_MC, bds_sel_MC, mem_to_reg_MC, halt_MC);
     end
 
 endmodule

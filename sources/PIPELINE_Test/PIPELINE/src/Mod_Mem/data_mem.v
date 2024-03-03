@@ -23,7 +23,7 @@ module data_mem
         output [B-1 : 0]                o_data                      // Data to Read
     );
 
-    // BHW Load-Store
+    // BHW Load-Store //TODO Agregar bit para unsigned
     localparam BYTE     =       2'b00;         // Load-Store Byte
     localparam HALFWORD =       2'b01;         // Load-Store HalfWord
     localparam WORD     =       2'b11;         // Load-Store Word
@@ -104,6 +104,6 @@ module data_mem
 
     //! Assignments
     assign o_data = read_reg;
-    assign o_debug_mem = array_reg[i_debug_addr];
+    assign o_debug_mem = array_reg[i_debug_addr>>2];
 
 endmodule
