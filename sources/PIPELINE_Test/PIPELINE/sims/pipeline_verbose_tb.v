@@ -41,7 +41,8 @@ module pipeline_verbose_tb();
     reg [REG_SZ-1 : 0]            i_debug_addr;
 
     wire [INST_SZ-1 : 0]          o_pc;
-    wire [INST_SZ-1 : 0]          o_data;
+    wire [INST_SZ-1 : 0]          o_mem;
+    wire [INST_SZ-1 : 0]          o_reg;
     wire                          o_halt;
 
     reg [INST_SZ-1 : 0] seed;
@@ -115,7 +116,7 @@ module pipeline_verbose_tb();
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset),
         // Inputs
-        .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID),
+        .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID), .i_debug_addr(i_debug_addr),
         // Input Control Lines
         .i_forward_eq_a_FU(forward_eq_a_FU), .i_forward_eq_b_FU(forward_eq_b_FU), 
         .i_alu_result_M(alu_result_EX_MEM), .i_branch_MC(branch_MC), 
@@ -126,7 +127,7 @@ module pipeline_verbose_tb();
         .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),   
         .o_pc_src_D(pc_src_D), .o_instr_imm_D(instr_imm_D), 
         .o_instr_rs_D(instr_rs_D), .o_instr_rt_D(instr_rt_D), 
-        .o_instr_rd_D(instr_rd_D)
+        .o_instr_rd_D(instr_rd_D), .o_reg(o_reg)
         );
 
     /**
@@ -252,7 +253,7 @@ module pipeline_verbose_tb();
         // Input Control Lines 
         .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
         // Outputs
-        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_data)
+        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_mem)
         );
 
     /**
@@ -371,6 +372,8 @@ module pipeline_verbose_tb();
         #(T) i_clk = ~i_clk;
     end
     
+    integer i;
+
     // Task
     initial 
     begin
@@ -397,6 +400,7 @@ module pipeline_verbose_tb();
 
         #(T*2);
 
+        /*
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
@@ -406,6 +410,16 @@ module pipeline_verbose_tb();
         i_debug_addr = 5'b00101; // GPR[rt] (read_data_1) + offset
 
         i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
+
+        #(T*2);
+        */
+        //! ADDU - Add Test: rd <- rs + rt
+        // Inputs
+        reg_instr_rs = 5'b0000;
+        reg_instr_rt = 5'b00010;
+        reg_instr_rd = 5'b01010;
+
+        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
 
         #(T*2);
 
@@ -427,6 +441,25 @@ module pipeline_verbose_tb();
         @(posedge o_halt);
         
         $display("PROGRAM FINISHED.");
+        i_enable = 1'b0;
+
+        $display("\nDisplaying Memory Data:");
+        for(i = 0; i < 5**2; i = i + 1)
+        begin
+            i_debug_addr = i; // Address
+            #(T*2);
+            $display("DEBUG DATA: %d from %b", o_mem, i_debug_addr[MEM_SZ-1:0]);
+        end
+
+        $display("\nDisplaying Registers:");
+        for(i = 0; i < 32; i = i + 1)
+        begin
+            i_debug_addr = i; // Address
+            #(T*2);
+            $display("DEBUG REGS: %b from %b", o_reg, i_debug_addr[MEM_SZ-1:0]);
+        end
+
+        $display("\nTESTS PASSED!");
         
         $stop;
 

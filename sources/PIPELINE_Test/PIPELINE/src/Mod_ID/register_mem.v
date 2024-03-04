@@ -18,9 +18,11 @@ module register_mem
         input wire [W-1 : 0]            i_read_reg_2,               // Read Register 2
         input wire [W-1 : 0]            i_write_register,           // Write Register
         input wire [B-1 : 0]            i_write_data,               // Write Data
+        input wire [W-1 : 0]            i_debug_addr,               // Debug Register Address
         // Outputs
         output wire [B-1 : 0]           o_read_data_1,              // Read Data 1
-        output wire [B-1 : 0]           o_read_data_2               // Read Data 2
+        output wire [B-1 : 0]           o_read_data_2,              // Read Data 2
+        output wire [B-1 : 0]           o_reg
     );
 
     //! Signal Declaration
@@ -63,5 +65,6 @@ module register_mem
     //! Assignments
     assign o_read_data_1 = aux_1;
     assign o_read_data_2 = aux_2;
+    assign o_reg = regs[i_debug_addr];
 
 endmodule

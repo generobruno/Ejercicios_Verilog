@@ -23,7 +23,9 @@ module ID
         input                           i_reg_write_W,              // RegWrite Control Line
         input [REG_SZ-1 : 0]            i_write_register_D,         // Write Register
         input [INST_SZ-1 : 0]           i_write_data_D,             // Write Data
+        input [REG_SZ-1 : 0]            i_debug_addr,               // Debug Address 
         // Outputs
+        output [INST_SZ-1 : 0]          o_reg,                      // Debug Register
         output [INST_SZ-1 : 0]          o_jump_addr_D,              // Jump Address
         output [INST_SZ-1 : 0]          o_branch_addr_D,            // Branch Address
         output [INST_SZ-1 : 0]          o_read_data_1_D,            // Read Data 1 (from reg mem)
@@ -61,10 +63,10 @@ module ID
 
     register_mem #(.B(INST_SZ), .W(REG_SZ)) register_mem
         (.i_clk(i_clk), .i_reset(i_reset),
-        .i_reg_write_MC(i_reg_write_W),
+        .i_reg_write_MC(i_reg_write_W), .i_debug_addr(i_debug_addr),
         .i_read_reg_1(i_instruction_D[25 : 21]), .i_read_reg_2(i_instruction_D[20 : 16]),
         .i_write_register(i_write_register_D), .i_write_data(i_write_data_D),
-        .o_read_data_1(read_data_1), .o_read_data_2(read_data_2));
+        .o_read_data_1(read_data_1), .o_read_data_2(read_data_2), .o_reg(o_reg));
 
     //! Assignments
     // Shift instruction index to get jump address

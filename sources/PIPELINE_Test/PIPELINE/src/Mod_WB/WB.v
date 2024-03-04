@@ -23,7 +23,7 @@ module WB
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) mem_to_reg_mpx
-        (.input_a(i_read_data_M), .input_b(i_alu_result_M),
+        (.input_a(i_alu_result_M), .input_b(i_read_data_M),
         .i_select(i_mem_to_reg_W),
         .o_output(mem_to_reg));
         

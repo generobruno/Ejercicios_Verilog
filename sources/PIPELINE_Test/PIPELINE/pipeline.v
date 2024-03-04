@@ -27,7 +27,8 @@ module pipeline
         input [REG_SZ-1 : 0]            i_debug_addr,               // Debug Memory Address
         // Outputs
         output [PC_SZ-1 : 0]            o_pc,                       // Output PC
-        output [INST_SZ-1 : 0]          o_data,                     // Output Memory
+        output [INST_SZ-1 : 0]          o_mem,                      // Output Memory
+        output [INST_SZ-1 : 0]          o_reg,                      // Output Register
         output                          o_halt                      // Halt Control Line
         // TODO Agregar o_regs (mem_sel), o_mem
     );
@@ -96,7 +97,7 @@ module pipeline
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset),
         // Inputs
-        .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID),
+        .i_instruction_D(instruction_IF_ID), .i_npc_D(npc_IF_ID), .i_debug_addr(i_debug_addr),
         // Input Control Lines
         .i_forward_eq_a_FU(forward_eq_a_FU), .i_forward_eq_b_FU(forward_eq_b_FU), 
         .i_alu_result_M(alu_result_EX_MEM), .i_branch_MC(branch_MC), 
@@ -107,7 +108,7 @@ module pipeline
         .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),   
         .o_pc_src_D(pc_src_D), .o_instr_imm_D(instr_imm_D), 
         .o_instr_rs_D(instr_rs_D), .o_instr_rt_D(instr_rt_D), 
-        .o_instr_rd_D(instr_rd_D)
+        .o_instr_rd_D(instr_rd_D), .o_reg(o_reg)
         );
 
     /**
@@ -233,7 +234,7 @@ module pipeline
         // Input Control Lines 
         .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
         // Outputs
-        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_data)
+        .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_mem)
         );
 
     /**

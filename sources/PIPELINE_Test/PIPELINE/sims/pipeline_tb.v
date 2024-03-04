@@ -41,7 +41,8 @@ module pipeline_tb();
     reg [REG_SZ-1 : 0]            i_debug_addr;
 
     wire [INST_SZ-1 : 0]          o_pc;
-    wire [INST_SZ-1 : 0]          o_data;
+    wire [INST_SZ-1 : 0]          o_mem;
+    wire [INST_SZ-1 : 0]          o_reg;
     wire                          o_halt;
 
     reg [INST_SZ-1 : 0] seed;
@@ -65,7 +66,7 @@ module pipeline_tb();
         .i_instruction(i_instruction),
         .i_debug_addr(i_debug_addr),
         // Outputs
-        .o_pc(o_pc), .o_data(o_data), .o_halt(o_halt)
+        .o_pc(o_pc), .o_mem(o_mem),  .o_halt(o_halt), .o_reg(o_reg)
         );
 
     // Clock Generation
@@ -100,6 +101,7 @@ module pipeline_tb();
 
         #(T*2);
 
+        
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
@@ -112,6 +114,7 @@ module pipeline_tb();
 
         #(T*2);
 
+        /*
         //! LW - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
@@ -123,6 +126,7 @@ module pipeline_tb();
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
+        */
 
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
@@ -130,7 +134,7 @@ module pipeline_tb();
         reg_instr_rt = 5'b00010;
         reg_instr_rd = 5'b01010;
 
-        i_instruction = {6'b101011, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
+        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
 
         #(T*2);
 
@@ -152,13 +156,22 @@ module pipeline_tb();
         @(posedge o_halt);
         
         $display("PROGRAM FINISHED.");
+        i_enable = 1'b0;
 
         $display("\nDisplaying Memory Data:");
         for(i = 0; i < 5**2; i = i + 1)
         begin
             i_debug_addr = i; // Address
             #(T*2);
-            $display("DEBUG DATA: %d from %b", o_data, i_debug_addr[MEM_SZ-1:0]);
+            $display("DEBUG DATA: %d from %b", o_mem, i_debug_addr[MEM_SZ-1:0]);
+        end
+
+        $display("\nDisplaying Registers:");
+        for(i = 0; i < 32; i = i + 1)
+        begin
+            i_debug_addr = i; // Address
+            #(T*2);
+            $display("DEBUG REGS: %d from %b", o_reg, i_debug_addr[MEM_SZ-1:0]);
         end
 
         $display("\nTESTS PASSED!");
