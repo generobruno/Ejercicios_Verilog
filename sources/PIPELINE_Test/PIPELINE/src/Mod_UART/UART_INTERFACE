@@ -9,12 +9,15 @@ module UART_INTERFACE#(
         input wire i_available_data,
         input wire i_fifo_empty,
         input wire [N-1:0 ] i_result,
-        input wire [32-1:0] i_reg_read;
+        input wire [32-1:0] i_reg_read; // Data from register memory
+        input wire [32-1:0] i_mem_read; // Data from data memory
         output wire [32-1:0] o_inst,
         output wire [N-1:0] o_result,
         output wire o_write_mem,
+        output wire o_read_mem,
         output wire [PC-1 : 0] o_addr,
-        output wire [w-1] o_addr_ID;    
+        output wire [w-1] o_addr_ID;
+        output wire [w-1] o_addr_M;    
         
         
         output wire o_wr,
@@ -34,6 +37,8 @@ module UART_INTERFACE#(
     reg [N-1: 0]        to_tx_fifo_next;
     reg                 write_mem_reg;
     reg                 write_mem_reg_next;
+    reg                 read_mem_reg;
+    reg                 read_mem_reg_next;
     reg [8-1: 0]        mode_reg;
     reg [8-1: 0]        mode_reg_next;
     reg [8-1: 0]        prog_size_reg;
@@ -44,15 +49,19 @@ module UART_INTERFACE#(
     reg [PC-1: 0]       addr_reg_next;
     reg [W-1: 0]        addr_ID_reg;
     reg [W-1: 0]        addr_ID_reg_next;
+    reg [W-1: 0]        addr_M_reg;
+    reg [W-1: 0]        addr_M_reg_next;
 
     /* Codigos para modo de funcionamiento */
-    localparam REC_PROG         = 11111111;
-    localparam LOAD_PROG_SIZE   = 11111110;
-    localparam LOAD_PROG        = 11111101;
-    localparam DEBUG            = 11111100;
-    localparam SEND_STATE       = 11111011;
-    localparam NEXT             = 00000001;
-    localparam WAIT             = 00000000;
+    localparam REC_PROG             = 11111111;
+    localparam LOAD_PROG_SIZE       = 11111110;
+    localparam LOAD_PROG            = 11111101;
+    localparam DEBUG                = 11111100;
+    localparam SEND_STATE_REG       = 11111011;
+    localparam SEND_STATE_MEM       = 11111011;
+    localparam END_DEBUG            = 11111010;
+    localparam NEXT                 = 00000001;
+    localparam WAIT                 = 00000000;
 
     
     
@@ -63,8 +72,10 @@ module UART_INTERFACE#(
     assign o_result = to_tx_fifo;
     assign o_inst = inst_reg;
     assign o_write_mem = write_mem_reg
+    assign o_read_mem = read_mem_reg
     assign o_addr = addr_reg;
     assign o_addr_ID = addr_ID_reg;
+    assign o_addr_M = addr_M_reg;
     
     assign o_rd = rd_reg;
     assign o_wr = wr_reg; 
@@ -80,11 +91,13 @@ module UART_INTERFACE#(
             reg_counter <= {W{1'b0}};
             mode_reg <= {8{1'b0}};
             write_mem_reg <= 1'b0;
+            read_mem_reg <= 1'b0;
             cont <= {3{1'b0}};
             prog_size_reg <= {8{1'b0}};
             inst_n <= {8{1'b0}};
             addr_reg <= {32{1'b0}};
             addr_ID_reg <= {W{1'b0}};
+            addr_M_reg <= {W{1'b0}};
         end
         else begin
             inst_reg <= inst_reg_next;
@@ -93,10 +106,12 @@ module UART_INTERFACE#(
             to_tx_fifo <= to_tx_fifo_next;
             mode_reg <= mode_reg_next;
             write_mem_reg <= write_mem_reg_next;
+            read_mem_reg <= read_mem_reg_next;
             prog_size_reg <= prog_size_reg_next;
             inst_n <= inst_n_next;
             addr_reg <= addr_reg_next;
             addr_ID_reg <= addr_ID_reg_next;
+            addr_M_reg <= addr_M_reg_next;
             reg_counter <= reg_counter_next;
         end
         
@@ -130,6 +145,7 @@ module UART_INTERFACE#(
                  end
                  else if(mode_reg == LOAD_PROG)begin
                     rd_reg_next = 1'b1;
+                    // TODO: add halt instruction at end of program
                     if(inst_n == prog_size_reg)begin
                         mode_reg_next = START;
                         inst_n_next = 8'b00000000;
@@ -151,9 +167,17 @@ module UART_INTERFACE#(
                  end
                  else if(mode_reg == DEBUG)begin
                     if(i_data == NEXT)begin
-                        //TBA como señalar a la pipeline que prosiga
+                        //TODO: como señalar a la pipeline que prosiga
                         mode_reg_next = SEND_STATE;
                     end
+                    else if(i_data == END_DEBUG)begin
+                        mode_reg_next = START;
+                    end
+                 end
+                 else if(mode_reg == NO_DEBUG)begin
+                    //TODO: Agregar un enable a la pipeline, ponerlo en uno en este estado y dejar que funcione.
+                    //TODO: Esperar una señal del pipeline HALT y enviar estados de registros, mem y PC. 
+
                  end
                  else if(mode_reg == WAIT)begin
                     rd_reg_next = 1'b1;
@@ -161,12 +185,25 @@ module UART_INTERFACE#(
                     mode_reg_next = cont;
                  end
         end
-        if(mode_reg == SEND_STATE)begin
+        if(mode_reg == SEND_STATE_REG)begin
             rd_reg_next = 1'b0;
             if(reg_counter < 31)begin
                 addr_ID_reg_next = reg_counter+1;
                 reg_counter_next = reg_counter+1;
-                to_tx_fifo_next = i_reg_read;
+                to_tx_fifo_next = i_reg_read[8*counter+:8];
+                wr_reg_next = 1'b1;
+            end
+            else begin
+                reg_counter_next = 5'b00000;
+                mode_reg_next = SEND_STATE_MEM;
+            end
+        end
+        if(mode_reg == SEND_STATE_MEM)begin
+            rd_reg_next = 1'b0;
+            if(reg_counter < 31)begin
+                addr_M_reg_next = reg_counter+1;
+                reg_counter_next = reg_counter+1;
+                to_tx_fifo_next = i_mem_read;
                 wr_reg_next = 1'b1;
             end
             else begin
@@ -174,23 +211,6 @@ module UART_INTERFACE#(
                 mode_reg_next = DEBUG;
             end
         end
-
-        else
-        begin
-            if(counter<4)begin
-                rd_reg_next = 1'b0;
-                counter_next = 3'b101;
-            end
-            end
-            if(counter == 4)begin
-                rd_reg_next = 1'b0;
-                to_tx_fifo_next = i_result;
-                write_mem_reg_next = 1'b1;
-                wr_reg_next = 1'b1;
-                counter_next = 3'b100;
-                cont_next = 3'b000;
-            end
-    
     end
     
     
