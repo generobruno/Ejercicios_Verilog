@@ -101,7 +101,7 @@ module pipeline_tb();
 
         #(T*2);
 
-        
+        /*
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
@@ -130,7 +130,7 @@ module pipeline_tb();
 
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
-        reg_instr_rs = 5'b0000;
+        reg_instr_rs = 5'b00000;
         reg_instr_rt = 5'b00010;
         reg_instr_rd = 5'b01010;
 

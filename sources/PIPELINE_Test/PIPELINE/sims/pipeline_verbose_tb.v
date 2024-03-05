@@ -413,9 +413,10 @@ module pipeline_verbose_tb();
 
         #(T*2);
         */
+
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
-        reg_instr_rs = 5'b0000;
+        reg_instr_rs = 5'b00010;
         reg_instr_rt = 5'b00010;
         reg_instr_rd = 5'b01010;
 
@@ -456,7 +457,7 @@ module pipeline_verbose_tb();
         begin
             i_debug_addr = i; // Address
             #(T*2);
-            $display("DEBUG REGS: %b from %b", o_reg, i_debug_addr[MEM_SZ-1:0]);
+            $display("DEBUG REGS: %d from %b", o_reg, i_debug_addr[MEM_SZ-1:0]);
         end
 
         $display("\nTESTS PASSED!");

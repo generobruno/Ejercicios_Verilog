@@ -50,14 +50,14 @@ module EX
         .o_output(o_instr_rd_E));
 
     mpx_3to1 #(.N(INST_SZ)) forward_a_mpx
-        (.input_a(i_read_data_1_E), .input_b(i_alu_result_M), .input_c(i_read_data_W),
+        (.input_a(i_read_data_1_E), .input_b(i_read_data_W), .input_c(i_alu_result_M),
         .i_select(i_forward_a_FU),
         .o_output(alu_a));
 
     // TODO SXL/SXLV MPX -> su salida reemplazaria a "i_read_data_2_E" en forward_b_mpx -> Creo que no hace falta xq le meti otra entrada a la alu directamente como un desgraciado
     
     mpx_3to1 #(.N(INST_SZ)) forward_b_mpx
-        (.input_a(i_read_data_2_E), .input_b(i_alu_result_M), .input_c(i_read_data_W),
+        (.input_a(i_read_data_2_E), .input_b(i_read_data_W), .input_c(i_alu_result_M),
         .i_select(i_forward_b_FU),
         .o_output(o_operand_b_E));
     

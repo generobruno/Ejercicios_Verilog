@@ -309,14 +309,15 @@ module pipeline
     //  Hazard Detection Unit
     HazardDetectionUnit #(.INPUT_SZ(REG_SZ)) HazardDetectionUnit
         (
-            // Inputs //TODO REVISAR
+            // Input Control Lines //TODO REVISAR
             .i_mem_to_reg_M(mem_to_reg_EX_MEM),             
             .i_mem_read_E(mem_read_ID_EX),               
             .i_reg_write_E(reg_write_ID_EX),              
-            .i_branch_D(branch_MC),                 
-            .i_instr_rs_D(instr_rs_D),
-            .i_instr_rt_D(instr_rt_D),
-            .i_instr_rt_E(instr_rt_ID_EX),
+            .i_branch_D(branch_MC),  
+            // Inputs               
+            .i_instr_rs_D(instr_rs_D),    
+            .i_instr_rt_D(instr_rt_D), 
+            .i_instr_rt_E(instr_rt_ID_EX), 
             .i_instr_rd_E(instr_rd_ID_EX),
             .i_instr_rd_M(write_register_EX_MEM),
             // Output Control Lines

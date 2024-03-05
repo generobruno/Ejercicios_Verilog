@@ -47,18 +47,18 @@ module ID
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) forw_eq_a_mpx
-        (.input_a(read_data_1), .input_b(i_alu_result_M),
+        (.input_a(o_read_data_1_D), .input_b(i_alu_result_M),
         .i_select(i_forward_eq_a_FU),
-        .o_output(o_read_data_1_D));
+        .o_output(read_data_1));
 
     mpx_2to1 #(.N(INST_SZ)) forw_eq_b_mpx
-        (.input_a(read_data_2), .input_b(i_alu_result_M),
+        (.input_a(o_read_data_2_D), .input_b(i_alu_result_M),
         .i_select(i_forward_eq_b_FU),
-        .o_output(o_read_data_2_D));
+        .o_output(read_data_2));
 
     comparator #(.INST_SZ(INST_SZ)) comparator
-        (.i_read_data_1(o_read_data_1_D),
-        .i_read_data_2(o_read_data_2_D),
+        (.i_read_data_1(read_data_1),
+        .i_read_data_2(read_data_2),
         .o_comparison(comparison));
 
     register_mem #(.B(INST_SZ), .W(REG_SZ)) register_mem
@@ -66,7 +66,7 @@ module ID
         .i_reg_write_MC(i_reg_write_W), .i_debug_addr(i_debug_addr),
         .i_read_reg_1(i_instruction_D[25 : 21]), .i_read_reg_2(i_instruction_D[20 : 16]),
         .i_write_register(i_write_register_D), .i_write_data(i_write_data_D),
-        .o_read_data_1(read_data_1), .o_read_data_2(read_data_2), .o_reg(o_reg));
+        .o_read_data_1(o_read_data_1_D), .o_read_data_2(o_read_data_2_D), .o_reg(o_reg));
 
     //! Assignments
     // Shift instruction index to get jump address

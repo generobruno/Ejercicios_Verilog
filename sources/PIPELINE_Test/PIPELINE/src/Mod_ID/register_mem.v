@@ -45,7 +45,7 @@ module register_mem
     end
 
     // Body
-    always @(posedge i_clk) // Write Cycle
+    always @(negedge i_clk) // Write Cycle
     begin
         if(i_reset)
         begin
@@ -56,15 +56,10 @@ module register_mem
             regs[i_write_register] <= i_write_data;
         end
     end
-    always @(negedge i_clk) // Read Cycle
-    begin
-        aux_1 <= regs[i_read_reg_1];
-        aux_2 <= regs[i_read_reg_2];
-    end
     
     //! Assignments
-    assign o_read_data_1 = aux_1;
-    assign o_read_data_2 = aux_2;
+    assign o_read_data_1 = regs[i_read_reg_1];
+    assign o_read_data_2 = regs[i_read_reg_2];
     assign o_reg = regs[i_debug_addr];
 
 endmodule
