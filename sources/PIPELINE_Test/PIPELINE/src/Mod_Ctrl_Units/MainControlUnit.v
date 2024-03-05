@@ -412,14 +412,14 @@ module MainControlUnit
                         alu_op      =   3'b000;
                         branch      =   1'b0;
                         equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
+                        mem_read    =   1'b0;
+                        mem_write   =   1'b1;
                         bhw         =   2'b00;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
+                        reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
+                        mem_to_reg  =   1'b0;        
                         halt        =   1'b0; 
                     end
                     HALFWORD:
@@ -430,14 +430,14 @@ module MainControlUnit
                         alu_op      =   3'b000;
                         branch      =   1'b0;
                         equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
+                        mem_read    =   1'b0;
+                        mem_write   =   1'b1;
                         bhw         =   2'b01;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
+                        reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
+                        mem_to_reg  =   1'b0;        
                         halt        =   1'b0; 
                     end
                     WORD:
@@ -448,14 +448,14 @@ module MainControlUnit
                         alu_op      =   3'b000;
                         branch      =   1'b0;
                         equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
+                        mem_read    =   1'b0;
+                        mem_write   =   1'b1;
                         bhw         =   2'b11;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
+                        reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
+                        mem_to_reg  =   1'b0;        
                         halt        =   1'b0; 
                     end 
                     default:
@@ -466,14 +466,14 @@ module MainControlUnit
                         alu_op      =   3'b000;
                         branch      =   1'b0;
                         equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
+                        mem_read    =   1'b0;
+                        mem_write   =   1'b1;
                         bhw         =   2'b11;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
+                        reg_write   =   1'b0;
                         bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1; 
+                        mem_to_reg  =   1'b0; 
                         halt        =   1'b0; 
                     end 
                 endcase    

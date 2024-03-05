@@ -101,36 +101,33 @@ module pipeline_tb();
 
         #(T*2);
 
-        /*
         //! SW - Store Test: mem[base+offset] <- rt
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0002;
         reg_instr_rt = 5'b00010;
 
-        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset
+        i_debug_addr = 5'b00001; // Signed offset + GPR[base] // TODO Revisar y ver caso LH (y LB)
 
         i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
 
-        /*
         //! LW - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0002;
-        reg_instr_rt = 5'b00010;
+        reg_instr_rt = 5'b00101;
 
-        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset
+        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset // TODO Revisar
 
         i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
-        */
 
         //! ADDU - Add Test: rd <- rs + rt
         // Inputs
-        reg_instr_rs = 5'b00000;
+        reg_instr_rs = 5'b00010;
         reg_instr_rt = 5'b00010;
         reg_instr_rd = 5'b01010;
 

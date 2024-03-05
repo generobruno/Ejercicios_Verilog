@@ -10,6 +10,7 @@ module MainControlUnit_tb();
     localparam SLL      = 32'b000000_00000_00000_00000_00000_000000;
     localparam ADDU     = 32'b000000_00001_00010_00011_00000_100001;
     localparam LW       = 32'b100011_00001_00010_0000000000000000;
+    localparam LH       = 32'b100001_00001_00010_0000000000000000;
     localparam SW       = 32'b101011_00001_00010_0000000000000000;
     localparam ADDI     = 32'b001000_00001_00010_0000000000000000;
     localparam BEQ      = 32'b000100_00001_00010_0000000000000000;
@@ -101,6 +102,9 @@ module MainControlUnit_tb();
         #10;
         // HALT Instruction
         i_instruction_IF_ID = HALT;
+        #10;
+        // LH Instruction
+        i_instruction_IF_ID = LH;
         #10;
 
         $finish;          

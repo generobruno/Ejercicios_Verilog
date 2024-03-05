@@ -12,7 +12,6 @@ module data_mem
     (
         // Inputs
         input wire                      i_clk,                      // Clock
-        input wire                      i_mem_read,                 // Read Control Line
         input wire                      i_mem_write,                // Write Control Line
         input wire [1 : 0]              i_bhw,                      // Memory Size Control Line
         input [W-1 : 0]                 i_addr,                     // Address
@@ -33,7 +32,6 @@ module data_mem
 
     //! Signal Declaration
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
-    reg [B-1 : 0]   read_reg;
     integer i;
 
     // Initial Registers Values
@@ -100,20 +98,11 @@ module data_mem
                     end 
                 endcase
             end
-        else if(i_mem_read)
-            begin
-                // Read Operation (Aligned)
-                read_reg <= array_reg[i_addr>>2];
-            end
-        else
-            begin
-                // Default
-                read_reg <= array_reg[i_addr>>2];
-            end   
+
     end
 
     //! Assignments
-    assign o_data = read_reg;
+    assign o_data = array_reg[i_addr>>2];
     assign o_debug_mem = array_reg[i_debug_addr];
 
 endmodule

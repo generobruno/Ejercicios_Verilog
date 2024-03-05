@@ -191,7 +191,7 @@ module pipeline
     wire [INST_SZ-1 : 0]     write_data_EX_MEM;     
     wire [INST_SZ-1 : 0]     bds_EX_MEM;
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
-    wire                     mem_read_EX_MEM;               
+    wire                     mem_read_EX_MEM;   // TODO Revisar si este deberia ir a HD            
     wire                     mem_write_EX_MEM;
     wire [1 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
@@ -232,7 +232,7 @@ module pipeline
         .i_alu_result_E(alu_result_EX_MEM), .i_operand_b_E(write_data_EX_MEM),
         .i_debug_addr(i_debug_addr),
         // Input Control Lines 
-        .i_mem_read_M(mem_read_EX_MEM), .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
+        .i_mem_write_M(mem_write_EX_MEM), .i_bhw_M(bhw_EX_MEM),
         // Outputs
         .o_alu_result_M(alu_result_M), .o_read_data_M(read_data_M), .o_debug_mem(o_mem)
         );
