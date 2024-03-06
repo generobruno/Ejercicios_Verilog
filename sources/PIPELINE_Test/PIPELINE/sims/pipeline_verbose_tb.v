@@ -476,18 +476,18 @@ module pipeline_verbose_tb();
         reg_instr_rs = 5'b00111;
         reg_immediate = 16'h0002;
         reg_instr_rt = 5'b00111;
-        // reg[7] += 2 = 4 (iter 1) -> 6 (iter 2)
+        // reg[7] += 2 = 4 
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
         
         #(T*2);
 
-        //! BEQ - Branch Test: rt <- rs | imm
+        //! BEQ - Branch Test: rt <- rs | imm - 9th Inst
         // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_offset = 16'h0002;//TODO VER
-        reg_instr_rt = 5'b01010;
-        // if reg[7] == reg[10] -> branch to
+        reg_instr_rs = 5'b01111;
+        reg_offset = 16'h0001; 
+        reg_instr_rt = 5'b11011;
+        // if reg[27] == reg[15] -> branch to 11th (NPC + offset = NPC + 1)
 
         i_instruction = {6'b000100, reg_instr_rs, reg_instr_rt, reg_offset};
 
