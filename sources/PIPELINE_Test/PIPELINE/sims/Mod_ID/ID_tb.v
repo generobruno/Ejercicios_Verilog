@@ -44,7 +44,7 @@ module ID_tb();
     localparam ADDI     = 32'b001000_00001_00010_0000000000000000;
     localparam BEQ      = 32'b000100_00001_00010_0000000000000000;
     localparam BNE      = 32'b000101_00001_00010_0000000000000000;
-    localparam J        = 32'b000010_00000000000000000000000000;
+    localparam J        = 32'b000010_00000000000000000000111000;
     localparam JAL      = 32'b000011_00000000000000000000000000;
     localparam JR       = 32'b000000_00001_000000000000000_001000;
     localparam JALR     = 32'b000000_00001_00000_00000_001001;
@@ -135,8 +135,10 @@ module ID_tb();
         #10;    
         /* J Instrucion
         */
+        i_npc = 32'h30;
         i_instruction = J;
         #10;
+        $stop;
         /* JAL Instrucion
         */
         i_instruction = JAL;

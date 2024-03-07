@@ -187,9 +187,9 @@ module pipeline_tb();
         //! BEQ - Branch Test: rt <- rs | imm
         // Inputs
         reg_instr_rs = 5'b00111;
-        reg_offset = 16'h0050;//TODO VER
+        reg_offset = 16'h0001;
         reg_instr_rt = 5'b01010;
-        // if reg[7] == reg[10] -> branch to
+        // if reg[7] == reg[10] -> branch to 11th (NPC + offset = NPC + 1 = 10th + 1)
 
         i_instruction = {6'b000100, reg_instr_rs, reg_instr_rt, reg_offset};
 
@@ -215,6 +215,37 @@ module pipeline_tb();
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
         
+        #(T*2);
+
+        //! J - Jump Test: pc <- instr_index - 12ve Inst (32'h30)
+        // Inputs
+        reg_instr_index = 26'h00001C; 
+        // Jump to 14th Inst 
+        
+        i_instruction = {6'b000010, reg_instr_index};
+
+        #(T*2);
+
+        //! Add To Test J - 13th Inst (32'h34)
+        // Inputs
+        reg_instr_rs = 5'b00111;
+        reg_immediate = 16'h0002;
+        reg_instr_rt = 5'b00111;
+        // reg[7] += 2 -> 8 (should be 8 if BEQ)
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! Add To Test J - 14th Inst (32'h38)
+        // Inputs
+        reg_instr_rs = 5'b00111;
+        reg_immediate = 16'h0002;
+        reg_instr_rt = 5'b00111;
+        // reg[7] += 2 -> if J 8 , else 10
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
         #(T*2);
 
         //! HALT

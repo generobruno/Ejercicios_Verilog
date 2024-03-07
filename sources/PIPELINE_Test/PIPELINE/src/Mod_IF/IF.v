@@ -31,7 +31,6 @@ module IF
     );
 
     //! Signal Declaration
-    // TODO Declarar registros para debuggear
     wire [INST_SZ-1 : 0] o_pc_src_mpx;
     wire [INST_SZ-1 : 0] o_jump_mpx;
     wire [INST_SZ-1 : 0] o_jump_sel_mpx;
@@ -39,12 +38,12 @@ module IF
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) pc_src_mpx
-        (.input_a(o_npc_F), .input_b(i_branch_addr_D), // TODO Revisar si se puede usar el output ahi
+        (.input_a(o_npc_F), .input_b(i_branch_addr_D),
         .i_select(i_pc_src_D),
         .o_output(o_pc_src_mpx));
 
     mpx_2to1 #(.N(INST_SZ)) jump_mpx
-        (.input_a(o_pc_src_mpx), .input_b(i_jump_addr_D),
+        (.input_a(o_pc_src_mpx), .input_b(i_jump_addr_D), //TODO REVISAR
         .i_select(i_jump_D),
         .o_output(o_jump_mpx));
 
@@ -65,7 +64,7 @@ module IF
     instruction_mem #(.B(INST_SZ), .W(MEM_SZ), .PC(PC_SZ)) inst_mem
         (.i_clk(i_clk), .i_reset(i_reset),
         .i_write(i_write & ~i_enable), 
-        .i_addr(instr_addr), .i_data(i_instruction_F), //TODO Revisar si se cargan asi las insts
+        .i_addr(instr_addr), .i_data(i_instruction_F), 
         .o_data(o_instruction_F));
 
     //! Assignments

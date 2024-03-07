@@ -70,7 +70,7 @@ module ID
 
     //! Assignments
     // Shift instruction index to get jump address
-    assign o_jump_addr_D = {i_npc_D[31:28], {i_instruction_D[25 : 0] << 2} ,{2{1'b0}}}; //TODO Revisar bien
+    assign o_jump_addr_D = {i_npc_D[31:28], {i_instruction_D[25 : 0]}, {2{1'b0}}}; //TODO Revisar bien
 
     // Decide if branch or not
     assign xnor_result = ~(comparison ^ i_equal_MC);

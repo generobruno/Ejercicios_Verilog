@@ -33,7 +33,7 @@ module IF_ID_reg
         begin
             instruction <= 0; //TODO Averiguear si esta es la forma de hacer NOP
             npc <= 0;
-            bds <= 0;
+            bds <= i_bds; // HACK
         end
         else if(i_enable)
         begin
