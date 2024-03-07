@@ -1,16 +1,19 @@
 module UART_INTERFACE#(
     N   =   8,
     PC  =   32,     // Numbrer of addres bits for Inst mem    
-    W   =   5       // Number of address bits for reg mem
+    W   =   5,       // Number of address bits for reg mem
+    PC_SZ = 32
 )(
         input wire i_clock, 
         input wire i_reset,
         input wire [N-1:0] i_data,
         input wire i_available_data,
         input wire i_fifo_empty,
+        input wire i_fifo_full,
         input wire [N-1:0 ] i_result,
         input wire [32-1:0] i_reg_read; // Data from register memory
         input wire [32-1:0] i_mem_read; // Data from data memory
+        input wire [PC_SZ-1:0] i_pc;
         output wire [32-1:0] o_inst,
         output wire [N-1:0] o_result,
         output wire o_write_mem,
@@ -59,7 +62,8 @@ module UART_INTERFACE#(
     localparam DEBUG                = 11111100;
     localparam SEND_STATE_REG       = 11111011;
     localparam SEND_STATE_MEM       = 11111011;
-    localparam END_DEBUG            = 11111010;
+    localparam SEND_PC              = 11111010;
+    localparam END_DEBUG            = 11111001;
     localparam NEXT                 = 00000001;
     localparam WAIT                 = 00000000;
 
@@ -126,90 +130,122 @@ module UART_INTERFACE#(
          wr_reg_next = wr_reg;
          to_tx_fifo_next = to_tx_fifo;
     
-    
+        /* RX */
          if(!i_fifo_empty)begin
                 
                 wr_reg_next = 1'b0;
                 write_mem_reg_next = 1'b0;
-                if(mode_reg == START)begin
-                    mode_reg_next = i_data;
-                end
-                else if(mode_reg == REC_PROG)begin
-                    rd_reg_next = 1'b1;
-                    mode_reg_next <= LOAD_PROG_SIZE;
-                 end
-                 else if(mode_reg == LOAD_PROG_SIZE)begin
-                    rd_reg_next = 1'b1;
-                    prog_size_reg_next <= i_data;
-                    mode_reg_next <= LOAD_PROG;
-                 end
-                 else if(mode_reg == LOAD_PROG)begin
-                    rd_reg_next = 1'b1;
-                    // TODO: add halt instruction at end of program
-                    if(inst_n == prog_size_reg)begin
-                        mode_reg_next = START;
-                        inst_n_next = 8'b00000000;
-                    end
-                    else if(counter < 4)begin
-                        mode_reg_next <= LOAD_PROG_SIZE;
-                        inst_reg_next[8*(counter)+:8] = i_data;
-                        counter_next = counter +1;
-                    end
-                    else if(counter == 4)begin
-                        rd_reg_next = 1'b0;
-                        write_mem_reg_next = 1'b1;
-                        addr_reg_next = addr_reg +1;
-                        counter_next = 3'b000;
-                        inst_n_next = inst_n + 1;
-                        mode_reg_next = WAIT;
-                        cont_next = mode_reg;
-                    end
-                 end
-                 else if(mode_reg == DEBUG)begin
-                    if(i_data == NEXT)begin
-                        //TODO: como señalar a la pipeline que prosiga
-                        mode_reg_next = SEND_STATE;
-                    end
-                    else if(i_data == END_DEBUG)begin
-                        mode_reg_next = START;
-                    end
-                 end
-                 else if(mode_reg == NO_DEBUG)begin
-                    //TODO: Agregar un enable a la pipeline, ponerlo en uno en este estado y dejar que funcione.
-                    //TODO: Esperar una señal del pipeline HALT y enviar estados de registros, mem y PC. 
 
-                 end
-                 else if(mode_reg == WAIT)begin
-                    rd_reg_next = 1'b1;
-                            
-                    mode_reg_next = cont;
-                 end
+                case(mode_reg)
+                    START: begin
+                        mode_reg_next = i_data;
+                    end
+                    REC_PROG: begin
+                        rd_reg_next = 1'b1;
+                        mode_reg_next <= LOAD_PROG_SIZE;
+                    end
+                    LOAD_PROG_SIZE: begin
+                        rd_reg_next = 1'b1;
+                        prog_size_reg_next <= i_data;
+                        mode_reg_next <= LOAD_PROG;
+                    end
+                    LOAD_PROG: begin
+                        rd_reg_next = 1'b1;
+                        // TODO: add halt instruction at end of program
+                        if(inst_n == prog_size_reg)begin
+                            mode_reg_next = START;
+                            inst_n_next = 8'b00000000;
+                        end
+                        else if(counter < 4)begin
+                            mode_reg_next <= LOAD_PROG_SIZE;
+                            inst_reg_next[8*(counter)+:8] = i_data;
+                            counter_next = counter +1;
+                        end
+                        else if(counter == 4)begin
+                            rd_reg_next = 1'b0;
+                            write_mem_reg_next = 1'b1;
+                            addr_reg_next = addr_reg +1;
+                            counter_next = 3'b000;
+                            inst_n_next = inst_n + 1;
+                            mode_reg_next = WAIT;
+                            cont_next = mode_reg;
+                        end
+                    end
+                    DEBUG: begin
+                        if(i_data == NEXT)begin
+                            //TODO: como señalar a la pipeline que prosiga
+                            mode_reg_next = SEND_STATE;
+                        end
+                        else if(i_data == END_DEBUG)begin
+                            mode_reg_next = START;
+                        end
+                    end
+                    NO_DEBUG: begin
+                        //TODO: Agregar un enable a la pipeline, ponerlo en uno en este estado y dejar que funcione.
+                        //TODO: Esperar una señal del pipeline HALT y enviar estados de registros, mem y PC. 
+
+                    end
+                    WAIT: begin
+                        rd_reg_next = 1'b1;
+                                
+                        mode_reg_next = cont;
+                    end
+                endcase
         end
-        if(mode_reg == SEND_STATE_REG)begin
-            rd_reg_next = 1'b0;
-            if(reg_counter < 31)begin
-                addr_ID_reg_next = reg_counter+1;
-                reg_counter_next = reg_counter+1;
-                to_tx_fifo_next = i_reg_read[8*counter+:8];
-                wr_reg_next = 1'b1;
-            end
-            else begin
-                reg_counter_next = 5'b00000;
-                mode_reg_next = SEND_STATE_MEM;
-            end
-        end
-        if(mode_reg == SEND_STATE_MEM)begin
-            rd_reg_next = 1'b0;
-            if(reg_counter < 31)begin
-                addr_M_reg_next = reg_counter+1;
-                reg_counter_next = reg_counter+1;
-                to_tx_fifo_next = i_mem_read;
-                wr_reg_next = 1'b1;
-            end
-            else begin
-                reg_counter_next = 5'b00000;
-                mode_reg_next = DEBUG;
-            end
+        /* TX */
+        if(!i_fifo_full)begin
+
+            case(mode_reg)
+                SEND_STATE_REG: begin
+                    rd_reg_next = 1'b0;
+                    if(reg_counter < 31)begin
+                        if(counter < 4)begin
+                            to_tx_fifo_next = i_reg_read[8*counter+:8];
+                            counter_next = counter +1;
+                        end
+                        else if(counter == 4)begin
+                            wr_reg_next = 1'b1;
+                            counter_next = 0;
+                            addr_ID_reg_next = reg_counter+1;
+                            reg_counter_next = reg_counter+1;
+                        end
+                    end
+                    else begin
+                        reg_counter_next = 5'b00000;
+                        mode_reg_next = SEND_STATE_MEM;
+                    end
+                end
+                SEND_STATE_MEM: begin
+                    rd_reg_next = 1'b0;
+                    if(reg_counter < 31)begin
+                        if(counter < 4)begin
+                            to_tx_fifo_next = i_mem_read[8*counter+:8];
+                            counter_next = counter +1;
+                        end
+                        else if(counter == 4)begin
+                            wr_reg_next = 1'b1;
+                            counter_next = 0;
+                            addr_M_reg_next = reg_counter+1;
+                            reg_counter_next = reg_counter+1;
+                        end
+                    end
+                    else begin
+                        reg_counter_next = 5'b00000;
+                        mode_reg_next = SEND_PC;
+                    end
+                end
+                SEND_PC: begin
+                    if(counter < 4)begin
+                            to_tx_fifo_next = i_pc[8*counter+:8];
+                            counter_next = counter +1;
+                        end
+                    else if(counter == 4)begin
+                            wr_reg_next = 1'b1;
+                            counter_next = 0;
+                            mode_reg_next = DEBUG;
+                    end
+                end
+            endcase
         end
     end
     
