@@ -299,7 +299,7 @@ module MainControlUnit
                         bhw         =   2'b11;
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
-                        reg_write   =   1'b0; //X
+                        reg_write   =   1'b1; //X
                         bds_sel     =   1'b1;
                         mem_to_reg  =   1'b0; //X
                         halt        =   1'b0;
