@@ -55,6 +55,7 @@ module pipeline_tb();
     reg [4 : 0]         reg_base;
     reg [15 : 0]        reg_offset;
     reg [15 : 0]        reg_immediate;
+    reg [25 : 0]        reg_instr_index;
 
     integer i;
 
@@ -184,18 +185,18 @@ module pipeline_tb();
         
         #(T*2);
 
-        //! BEQ - Branch Test: rt <- rs | imm
+        //! BEQ - Branch Test: rt <- rs | imm - 9th Inst
         // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_offset = 16'h0001;
-        reg_instr_rt = 5'b01010;
-        // if reg[7] == reg[10] -> branch to 11th (NPC + offset = NPC + 1 = 10th + 1)
+        reg_instr_rs = 5'b01111;
+        reg_offset = 16'h0001; 
+        reg_instr_rt = 5'b11011;
+        // if reg[27] == reg[15] -> branch to 11th (NPC + offset = NPC + 1 = 10th + 1)
 
         i_instruction = {6'b000100, reg_instr_rs, reg_instr_rt, reg_offset};
 
         #(T*2);
 
-        //! Add To Test BEQ - 10th Inst (32'h20)
+        //! Add To Test BEQ - 10th Inst (32'h28)
         // Inputs
         reg_instr_rs = 5'b00111;
         reg_immediate = 16'h0002;
@@ -206,7 +207,7 @@ module pipeline_tb();
         
         #(T*2);
 
-        //! Add To Test BEQ - 11th Inst (32'h20)
+        //! Add To Test BEQ - 11th Inst (32'h2C)
         // Inputs
         reg_instr_rs = 5'b00111;
         reg_immediate = 16'h0002;
@@ -214,41 +215,52 @@ module pipeline_tb();
         // reg[7] += 2 -> if BEQ 6 , else 8
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
-        
+
         #(T*2);
 
-        //! J - Jump Test: pc <- instr_index - 12ve Inst (32'h30)
+        //! JAL - Jump Test: pc <- instr_index (JUMP TO 3Chex - Inst 15 (001111)) (GPR[31] <- PC+8 = 38h)
         // Inputs
-        reg_instr_index = 26'h00001C; 
-        // Jump to 14th Inst 
+        reg_instr_index = 26'b0000_0000_0000_0000_0000_001111; // TODO Revisar
+        // Jump to 14th Inst (PC = 38hex)
         
-        i_instruction = {6'b000010, reg_instr_index};
+        i_instruction = {6'b000011, reg_instr_index};
 
         #(T*2);
 
-        //! Add To Test J - 13th Inst (32'h34)
+        //! Add To Test J (13th Inst - 32'h34)
         // Inputs
         reg_instr_rs = 5'b00111;
         reg_immediate = 16'h0002;
         reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> 8 (should be 8 if BEQ)
+        // reg[7] += 2 -> if J 6, else 8
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
         #(T*2);
 
-        //! Add To Test J - 14th Inst (32'h38)
+        //! Add To Test J (14th Inst - 32'h38)
         // Inputs
         reg_instr_rs = 5'b00111;
         reg_immediate = 16'h0002;
         reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> if J 8 , else 10
+        // reg[7] += 2 -> if J 6, else 10
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
         #(T*2);
 
-        //! HALT
+        //! Add To Test J (15th Inst - 32'h3C)
+        // Inputs
+        reg_instr_rs = 5'b00111;
+        reg_immediate = 16'h0002;
+        reg_instr_rt = 5'b00111;
+        // reg[7] += 2 -> if J 6, else 12
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! HALT 
         i_instruction = 32'b000000_00000_00000_00000_111111;
         
         #(T*2);
