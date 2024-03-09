@@ -33,11 +33,6 @@ module pipeline
         // TODO Agregar o_regs (mem_sel), o_mem
     );
 
-    //! Signal Declaration
-    // TODO Declarar registros para debuggear
-
-    // TODO Revisar si es necesario inicializar en 0 valores de control
-
     //! Instantiations
     /**
                                 INSTUCTION FETCH
@@ -91,6 +86,10 @@ module pipeline
     wire [REG_SZ-1 : 0]           instr_rt_D;                
     wire [REG_SZ-1 : 0]           instr_rd_D;
     wire [REG_SZ-1 : 0]           write_register_MEM_WB;
+    wire [ALU_OP-1 : 0]           alu_op_MC;
+    wire [1 : 0]                  bhw_MC;
+    wire                          halt_MC;
+
 
     ID #(.INST_SZ(INST_SZ), .REG_SZ(REG_SZ), .FORW_EQ(FORW_EQ)) InstructionDecode
         (
@@ -108,7 +107,23 @@ module pipeline
         .o_read_data_1_D(read_data_1), .o_read_data_2_D(read_data_2),   
         .o_pc_src_D(pc_src_D), .o_instr_imm_D(instr_imm_D), 
         .o_instr_rs_D(instr_rs_D), .o_instr_rt_D(instr_rt_D), 
-        .o_instr_rd_D(instr_rd_D), .o_reg(o_reg)
+        .o_instr_rd_D(instr_rd_D), .o_reg(o_reg),
+        // Output Control Lines
+        .o_alu_op_MC(alu_op_MC),
+        .o_reg_dst_MC(reg_dst_MC),
+        .o_jal_sel_MC(jal_sel_MC),
+        .o_alu_src_MC(alu_src_MC),
+        .o_branch_MC(branch_MC),
+        .o_equal_MC(equal_MC),
+        .o_mem_read_MC(mem_read_MC),
+        .o_mem_write_MC(mem_write_MC),
+        .o_bhw_MC(bhw_MC),
+        .o_jump_MC(jump_MC),
+        .o_jump_sel_MC(jump_sel_MC),
+        .o_reg_write_MC(reg_write_MC),
+        .o_bds_sel_MC(bds_sel_MC),
+        .o_mem_to_reg_MC(mem_to_reg_MC),
+        .o_halt_MC(halt_MC)
         );
 
     /**
@@ -121,7 +136,6 @@ module pipeline
     wire [REG_SZ-1 : 0]      instr_rt_ID_EX;                 
     wire [REG_SZ-1 : 0]      instr_rd_ID_EX;                 
     wire [REG_SZ-1 : 0]      instr_rs_ID_EX;
-    wire [ALU_OP-1 : 0]      alu_op_MC;
     wire [ALU_OP-1 : 0]      alu_op_ID_EX;
     wire                     halt_ID_EX; 
     wire                     alu_src_ID_EX;      
@@ -129,13 +143,11 @@ module pipeline
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
     wire                     mem_read_ID_EX;  
     wire                     mem_write_ID_EX;
-    wire [1 : 0]             bhw_MC;
     wire [1 : 0]             bhw_ID_EX; 
     wire                     reg_write_ID_EX; 
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
     wire                     flush_id_ex_HD;
-    wire                     halt_MC;
 
     ID_EX_reg #(.INST_SZ(INST_SZ)) ID_EX
         (
@@ -281,30 +293,6 @@ module pipeline
     /**
                                 CONTROL UNITS
     **/
-    
-    //  Main Control Unit
-    MainControlUnit #(.OPCODE_SZ(OPCODE_SZ), .FUNCT_SZ(FUNCT_SZ)) MainControlUnit
-        (
-            // Inputs
-            .i_instr_op_D(instruction_IF_ID[31 : 26]),
-            .i_instr_funct_D(instruction_IF_ID[5 : 0]),
-            // Output Control Lines
-            .o_alu_op_MC(alu_op_MC),
-            .o_reg_dst_MC(reg_dst_MC),
-            .o_jal_sel_MC(jal_sel_MC),
-            .o_alu_src_MC(alu_src_MC),
-            .o_branch_MC(branch_MC),
-            .o_equal_MC(equal_MC),
-            .o_mem_read_MC(mem_read_MC),
-            .o_mem_write_MC(mem_write_MC),
-            .o_bhw_MC(bhw_MC),
-            .o_jump_MC(jump_MC),
-            .o_jump_sel_MC(jump_sel_MC),
-            .o_reg_write_MC(reg_write_MC),
-            .o_bds_sel_MC(bds_sel_MC),
-            .o_mem_to_reg_MC(mem_to_reg_MC),
-            .o_halt_MC(halt_MC)
-        );
 
     //  Hazard Detection Unit
     HazardDetectionUnit #(.INPUT_SZ(REG_SZ)) HazardDetectionUnit

@@ -7,7 +7,9 @@ module ID
         // Parameters
         parameter INST_SZ = 32,
         parameter REG_SZ = 5,
-        parameter FORW_EQ = 1
+        parameter FORW_EQ = 1,
+        parameter OPCODE_SZ = 6,
+        parameter FUNCT_SZ = 6
     )
     (
         // Inputs
@@ -34,7 +36,22 @@ module ID
         output [INST_SZ-1 : 0]          o_instr_imm_D,              // Instruction Immediate (instr[15:0])
         output [4 : 0]                  o_instr_rs_D,               // Instruction RS (instr[25:21]) 
         output [4 : 0]                  o_instr_rt_D,               // Instruction RT (instr[20:16])
-        output [4 : 0]                  o_instr_rd_D                // Instruction RD (instr[15:11])
+        output [4 : 0]                  o_instr_rd_D,               // Instruction RD (instr[15:11])
+        output [2 : 0]                  o_alu_op_MC,                // ALUOp Control Line
+        output                          o_reg_dst_MC,               // RegDst Control Line
+        output                          o_jal_sel_MC,               // JALSel Control Line
+        output                          o_alu_src_MC,               // ALUSrc Control Line
+        output                          o_branch_MC,                // Branch Control Line
+        output                          o_equal_MC,                 // Equal Control Line
+        output                          o_mem_read_MC,              // MemRead Control Line
+        output                          o_mem_write_MC,             // MemWrite Control Line
+        output [1 : 0]                  o_bhw_MC,                   // Memory Size Control Line
+        output                          o_jump_MC,                  // Jump Control Line
+        output                          o_jump_sel_MC,              // JumpSel Control Line
+        output                          o_reg_write_MC,             // RegWrite Control Line
+        output                          o_bds_sel_MC,               // BDSSel Control Line
+        output                          o_mem_to_reg_MC,            // MemToReg Control Line
+        output                          o_halt_MC                   // Halt Control Line
     );
 
     //! Signal Declaration
@@ -68,6 +85,30 @@ module ID
         .i_write_register(i_write_register_D), .i_write_data(i_write_data_D),
         .o_read_data_1(o_read_data_1_D), .o_read_data_2(o_read_data_2_D), .o_reg(o_reg));
 
+    //  Main Control Unit
+    MainControlUnit #(.OPCODE_SZ(OPCODE_SZ), .FUNCT_SZ(FUNCT_SZ)) MainControlUnit
+        (
+            // Inputs
+            .i_instr_op_D(i_instruction_D[31 : 26]),
+            .i_instr_funct_D(i_instruction_D[5 : 0]),
+            // Output Control Lines
+            .o_alu_op_MC(o_alu_op_MC),
+            .o_reg_dst_MC(o_reg_dst_MC),
+            .o_jal_sel_MC(o_jal_sel_MC),
+            .o_alu_src_MC(o_alu_src_MC),
+            .o_branch_MC(o_branch_MC),
+            .o_equal_MC(o_equal_MC),
+            .o_mem_read_MC(o_mem_read_MC),
+            .o_mem_write_MC(o_mem_write_MC),
+            .o_bhw_MC(o_bhw_MC),
+            .o_jump_MC(o_jump_MC),
+            .o_jump_sel_MC(o_jump_sel_MC),
+            .o_reg_write_MC(o_reg_write_MC),
+            .o_bds_sel_MC(o_bds_sel_MC),
+            .o_mem_to_reg_MC(o_mem_to_reg_MC),
+            .o_halt_MC(o_halt_MC)
+        );
+
     //! Assignments
     // Shift instruction index to get jump address
     assign o_jump_addr_D = {i_npc_D[31:28], {i_instruction_D[25 : 0]}, {2{1'b0}}}; //TODO Revisar bien
@@ -83,7 +124,7 @@ module ID
     // Left shift extended immediate by 2 bits
     assign shifted_imm = extended_imm << 2;
     // Adding shifted immediate to i_npc_D to get o_branch_addr_D
-    assign o_branch_addr_D      =      extended_imm[INST_SZ-1]? (i_npc_D - shifted_imm) : (shifted_imm + i_npc_D);
+    assign o_branch_addr_D      =      i_npc_D + shifted_imm;
 
     assign o_instr_rs_D         =      i_instruction_D[25 : 21]; 
     assign o_instr_rt_D         =      i_instruction_D[20 : 16]; 
