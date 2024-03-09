@@ -218,9 +218,9 @@ module pipeline_tb();
 
         #(T*2);
 
-        //! JAL - Jump Test: pc <- instr_index (JUMP TO 3Chex - Inst 15 (001111)) (GPR[31] <- PC+8 = 38h)
+        //! JAL - Jump Test: pc <- instr_index (JUMP TO 3Chex - Inst 15 (001111)) (GPR[31] <- PC+8 = 34h)
         // Inputs
-        reg_instr_index = 26'b0000_0000_0000_0000_0000_001111; // TODO Revisar
+        reg_instr_index = 26'b0000_0000_0000_0000_0000_001111; 
         // Jump to 14th Inst (PC = 38hex)
         
         i_instruction = {6'b000011, reg_instr_index};

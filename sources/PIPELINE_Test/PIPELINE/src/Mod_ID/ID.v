@@ -83,7 +83,7 @@ module ID
     // Left shift extended immediate by 2 bits
     assign shifted_imm = extended_imm << 2;
     // Adding shifted immediate to i_npc_D to get o_branch_addr_D
-    assign o_branch_addr_D      =      shifted_imm + i_npc_D;
+    assign o_branch_addr_D      =      extended_imm[INST_SZ-1]? (i_npc_D - shifted_imm) : (shifted_imm + i_npc_D);
 
     assign o_instr_rs_D         =      i_instruction_D[25 : 21]; 
     assign o_instr_rt_D         =      i_instruction_D[20 : 16]; 

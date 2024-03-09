@@ -49,11 +49,11 @@ module MEM_WB_reg
             halt                <=      0;
             reg_write           <=      0;                
             mem_to_reg          <=      0;                
-            bds_sel             <=      i_bds_sel;  // HACK            
+            bds_sel             <=      0;  // HACK            
             read_data           <=      0;                
             alu_result          <=      0;                
             write_register      <=      0;                    
-            bds                 <=      i_bds;      // HACK        
+            bds                 <=      0;      // HACK        
 
         end
         else if(i_enable)

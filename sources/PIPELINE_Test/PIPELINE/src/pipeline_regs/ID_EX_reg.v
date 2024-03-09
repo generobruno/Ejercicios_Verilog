@@ -87,7 +87,7 @@ module ID_EX_reg
             reg_write      <=       0;
             mem_to_reg     <=       0;
             bds_sel        <=       0;
-            bds            <=       i_bds; // HACK
+            bds            <=       0; // HACK
             read_data_1    <=       0;
             read_data_2    <=       0;
             instr_imm      <=       0;

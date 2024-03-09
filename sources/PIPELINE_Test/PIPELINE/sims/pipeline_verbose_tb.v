@@ -393,166 +393,73 @@ module pipeline_verbose_tb();
 
         //! ADDI - Add Immediate Test: rt <- rs + imm
         // Inputs
-        reg_instr_rs = 5'b0000;
-        reg_immediate = 16'h0002;
+        reg_instr_rs = 5'b00000;
+        reg_immediate = 12; // 0Chex (12dec)
         reg_instr_rt = 5'b00010;
-        // reg[2] = 2
+        // reg[2] = 12
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
         #(T*2);
 
-        //! SW - Store Test: mem[base+offset] <- rt
-        // Inputs
-        reg_base = 5'b00000;
-        reg_offset = 16'h0002;
-        reg_instr_rt = 5'b00010;
-        // mem[0] = 2
-
-        i_debug_addr = 5'b00001; // Signed offset + GPR[base] // TODO Revisar y ver caso LH (y LB)
-
-        i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
-
-        #(T*2);
-
-        //! LW - Load Test: rt <- mem[base+offset]
-        // Inputs
-        reg_base = 5'b00000;
-        reg_offset = 16'h0002;
-        reg_instr_rt = 5'b00101;
-        // reg[5] = 2
-
-        i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset // TODO Revisar
-
-        i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
-
-        #(T*2);
-
-        //! ADDU - Add Test: rd <- rs + rt
+        //! JR - Jump Register Test: PC <- rs
         // Inputs
         reg_instr_rs = 5'b00010;
-        reg_instr_rt = 5'b00010;
-        reg_instr_rd = 5'b01010;
-        // reg[10] = 4
+        // Jump to PC = reg[2] = 12 = C hex
 
-        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, ADDU};
+        i_instruction = {6'b000000, reg_instr_rs, {15{1'b0}}, JR};
 
         #(T*2);
 
-        //! SUBU - Sub Test: rd <- rs - rt
+        //! Add to Test JR (PC = 8hex)
         // Inputs
-        reg_instr_rs = 5'b01010;
+        reg_instr_rs = 5'b00010;
+        reg_immediate = 16'h0002;
         reg_instr_rt = 5'b00010;
+        // reg[2] += 2 -> if JR 12, else 14
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! Add to Test JR (PC = Chex)
+        // Inputs
+        reg_instr_rs = 5'b00010;
+        reg_immediate = 16;
+        reg_instr_rt = 5'b00010;
+        // reg[2] += 16 -> if JR 28 (1C hex), else 30
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! JALR - Jump and Link Register Test: PC <- rs and rd <- GPR[31] (PC: 14hex)
+        // Inputs
+        reg_instr_rs = 5'b00010;
         reg_instr_rd = 5'b00111;
-        // reg[7] = 2
+        // Jump to PC = reg[2] = 1C y PC+8 = reg[7] -> jump to 1C
 
-        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, SUBU};
+        i_instruction = {6'b000000, reg_instr_rs, 5'b00000, reg_instr_rd, 5'b00000, JALR};
 
-        #(T*2);
+        #(T*2); 
 
-        //! AND - And Test: rd <- rs & rt
+        //! Add to Test JALR (PC = 18hex)
         // Inputs
         reg_instr_rs = 5'b00010;
+        reg_immediate = 10;
         reg_instr_rt = 5'b00010;
-        reg_instr_rd = 5'b01111;
-        // reg[15] = 2
-
-        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, AND};
-
-        #(T*2);
-
-        //! ORI - Or Test: rt <- rs | imm
-        // Inputs
-        reg_instr_rs = 5'b0000;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b11011;
-        // reg[27] = 2
-
-        i_instruction = {6'b001101, reg_instr_rs, reg_instr_rt, reg_immediate};
-
-        #(T*2);
-
-        //! Add To Test BEQ - 8th Inst (32'h20)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 = 4 
-
-        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
-        
-        #(T*2);
-
-        //! BEQ - Branch Test: rt <- rs | imm - 9th Inst
-        // Inputs
-        reg_instr_rs = 5'b01111;
-        reg_offset = 16'h0001; 
-        reg_instr_rt = 5'b11011;
-        // if reg[27] == reg[15] -> branch to 11th (NPC + offset = NPC + 1 = 10th + 1)
-
-        i_instruction = {6'b000100, reg_instr_rs, reg_instr_rt, reg_offset};
-
-        #(T*2);
-
-        //! Add To Test BEQ - 10th Inst (32'h28)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 = -> 6 
-
-        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
-        
-        #(T*2);
-
-        //! Add To Test BEQ - 11th Inst (32'h2C)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> if BEQ 6 , else 8
+        // reg[2] += 10 -> if JALR 28, else 38
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 
         #(T*2);
 
-        //! JAL - Jump Test: pc <- instr_index (JUMP TO 3Chex - Inst 15 (001111)) (GPR[31] <- PC+8 = 38h)
+        //! Add to Test JALR (PC = 1Chex)
         // Inputs
-        reg_instr_index = 26'b0000_0000_0000_0000_0000_001111; // TODO Revisar
-        // Jump to 14th Inst (PC = 38hex)
-        
-        i_instruction = {6'b000011, reg_instr_index};
-
-        #(T*2);
-
-        //! Add To Test J (13th Inst - 32'h34)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> if J 6, else 8
-
-        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
-
-        #(T*2);
-
-        //! Add To Test J (14th Inst - 32'h38)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> if J 6, else 10
-
-        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
-
-        #(T*2);
-
-        //! Add To Test J (15th Inst - 32'h3C)
-        // Inputs
-        reg_instr_rs = 5'b00111;
-        reg_immediate = 16'h0002;
-        reg_instr_rt = 5'b00111;
-        // reg[7] += 2 -> if J 6, else 12
+        reg_instr_rs = 5'b00010;
+        reg_immediate = 10;
+        reg_instr_rt = 5'b00010;
+        // reg[2] += 10 -> if JR 38, else 48
 
         i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
 

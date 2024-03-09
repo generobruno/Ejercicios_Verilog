@@ -38,12 +38,12 @@ module IF
 
     //! Instantiations
     mpx_2to1 #(.N(INST_SZ)) pc_src_mpx
-        (.input_a(o_npc_F), .input_b(i_branch_addr_D),
+        (.input_a(o_npc_F), .input_b(i_branch_addr_D), // TODO Revisar
         .i_select(i_pc_src_D),
         .o_output(o_pc_src_mpx));
 
     mpx_2to1 #(.N(INST_SZ)) jump_mpx
-        (.input_a(o_pc_src_mpx), .input_b(i_jump_addr_D), //TODO REVISAR
+        (.input_a(o_pc_src_mpx), .input_b(i_jump_addr_D>>2), //TODO REVISAR
         .i_select(i_jump_D),
         .o_output(o_jump_mpx));
 
