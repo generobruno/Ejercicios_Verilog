@@ -274,6 +274,78 @@ module EX_tb();
             $display("Actual Result: %b\n", o_alu_result);
         end
 
+        //! SLT Test (ALU WITH IMM LOGICAL INSTS)
+        // Control Lines
+        reg_dst = 1'b1;
+        jal_sel = 1'b0;
+        alu_src = 1'b0;
+        alu_op = 3'b010;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
+
+        // Inputs
+        reg_instr_rt = $random(seed) % 32;
+        reg_instr_rs = $random(seed) % 32;   
+        reg_instr_rd = $random(seed) % 32;   
+        read_data_1 = 1;
+        read_data_2 = 2;
+
+        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, 6'b101010};
+
+        #10;
+
+        // Result Check
+        expected_res = ($signed(read_data_1) < $signed(read_data_2)); 
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nSLT DID NOT PASS!!!");
+            $display("Expected Result: %b (%d)", expected_res, expected_res);
+            $display("Actual Result: %b (%d)\n", o_alu_result, o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nSLT PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
+
+        //! SUBU Test (3 OPERAND ALU INSTRUCTIONS)
+        // Control Lines
+        reg_dst = 1'b1;
+        jal_sel = 1'b0;
+        alu_src = 1'b0;
+        alu_op = 3'b010;
+        forward_a = 1'b0;
+        forward_b = 1'b0;
+
+        // Inputs
+        reg_instr_rt = $random(seed) % 32;
+        reg_instr_rs = $random(seed) % 32;   
+        reg_instr_rd = $random(seed) % 32;   
+        read_data_1 = $random(seed) & 32'hFFFFFFFF;
+        read_data_2 = $random(seed) & 32'hFFFFFFFF;
+
+        i_instruction = {6'b000000, reg_instr_rs, reg_instr_rt, reg_instr_rd, 5'b00000, 6'b100011};
+
+        #10;
+
+        // Result Check
+        expected_res = read_data_1 - read_data_2;
+        if(o_alu_result != expected_res) 
+        begin
+            $display("\nSUBU DID NOT PASS!!!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+            $stop;
+        end
+        else
+        begin
+            $display("\nADDU PASSED!");
+            $display("Expected Result: %b", expected_res);
+            $display("Actual Result: %b\n", o_alu_result);
+        end
+
         $stop;
     end
 

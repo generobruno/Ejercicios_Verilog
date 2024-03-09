@@ -48,7 +48,7 @@ module IF
         .o_output(o_jump_mpx));
 
     mpx_2to1 #(.N(INST_SZ)) jump_sel_mpx
-        (.input_a(o_jump_mpx), .input_b(i_rs_addr_D),
+        (.input_a(o_jump_mpx), .input_b((i_rs_addr_D & ~2'b11)), // Naturally-aligned GPR[rs]
         .i_select(i_jump_sel_D),
         .o_output(o_jump_sel_mpx));
 

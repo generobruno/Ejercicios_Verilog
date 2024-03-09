@@ -385,7 +385,7 @@ module pipeline_hazards_tb();
         i_reset = 1'b0;
 
         //! START
-        //! INST 1: XORI $s0, $zero, 0x0003 (04hex)
+        //! INST 1: XORI $s0, $zero, 0x0003 (00hex)
         // Inputs
         reg_instr_rt = 5'b00001;
         reg_instr_rs = 5'b00000;
@@ -396,7 +396,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! XORI $s1, $zero, 0x0004 (08hex)
+        //! XORI $s1, $zero, 0x0004 (04hex)
         // Inputs
         reg_instr_rt = 5'b00010;
         reg_instr_rs = 5'b00000;
@@ -407,16 +407,16 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! J next1 -> CONTOL HAZARD (0Chex)
+        //! J next1 -> CONTOL HAZARD (08hex)
         // Inputs
-        reg_instr_index = 26'h18;
-        // Jump to next1 (18hex)
+        reg_instr_index = 26'h14;
+        // Jump to next1 (18hex)    
 
         i_instruction = {6'b000010, reg_instr_index};
 
         #(T*2);
 
-        //! next2: XORI $s0, $zero, 0x0001 (10hex)
+        //! next2: XORI $s0, $zero, 0x0001 (0Chex)
         // Inputs
         reg_instr_rt = 5'b00001;
         reg_instr_rs = 5'b00000;
@@ -427,7 +427,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! XORI $s1, $zero, 0x0001 (14hex)
+        //! XORI $s1, $zero, 0x0001 (10hex)
         // Inputs
         reg_instr_rt = 5'b00010;
         reg_instr_rs = 5'b00000;
@@ -438,7 +438,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! INST 6 - next1: SUB $s2, $s1, $s0 -> DATA HAZARD (FORWARDING) (18hex)
+        //! next1: SUB $s2, $s1, $s0 -> DATA HAZARD (FORWARDING) (14hex)
         // Inputs
         reg_instr_rd = 5'b00011;
         reg_instr_rs = 5'b00010;
@@ -449,7 +449,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! BNE $s0, $s1, next2 -> DATA AND CONTROL HAZARD (FORWARDING) (1Chex)
+        //! BNE $s0, $s1, next2 -> DATA AND CONTROL HAZARD (FORWARDING) (18hex)
         // Inputs
         reg_instr_rs = 5'b00001;
         reg_instr_rt = 5'b00010;
@@ -460,7 +460,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! ADD $s3, $s0, $s1 (20hex)
+        //! ADD $s3, $s0, $s1 (1Chex)
         // Inputs
         reg_instr_rd = 5'b00100;
         reg_instr_rs = 5'b00001;
@@ -471,7 +471,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! SW $s3, 16($s2) -> DATA HAZARD (FORWARDING) (24hex)
+        //! SW $s3, 16($s2) -> DATA HAZARD (FORWARDING) (20hex)
         // Inputs
         reg_base = 5'b00011;
         reg_instr_rt = 5'b00100;
@@ -482,7 +482,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! LW $s4, 16($s2) (28hex)
+        //! LW $s4, 16($s2) (24hex)
         // Inputs
         reg_base = 5'b00011;
         reg_instr_rt = 5'b00101;
@@ -493,7 +493,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! SLT $s5, $s0, $s4 -> DATA HAZARD (STALLING AND FORWARDING) (2Chex)
+        //! SLT $s5, $s0, $s4 -> DATA HAZARD (STALLING AND FORWARDING) (28hex)
         // Inputs
         reg_instr_rd = 5'b00110;
         reg_instr_rs = 5'b00001;
@@ -504,7 +504,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! LW $s3, 16($s2) (30hex)
+        //! LW $s3, 16($s2) (2Chex)
         // Inputs
         reg_base = 5'b00011;
         reg_instr_rt = 5'b00100;
@@ -515,7 +515,7 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! XORI $s3, $s2, 0x0001 -> STALLING (34hex)
+        //! XORI $s3, $s2, 0x0001 -> STALLING (30hex)
         // Inputs
         reg_instr_rs = 5'b00011;
         reg_immediate = 16'h0001;
@@ -526,10 +526,10 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! XORI $s5, $s5, 0x0001 (38hex)
+        //! XORI $s5, $s5, 0x0001 (34hex)
         // Inputs
         reg_instr_rs = 5'b00110;
-        reg_immediate = 16'h0002;
+        reg_immediate = 1;
         reg_instr_rt = 5'b00110;
         // reg[6] = reg[6] XOR 1
 
@@ -537,7 +537,8 @@ module pipeline_hazards_tb();
 
         #(T*2);
 
-        //! JR $s5 -> DATA AND CONTROL HAZARD (FORWARDING) (3Chex)
+        /*
+        //! JR $s5 -> DATA AND CONTROL HAZARD (FORWARDING) (38hex)
         // Inputs
         reg_instr_rs = 5'b00110;
         // PC <- reg[6]
@@ -545,11 +546,23 @@ module pipeline_hazards_tb();
         i_instruction = {6'b000000, reg_instr_rs, {15{1'b0}}, JR};
 
         #(T*2);
+        */
 
-        //! HALT 
+        //! HALT (3Chex)
         i_instruction = 32'b000000_00000_00000_00000_111111;
         
         #(T*2);
+
+        /**********************************
+            Results (withoud JR):
+                reg[0]=0
+                reg[1]=1
+                reg[2]=1
+                reg[3]=0
+                reg[4]=1
+                reg[5]=2
+                reg[6]=0
+        ***********************************/
         
         $display("LOADING PROGRAM...");
 

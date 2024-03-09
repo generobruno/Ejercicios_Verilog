@@ -99,7 +99,7 @@ module MainControlUnit
         case(i_instr_op_D[5:3]) // bits 3 a 5
             SPECIAL: 
             begin
-                case(i_instr_op_D[3:0])  // bits 0 a 3
+                case(i_instr_op_D[2:0])  // bits 0 a 3
                     R_TYPE: 
                     begin
                         case(i_instr_funct_D) // Function Field
@@ -326,7 +326,7 @@ module MainControlUnit
             end
             LOAD:               // Load Instructions            
             begin
-                case (i_instr_op_D[3:0]) // Bits 3 a 0
+                case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
                         reg_dst     =   1'b0;   
@@ -403,7 +403,7 @@ module MainControlUnit
             end
             STORE:              // Store Instructions
             begin
-                case (i_instr_op_D[3:0]) // Bits 3 a 0
+                case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
                         reg_dst     =   1'b0;   
@@ -494,7 +494,7 @@ module MainControlUnit
                 bds_sel     =   1'b0;
                 mem_to_reg  =   1'b0;
                 halt        =   1'b0;
-                case(i_instr_op_D[3:0])
+                case(i_instr_op_D[2:0])
                     ADDI:
                     begin
                         alu_op      =   3'b000;
@@ -520,7 +520,9 @@ module MainControlUnit
                         alu_op      =   3'b111;
                     end
                     default:
+                    begin
                         alu_op      =   3'b000;
+                    end
                 endcase            
             end
             default:            // Default Op

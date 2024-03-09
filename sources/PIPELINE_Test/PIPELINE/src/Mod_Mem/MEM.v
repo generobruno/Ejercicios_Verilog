@@ -27,7 +27,7 @@ module MEM
         (.i_clk(i_clk), 
         .i_mem_write(i_mem_write_M), .i_bhw(i_bhw_M),
         .i_addr(i_alu_result_E[MEM_SZ-1:0]), .i_debug_addr(i_debug_addr),
-        .i_data(i_operand_b_E), //TODO Que parte de alu_result se usa?
+        .i_data(i_operand_b_E),
         .o_data(o_read_data_M), .o_debug_mem(o_debug_mem));
     
     //! Assignments
