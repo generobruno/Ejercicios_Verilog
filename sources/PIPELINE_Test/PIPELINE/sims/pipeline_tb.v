@@ -117,7 +117,7 @@ module pipeline_tb();
 
         #(T*2);
 
-        //! LW - Load Test: rt <- mem[base+offset]
+        //! LH - Load Test: rt <- mem[base+offset]
         // Inputs
         reg_base = 5'b00000;
         reg_offset = 16'h0002;
@@ -126,7 +126,7 @@ module pipeline_tb();
 
         i_debug_addr = 5'b00010; // GPR[rt] (read_data_1) + offset // TODO Revisar
 
-        i_instruction = {6'b100011, reg_base, reg_instr_rt, reg_offset};
+        i_instruction = {6'b100001, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
 
@@ -188,7 +188,7 @@ module pipeline_tb();
         //! BEQ - Branch Test: rt <- rs | imm - 9th Inst
         // Inputs
         reg_instr_rs = 5'b01111;
-        reg_offset = 16'h0001; 
+        reg_offset = 16'h0003; 
         reg_instr_rt = 5'b11011;
         // if reg[27] == reg[15] -> branch to 11th (NPC + offset = NPC + 1 = 10th + 1)
 
@@ -220,7 +220,7 @@ module pipeline_tb();
 
         //! JAL - Jump Test: pc <- instr_index (JUMP TO 3Chex - Inst 15 (001111)) (GPR[31] <- PC+8 = 34h)
         // Inputs
-        reg_instr_index = 26'b0000_0000_0000_0000_0000_001111; 
+        reg_instr_index = 26'h34; 
         // Jump to 14th Inst (PC = 38hex)
         
         i_instruction = {6'b000011, reg_instr_index};

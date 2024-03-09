@@ -21,9 +21,8 @@ verilog xil_defaultlib  \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/utils/mpx_3to1.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_IF/pc.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/utils/pc_adder.v" \
-"../../../../../sources/PIPELINE_Test/PIPELINE/pipeline.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" \
-"../../../../../sources/PIPELINE_Test/PIPELINE/sims/pipeline_tb.v" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/sims/pipeline_hazards_tb.v" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

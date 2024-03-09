@@ -50,9 +50,12 @@ module MainControlUnit
     localparam SLTI     =       3'b010;         //      SLT Immediate
 
     // BHW Load-Store
-    localparam BYTE     =       3'b000;         // Load-Store Byte
-    localparam HALFWORD =       3'b001;         // Load-Store HalfWord
-    localparam WORD     =       3'b011;         // Load-Store Word
+    localparam BYTE       =       3'b000;         // Load-Store Byte
+    localparam HALFWORD   =       3'b001;         // Load-Store HalfWord
+    localparam WORD       =       3'b011;         // Load-Store Word
+    localparam U_BYTE     =       3'b100;         // Load-Store Byte Unsigned
+    localparam U_HALFWORD =       3'b101;         // Load-Store HalfWord Unsigned
+    localparam U_WORD     =       3'b111;         // Load-Store Word Unsigned
 
     // ALU Operations Function Fields
     localparam ADDU =           6'b100001;      // Add Word Unsigned 
@@ -326,155 +329,95 @@ module MainControlUnit
             end
             LOAD:               // Load Instructions            
             begin
+                reg_dst     =   1'b0;   
+                jal_sel     =   1'b0;
+                alu_src     =   1'b1;
+                alu_op      =   3'b000;
+                branch      =   1'b0;
+                equal       =   1'b0; //X
+                mem_read    =   1'b1;
+                mem_write   =   1'b0;
+                jump        =   1'b0;
+                jump_sel    =   1'b0; //X
+                reg_write   =   1'b1;
+                bds_sel     =   1'b0;
+                mem_to_reg  =   1'b1;        
+                halt        =   1'b0; 
                 case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
                         bhw         =   2'b00;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
-                        halt        =   1'b0; 
                     end
                     HALFWORD:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
                         bhw         =   2'b01;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
-                        halt        =   1'b0; 
                     end
                     WORD:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
                         bhw         =   2'b11;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
-                        halt        =   1'b0; 
+                    end 
+                    U_BYTE:
+                    begin
+                        bhw         =   2'b00;
+                    end
+                    U_HALFWORD:
+                    begin
+                        bhw         =   2'b01;
+                    end
+                    U_WORD:
+                    begin
+                        bhw         =   2'b11;
                     end 
                     default:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b1;
-                        mem_write   =   1'b0;
                         bhw         =   2'b11;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b1;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b1;        
-                        halt        =   1'b0; 
                     end 
                 endcase   
             end
             STORE:              // Store Instructions
             begin
+                reg_dst     =   1'b0;   
+                jal_sel     =   1'b0;
+                alu_src     =   1'b1;
+                alu_op      =   3'b000;
+                branch      =   1'b0;
+                equal       =   1'b0; //X
+                mem_read    =   1'b0;
+                mem_write   =   1'b1;
+                jump        =   1'b0;
+                jump_sel    =   1'b0; //X
+                reg_write   =   1'b0;
+                bds_sel     =   1'b0;
+                mem_to_reg  =   1'b0;        
+                halt        =   1'b0;
                 case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b0;
-                        mem_write   =   1'b1;
                         bhw         =   2'b00;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b0;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b0;        
-                        halt        =   1'b0; 
                     end
                     HALFWORD:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b0;
-                        mem_write   =   1'b1;
                         bhw         =   2'b01;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b0;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b0;        
-                        halt        =   1'b0; 
                     end
                     WORD:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b0;
-                        mem_write   =   1'b1;
                         bhw         =   2'b11;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b0;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b0;        
-                        halt        =   1'b0; 
+                    end
+                    U_BYTE:
+                    begin
+                        bhw         =   2'b00;
+                    end
+                    U_HALFWORD:
+                    begin
+                        bhw         =   2'b01;
+                    end
+                    U_WORD:
+                    begin
+                        bhw         =   2'b11;
                     end 
                     default:
                     begin
-                        reg_dst     =   1'b0;   
-                        jal_sel     =   1'b0;
-                        alu_src     =   1'b1;
-                        alu_op      =   3'b000;
-                        branch      =   1'b0;
-                        equal       =   1'b0; //X
-                        mem_read    =   1'b0;
-                        mem_write   =   1'b1;
                         bhw         =   2'b11;
-                        jump        =   1'b0;
-                        jump_sel    =   1'b0; //X
-                        reg_write   =   1'b0;
-                        bds_sel     =   1'b0;
-                        mem_to_reg  =   1'b0; 
-                        halt        =   1'b0; 
                     end 
                 endcase    
             end
