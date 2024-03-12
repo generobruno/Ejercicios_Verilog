@@ -2,7 +2,6 @@
 
 **/
 
-// TODO Agregar lineas de control para tamaño de palabras
 module MainControlUnit
     #(
         // Parameters
@@ -444,7 +443,7 @@ module MainControlUnit
                     end
                     LUI:
                     begin
-                        alu_op      =   3'b101; //TODO
+                        alu_op      =   3'b101; 
                     end
                     SLTI:
                     begin

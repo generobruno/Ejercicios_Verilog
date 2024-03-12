@@ -49,7 +49,7 @@ module register_mem
     begin
         if(i_reset)
         begin
-            regs[0] = 32'h00000000; //TODO regs[0] siempre es 0 -> no permitir que se cambie
+            regs[0] = 32'h00000000; 
         end
         else if(i_reg_write_MC)
         begin

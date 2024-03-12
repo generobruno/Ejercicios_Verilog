@@ -30,7 +30,6 @@ module pipeline
         output [INST_SZ-1 : 0]          o_mem,                      // Output Memory
         output [INST_SZ-1 : 0]          o_reg,                      // Output Register
         output                          o_halt                      // Halt Control Line
-        // TODO Agregar o_regs (mem_sel), o_mem
     );
 
     //! Instantiations
@@ -296,7 +295,7 @@ module pipeline
     //  Hazard Detection Unit
     HazardDetectionUnit #(.INPUT_SZ(REG_SZ)) HazardDetectionUnit
         (
-            // Input Control Lines //TODO REVISAR
+            // Input Control Lines 
             .i_mem_to_reg_M(mem_to_reg_EX_MEM),             
             .i_mem_read_E(mem_read_ID_EX),               
             .i_reg_write_E(reg_write_ID_EX),              
@@ -316,7 +315,7 @@ module pipeline
     //  Forwarding Unit
     ForwardingUnit #(.FORW_EQ(FORW_EQ), .FORW_ALU(FORW_ALU)) ForwardingUnit
         (
-            // Inputs //TODO REVISAR
+            // Inputs
             .i_instr_rs_D(instr_rs_D),
             .i_instr_rt_D(instr_rt_D),
             .i_instr_rt_E(instr_rt_ID_EX),

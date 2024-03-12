@@ -22,15 +22,14 @@ module instruction_mem
     );
 
     //! Signal Declaration
-    // TODO Registros para debug
     // Instruction memory
     reg [B-1 : 0]       array_reg [2**W-1 : 0];
-    // Mask to select instruction. Default: 32 Instructions: (25-5-2) 0000000000000000000000000_11111_00
+    // Mask to select instruction. Default: 32 Instructions: (25-5-2) 00000000000000000000_1111111111_00
     reg [PC-1 : 0]      mask = {{(PC - W - 2){1'b0}} , {W{1'b1}} , 2'b00};
     // Write Pointers
     reg [W-1 : 0]       write_ptr, write_ptr_next, write_ptr_succ;
 
-    // Body //TODO REVISAR -> el clk se deberia usar para debuggear y cargar insts, pero las insts las selecciona el pc en otro caso
+    // Body 
     // Write Instructions
     always @(posedge i_clk) 
     begin

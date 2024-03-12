@@ -67,7 +67,7 @@ module EX
         .o_output(alu_b));
     
     AluControl #(.ALU_OP(), .FUNCT()) alu_control 
-        (.i_instr_funct_E(i_instr_imm_D[5:0]), //TODO Revisar que entre bien instr_imm_D despues de ser extendido
+        (.i_instr_funct_E(i_instr_imm_D[5:0]),
         .i_alu_op_MC(i_alu_op_MC),
         .o_alu_sel_AC(alu_sel));
 
