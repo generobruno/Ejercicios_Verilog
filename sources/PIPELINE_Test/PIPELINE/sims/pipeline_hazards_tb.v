@@ -227,7 +227,6 @@ module pipeline_hazards_tb();
     wire [INST_SZ-1 : 0]     write_data_EX_MEM;     
     wire [INST_SZ-1 : 0]     bds_EX_MEM;
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
-    wire                     mem_read_EX_MEM;   // TODO Revisar si este deberia ir a HD            
     wire                     mem_write_EX_MEM;
     wire [2 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
@@ -240,16 +239,16 @@ module pipeline_hazards_tb();
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset), .i_enable(i_enable),
         // Input Control Lines 
-        .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
-        .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
-        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
+        .i_mem_write(mem_write_ID_EX), .i_reg_write(reg_write_ID_EX), 
+        .i_mem_to_reg(mem_to_reg_ID_EX), .i_bds_sel(bds_sel_ID_EX),
+        .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
         .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
-        .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
-        .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), 
-        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
+        .o_mem_write(mem_write_EX_MEM), .o_reg_write(reg_write_EX_MEM), 
+        .o_mem_to_reg(mem_to_reg_EX_MEM), .o_bds_sel(bds_sel_EX_MEM), 
+        .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
         // Outputs
         .o_alu_result(alu_result_EX_MEM), .o_write_data(write_data_EX_MEM),
         .o_write_register(write_register_EX_MEM), .o_bds(bds_EX_MEM)
@@ -583,18 +582,16 @@ module pipeline_hazards_tb();
         reg_offset = 16'h18;
         // reg[30] <- mem[6]
 
-        i_instruction = {6'b100001, reg_base, reg_instr_rt, reg_offset};
+        i_instruction = {6'b100101, reg_base, reg_instr_rt, reg_offset};
 
         #(T*2);
 
-        //! TESTS
+        //! TESTS *****************************************************************
         // Inputs
-        reg_base = 5'b01101;
-        reg_instr_rt = 5'b11110;
-        reg_offset = 16'h18;
-        // reg[30] <- mem[6]
+        reg_immediate = 10;
+        reg_instr_rt = 5'b11011;
 
-        i_instruction = {6'b100001, reg_base, reg_instr_rt, reg_offset};
+        i_instruction = {6'b001_111, 5'b00000, reg_instr_rt, reg_immediate};
 
         #(T*2);
 

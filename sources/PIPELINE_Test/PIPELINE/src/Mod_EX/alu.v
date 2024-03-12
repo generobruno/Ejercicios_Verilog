@@ -31,6 +31,7 @@ module alu
     localparam SRLV =       6'b000110;      // Shift Word Right Logic Variable
     localparam SRAV =       6'b000111;      // Shift Word Right Arithmetic Variable
     localparam SLT  =       6'b101010;      // Set on Less Than
+    localparam LUI  =       6'b110110;      // Load Upper Immediate
 
     localparam I_TYPE_ANDI  =   3'b001;         // ANDI
     localparam I_TYPE_ORI   =   3'b011;         // ORI
@@ -77,6 +78,7 @@ module alu
             SRLV    : alu_Result = alu_b >> i_alu_A;
             SRAV    : alu_Result = $signed(alu_b) >>> i_alu_A;
             SLT     : alu_Result = $signed(i_alu_A) < $signed(alu_b);
+            LUI     : alu_Result = {alu_b[N-1], alu_b[14:0], 16'h0000};
             default : alu_Result = {N {1'b0}};
         endcase
     end

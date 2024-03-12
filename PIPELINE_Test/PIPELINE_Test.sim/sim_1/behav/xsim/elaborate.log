@@ -5,7 +5,7 @@ Running: /home/bruno/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --d
 Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3705] select index 9 into 'i_debug_addr' is out of bounds [/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_hazards_tb.v:626]
+WARNING: [VRFC 10-3705] select index 9 into 'i_debug_addr' is out of bounds [/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_hazards_tb.v:634]
 Completed static elaboration
 Starting simulation data flow analysis
 WARNING: [XSIM 43-4099] "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/IF.v" Line 5. Module IF doesn't have a timescale but at least one module in design has a timescale.

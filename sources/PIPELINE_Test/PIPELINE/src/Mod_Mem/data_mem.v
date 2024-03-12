@@ -103,9 +103,9 @@ module data_mem
     end
 
     // Aligned Byte 
-    wire [B-1 : 0] byte_aligned = (array_reg[i_addr>>2] >> (i_addr[1:0] * BYTE_SZ));
+    wire [BYTE_SZ-1 : 0] byte_aligned = (array_reg[i_addr>>2] >> (i_addr[1:0] * BYTE_SZ));
     // Aligned HalfWord 
-    wire [B-1 : 0] halfword_aligned = (array_reg[i_addr>>2] >> (i_addr[1] * HALFWORD_SZ));
+    wire [HALFWORD_SZ-1 : 0] halfword_aligned = (array_reg[i_addr>>2] >> (i_addr[1] * HALFWORD_SZ));
 
     // Manage Unsigned or Signed Loads
     always @(*) 
