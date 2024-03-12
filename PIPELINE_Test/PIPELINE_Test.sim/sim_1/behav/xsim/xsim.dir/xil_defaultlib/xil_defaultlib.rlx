@@ -2,7 +2,7 @@
 2020.2
 Jun 16 2023
 19:36:26
-/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/PIPELINE_Test/PIPELINE_Test.sim/sim_1/behav/xsim/glbl.v,1683266558,verilog,,,,glbl,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/PIPELINE_Test/PIPELINE_Test.sim/sim_1/behav/xsim/glbl.v,1710270205,verilog,,,,glbl,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/pipeline.v,1709990634,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v,,pipeline,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_Ctrl_Units/AluControl_tb.v,1708978714,verilog,,,,AluControl_tb,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/Mod_Ctrl_Units/MainControlUnit_tb.v,1709752284,verilog,,,,MainControlUnit_tb,,,,,,,,
@@ -20,7 +20,7 @@ Jun 16 2023
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_hazards_tb.v,1710268658,verilog,,,,pipeline_hazards_tb,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_tb.v,1710006441,verilog,,,,pipeline_tb,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_verbose_tb.v,1710006621,verilog,,,,pipeline_verbose_tb,,,,,,,,
-/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/AluControl.v,1710268970,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_EX/EX.v,,AluControl,,,,,,,,
+/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/AluControl.v,1710270205,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_EX/EX.v,,AluControl,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/ForwardingUnit.v,1708624776,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/HazardDetectionUnit.v,,ForwardingUnit,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/HazardDetectionUnit.v,1708624157,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v,,HazardDetectionUnit,,,,,,,,
 /home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/MainControlUnit.v,1710185501,verilog,,/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_WB/WB.v,,MainControlUnit,,,,,,,,
