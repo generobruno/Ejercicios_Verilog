@@ -22,7 +22,7 @@ module MainControlUnit
         output                          o_equal_MC,                 // Equal Control Line
         output                          o_mem_read_MC,              // MemRead Control Line
         output                          o_mem_write_MC,             // MemWrite Control Line
-        output [1 : 0]                  o_bhw_MC,                   // Memory Size Control Line
+        output [2 : 0]                  o_bhw_MC,                   // Memory Size Control Line
         output                          o_jump_MC,                  // Jump Control Line
         output                          o_jump_sel_MC,              // JumpSel Control Line
         output                          o_reg_write_MC,             // RegWrite Control Line
@@ -88,7 +88,7 @@ module MainControlUnit
     reg equal;
     reg mem_read;
     reg mem_write;
-    reg [1:0] bhw;
+    reg [2:0] bhw;
     reg jump;
     reg jump_sel;
     reg reg_write;
@@ -116,7 +116,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -134,7 +134,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -153,7 +153,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b1;
@@ -171,7 +171,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0; // X
                                 mem_write   =   1'b0; // X
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0; // X
                                 jump_sel    =   1'b1;
                                 reg_write   =   1'b0; // X
@@ -189,7 +189,7 @@ module MainControlUnit
                                 equal       =   1'b0;
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b1;
                                 reg_write   =   1'b1;
@@ -207,7 +207,7 @@ module MainControlUnit
                                 equal       =   1'b0; // X
                                 mem_read    =   1'b0; // X
                                 mem_write   =   1'b0; // X
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0; // X
                                 jump_sel    =   1'b0; // X
                                 reg_write   =   1'b0; // X
@@ -225,7 +225,7 @@ module MainControlUnit
                                 equal       =   1'b0;
                                 mem_read    =   1'b0;
                                 mem_write   =   1'b0;
-                                bhw         =   2'b11;
+                                bhw         =   3'b011;
                                 jump        =   1'b0;
                                 jump_sel    =   1'b0;
                                 reg_write   =   1'b0;
@@ -245,7 +245,7 @@ module MainControlUnit
                         equal       =   1'b1;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
@@ -263,7 +263,7 @@ module MainControlUnit
                         equal       =   1'b0;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                         jump        =   1'b0;
                         jump_sel    =   1'b0; //X
                         reg_write   =   1'b0;
@@ -281,7 +281,7 @@ module MainControlUnit
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
                         mem_write   =   1'b0; //X
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b0; //X
@@ -299,7 +299,7 @@ module MainControlUnit
                         equal       =   1'b0; //X
                         mem_read    =   1'b0; //X
                         mem_write   =   1'b0; //X
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                         jump        =   1'b1;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b1; //X
@@ -317,7 +317,7 @@ module MainControlUnit
                         equal       =   1'b0;
                         mem_read    =   1'b0;
                         mem_write   =   1'b0;
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                         jump        =   1'b0;
                         jump_sel    =   1'b0;
                         reg_write   =   1'b0;
@@ -346,31 +346,31 @@ module MainControlUnit
                 case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
-                        bhw         =   2'b00;
+                        bhw         =   3'b000;
                     end
                     HALFWORD:
                     begin
-                        bhw         =   2'b01;
+                        bhw         =   3'b001;
                     end
                     WORD:
                     begin
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                     end 
                     U_BYTE:
                     begin
-                        bhw         =   2'b00;
+                        bhw         =   3'b100;
                     end
                     U_HALFWORD:
                     begin
-                        bhw         =   2'b01;
+                        bhw         =   3'b101;
                     end
                     U_WORD:
                     begin
-                        bhw         =   2'b11;
+                        bhw         =   3'b111;
                     end 
                     default:
                     begin
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                     end 
                 endcase   
             end
@@ -393,31 +393,19 @@ module MainControlUnit
                 case (i_instr_op_D[2:0]) // Bits 3 a 0
                     BYTE:
                     begin
-                        bhw         =   2'b00;
+                        bhw         =   3'b000;
                     end
                     HALFWORD:
                     begin
-                        bhw         =   2'b01;
+                        bhw         =   3'b001;
                     end
                     WORD:
                     begin
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                     end
-                    U_BYTE:
-                    begin
-                        bhw         =   2'b00;
-                    end
-                    U_HALFWORD:
-                    begin
-                        bhw         =   2'b01;
-                    end
-                    U_WORD:
-                    begin
-                        bhw         =   2'b11;
-                    end 
                     default:
                     begin
-                        bhw         =   2'b11;
+                        bhw         =   3'b011;
                     end 
                 endcase    
             end
@@ -430,7 +418,7 @@ module MainControlUnit
                 equal       =   1'b0; //X
                 mem_read    =   1'b0;
                 mem_write   =   1'b0;
-                bhw         =   2'b11;
+                bhw         =   3'b011;
                 jump        =   1'b0;
                 jump_sel    =   1'b0; //X
                 reg_write   =   1'b1;
@@ -478,7 +466,7 @@ module MainControlUnit
                 equal       =   1'b0;
                 mem_read    =   1'b0;
                 mem_write   =   1'b0;
-                bhw         =   2'b11;
+                bhw         =   3'b011;
                 jump        =   1'b0;
                 jump_sel    =   1'b0;
                 reg_write   =   1'b0;

@@ -13,7 +13,7 @@ module data_mem
         // Inputs
         input wire                      i_clk,                      // Clock
         input wire                      i_mem_write,                // Write Control Line
-        input wire [1 : 0]              i_bhw,                      // Memory Size Control Line
+        input wire [2 : 0]              i_bhw,                      // Memory Size Control Line
         input [W-1 : 0]                 i_addr,                     // Address
         input [W-1 : 0]                 i_debug_addr,               // Debug Memory Address 
         input [B-1 : 0]                 i_data,                     // Data to Write
@@ -22,7 +22,7 @@ module data_mem
         output [B-1 : 0]                o_data                      // Data to Read
     );
 
-    // BHW Load-Store //TODO Agregar bit para unsigned
+    // BHW Load-Store
     localparam BYTE     =       2'b00;         // Load-Store Byte
     localparam HALFWORD =       2'b01;         // Load-Store HalfWord
     localparam WORD     =       2'b11;         // Load-Store Word
@@ -32,6 +32,7 @@ module data_mem
 
     //! Signal Declaration
     reg [B-1 : 0]   array_reg [2**W-1 : 0];
+    reg [B-1 : 0]   read_aux;
     integer i;
 
     // Initial Registers Values
@@ -53,8 +54,8 @@ module data_mem
     begin
         if(i_mem_write)
             begin // Write Operations
-                case (i_bhw)
-                    BYTE: // SB - LB
+                case (i_bhw[1:0])
+                    BYTE: // SB
                     begin
                         case(i_addr[1:0]) // Select Byte
                             2'b00:
@@ -75,7 +76,7 @@ module data_mem
                             end
                         endcase
                     end
-                    HALFWORD: // SH - LH
+                    HALFWORD: // SH
                     begin
                         case(i_addr[1]) // Select HalwWord
                             1'b1:
@@ -87,8 +88,8 @@ module data_mem
                                 array_reg[i_addr>>2] <= halfword_data;
                             end
                         endcase
-                    end// SB - LB
-                    WORD: // SW - LW
+                    end
+                    WORD: // SW 
                     begin
                         array_reg[i_addr>>2] <= i_data;
                     end 
@@ -101,8 +102,40 @@ module data_mem
 
     end
 
+    // Aligned Byte 
+    wire [B-1 : 0] byte_aligned = (array_reg[i_addr>>2] >> (i_addr[1:0] * BYTE_SZ));
+    // Aligned HalfWord 
+    wire [B-1 : 0] halfword_aligned = (array_reg[i_addr>>2] >> (i_addr[1] * HALFWORD_SZ));
+
+    // Manage Unsigned or Signed Loads
+    always @(*) 
+    begin
+        case(i_bhw[1:0])
+            BYTE:
+            begin
+                read_aux = { 
+                (!i_bhw[2]) & byte_aligned[BYTE_SZ-1],
+                {23'b0},
+                (i_bhw[2]) & byte_aligned[BYTE_SZ-1],
+                byte_aligned[BYTE_SZ-2 : 0]};
+            end
+            HALFWORD:
+            begin
+                read_aux = { 
+                (!i_bhw[2]) & halfword_aligned[HALFWORD_SZ-1],
+                {15'b0},
+                (i_bhw[2]) & halfword_aligned[HALFWORD_SZ-1],
+                halfword_aligned[HALFWORD_SZ-2 : 0]};
+            end
+            default: // Word
+            begin
+                read_aux = array_reg[i_addr>>2];
+            end
+        endcase    
+    end
+
     //! Assignments
-    assign o_data = array_reg[i_addr>>2];
+    assign o_data = read_aux;
     assign o_debug_mem = array_reg[i_debug_addr];
 
 endmodule

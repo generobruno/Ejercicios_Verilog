@@ -87,7 +87,7 @@ module pipeline
     wire [REG_SZ-1 : 0]           instr_rd_D;
     wire [REG_SZ-1 : 0]           write_register_MEM_WB;
     wire [ALU_OP-1 : 0]           alu_op_MC;
-    wire [1 : 0]                  bhw_MC;
+    wire [2 : 0]                  bhw_MC;
     wire                          halt_MC;
 
 
@@ -143,7 +143,7 @@ module pipeline
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
     wire                     mem_read_ID_EX;  
     wire                     mem_write_ID_EX;
-    wire [1 : 0]             bhw_ID_EX; 
+    wire [2 : 0]             bhw_ID_EX; 
     wire                     reg_write_ID_EX; 
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
@@ -203,9 +203,8 @@ module pipeline
     wire [INST_SZ-1 : 0]     write_data_EX_MEM;     
     wire [INST_SZ-1 : 0]     bds_EX_MEM;
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
-    wire                     mem_read_EX_MEM;   // TODO Revisar si este deberia ir a HD            
     wire                     mem_write_EX_MEM;
-    wire [1 : 0]             bhw_EX_MEM;               
+    wire [2 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
     wire                     bds_sel_EX_MEM;   
@@ -216,16 +215,16 @@ module pipeline
         // Sync Signals
         .i_clk(i_clk), .i_reset(i_reset), .i_enable(i_enable),
         // Input Control Lines 
-        .i_mem_read(mem_read_ID_EX), .i_mem_write(mem_write_ID_EX), 
-        .i_reg_write(reg_write_ID_EX), .i_mem_to_reg(mem_to_reg_ID_EX), 
-        .i_bds_sel(bds_sel_ID_EX), .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
+        .i_mem_write(mem_write_ID_EX), .i_reg_write(reg_write_ID_EX), 
+        .i_mem_to_reg(mem_to_reg_ID_EX), .i_bds_sel(bds_sel_ID_EX), 
+        .i_halt(halt_ID_EX), .i_bhw(bhw_ID_EX),
         // Inputs
         .i_alu_result(alu_result_E), .i_write_data(write_data_E),
         .i_write_register(write_register_E), .i_bds(bds_ID_EX),
         // Output Control Lines 
-        .o_mem_read(mem_read_EX_MEM), .o_mem_write(mem_write_EX_MEM), 
-        .o_reg_write(reg_write_EX_MEM), .o_mem_to_reg(mem_to_reg_EX_MEM), 
-        .o_bds_sel(bds_sel_EX_MEM), .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
+        .o_mem_write(mem_write_EX_MEM), .o_reg_write(reg_write_EX_MEM), 
+        .o_mem_to_reg(mem_to_reg_EX_MEM), .o_bds_sel(bds_sel_EX_MEM), 
+        .o_halt(halt_EX_MEM), .o_bhw(bhw_EX_MEM),
         // Outputs
         .o_alu_result(alu_result_EX_MEM), .o_write_data(write_data_EX_MEM),
         .o_write_register(write_register_EX_MEM), .o_bds(bds_EX_MEM)

@@ -1,0 +1,46 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/AluControl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module AluControl
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_EX/EX.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module EX
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/pipeline_regs/EX_MEM_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module EX_MEM_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/ForwardingUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ForwardingUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/HazardDetectionUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module HazardDetectionUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/ID.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ID
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/pipeline_regs/ID_EX_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ID_EX_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/IF.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module IF
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/pipeline_regs/IF_ID_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module IF_ID_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Mem/MEM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MEM
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/pipeline_regs/MEM_WB_reg.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MEM_WB_reg
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/MainControlUnit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MainControlUnit
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_WB/WB.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module WB
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_EX/alu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/comparator.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module comparator
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_Mem/data_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module data_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/instruction_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module instruction_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_2to1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mpx_2to1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/mpx_3to1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mpx_3to1
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_IF/pc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pc
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/utils/pc_adder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pc_adder
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_ID/register_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module register_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/bruno/Documents/Facultad/5to_anio/Arquitectura_de_Computadoras/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/pipeline_hazards_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipeline_hazards_tb

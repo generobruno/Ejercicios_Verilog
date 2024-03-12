@@ -15,7 +15,7 @@ module MEM
         input [INST_SZ-1 : 0]           i_alu_result_E,             // ALU Result
         input [INST_SZ-1 : 0]           i_operand_b_E,              // Operand B
         input                           i_mem_write_M,              // MemWrite Control Line
-        input [1 : 0]                   i_bhw_M,                    // Memory Size Control Line
+        input [2 : 0]                   i_bhw_M,                    // Memory Size Control Line
         // Outputs
         output [INST_SZ-1 : 0]          o_debug_mem,                // Data to send to debugger
         output [INST_SZ-1 : 0]          o_alu_result_M,             // ALU Result

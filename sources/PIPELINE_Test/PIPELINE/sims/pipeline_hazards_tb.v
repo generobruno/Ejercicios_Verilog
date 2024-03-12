@@ -111,7 +111,7 @@ module pipeline_hazards_tb();
     wire [REG_SZ-1 : 0]           instr_rd_D;
     wire [REG_SZ-1 : 0]           write_register_MEM_WB;
     wire [ALU_OP-1 : 0]           alu_op_MC;
-    wire [1 : 0]                  bhw_MC;
+    wire [2 : 0]                  bhw_MC;
     wire                          halt_MC;
 
 
@@ -167,7 +167,7 @@ module pipeline_hazards_tb();
     wire                     jal_sel_ID_EX;    //TODO Agregar SXL/SXLV Control line 
     wire                     mem_read_ID_EX;  
     wire                     mem_write_ID_EX;
-    wire [1 : 0]             bhw_ID_EX; 
+    wire [2 : 0]             bhw_ID_EX; 
     wire                     reg_write_ID_EX; 
     wire                     mem_to_reg_ID_EX;    
     wire                     bds_sel_ID_EX;
@@ -229,7 +229,7 @@ module pipeline_hazards_tb();
     wire [REG_SZ-1 : 0]      write_register_EX_MEM;             
     wire                     mem_read_EX_MEM;   // TODO Revisar si este deberia ir a HD            
     wire                     mem_write_EX_MEM;
-    wire [1 : 0]             bhw_EX_MEM;               
+    wire [2 : 0]             bhw_EX_MEM;               
     wire                     reg_write_EX_MEM;               
     wire                     mem_to_reg_EX_MEM;              
     wire                     bds_sel_EX_MEM;   
@@ -356,6 +356,7 @@ module pipeline_hazards_tb();
             .o_forward_a_FU(forward_a_FU),
             .o_forward_b_FU(forward_b_FU)
         );
+
 
     //*******************************************************************************************
 
@@ -538,7 +539,7 @@ module pipeline_hazards_tb();
         #(T*2);
 
         /*
-        //! JR $s5 -> DATA AND CONTROL HAZARD (FORWARDING) (38hex)
+        //! JR $s5 -> DATA AND CONTROL HAZARD (FORWARDING) (38hex) -> Loop
         // Inputs
         reg_instr_rs = 5'b00110;
         // PC <- reg[6]
@@ -547,6 +548,55 @@ module pipeline_hazards_tb();
 
         #(T*2);
         */
+
+        //! TEST UNSIGNED LOADS
+
+        //! ADDI - Add Immediate Test: rt <- rs + imm
+        // Inputs
+        reg_instr_rs = 5'b00000;
+        reg_immediate = 16'hFFFF; // 0Chex (12dec)
+        reg_instr_rt = 5'b01111;
+        // reg[15] = FFFF
+
+        i_instruction = {6'b001000, reg_instr_rs, reg_instr_rt, reg_immediate};
+
+        #(T*2);
+
+        //! SW - Store Reg[15]
+        // Inputs
+        // Inputs
+        reg_base = 5'b01101;
+        reg_instr_rt = 5'b01111;
+        reg_offset = 16'h18;
+        // mem[(0+18)>>2] = mem[6] = FFFF
+
+        i_debug_addr = 5'b00001; // Signed offset + GPR[base]
+
+        i_instruction = {6'b101011, reg_base, reg_instr_rt, reg_offset};
+
+        #(T*2);
+
+        //! LHU mem[6] to reg[30]
+        // Inputs
+        reg_base = 5'b01101;
+        reg_instr_rt = 5'b11110;
+        reg_offset = 16'h18;
+        // reg[30] <- mem[6]
+
+        i_instruction = {6'b100001, reg_base, reg_instr_rt, reg_offset};
+
+        #(T*2);
+
+        //! TESTS
+        // Inputs
+        reg_base = 5'b01101;
+        reg_instr_rt = 5'b11110;
+        reg_offset = 16'h18;
+        // reg[30] <- mem[6]
+
+        i_instruction = {6'b100001, reg_base, reg_instr_rt, reg_offset};
+
+        #(T*2);
 
         //! HALT (3Chex)
         i_instruction = 32'b000000_00000_00000_00000_111111;
@@ -584,7 +634,7 @@ module pipeline_hazards_tb();
         begin
             i_debug_addr = i; // Address
             #(T*2);
-            $display("DEBUG DATA: %d from %b", o_mem, i_debug_addr[MEM_SZ-1:0]);
+            $display("DEBUG DATA: %d (%h) from %b", o_mem, o_mem, i_debug_addr[MEM_SZ-1:0]);
         end
 
         $display("\nDisplaying Registers:");
@@ -592,7 +642,7 @@ module pipeline_hazards_tb();
         begin
             i_debug_addr = i; // Address
             #(T*2);
-            $display("DEBUG REGS: %d from %b (%d)", o_reg, i_debug_addr[4:0], i_debug_addr[4:0]);
+            $display("DEBUG REGS: %d (%h) from %b (%d)", o_reg, o_reg, i_debug_addr[4:0], i_debug_addr[4:0]);
         end
 
         $display("\nTESTS PASSED!");

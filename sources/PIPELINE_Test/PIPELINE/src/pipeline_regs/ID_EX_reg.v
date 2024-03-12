@@ -19,7 +19,7 @@ module ID_EX_reg
         input wire                      i_jal_sel,                  // JALSel Control Line //TODO Agregar SXL/SXLV Control line
         input wire                      i_mem_read,                 // MemRead Control Line
         input wire                      i_mem_write,                // MemWrite Control Line
-        input wire [1 : 0]              i_bhw,                      // Memory Size Control Line
+        input wire [2 : 0]              i_bhw,                      // Memory Size Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
@@ -38,7 +38,7 @@ module ID_EX_reg
         output wire                     o_jal_sel,                  // JALSel Control Line //TODO Agregar SXL/SXLV Control line
         output wire                     o_mem_read,                 // MemRead Control Line
         output wire                     o_mem_write,                // MemWrite Control Line
-        output wire [1 : 0]             o_bhw,                      // Memory Size Control Line
+        output wire [2 : 0]             o_bhw,                      // Memory Size Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
@@ -59,7 +59,7 @@ module ID_EX_reg
     reg                     jal_sel;                   //TODO Agregar SXL/SXLV Control line               
     reg                     mem_read;                 
     reg                     mem_write;
-    reg [1 : 0]             bhw;                
+    reg [2 : 0]             bhw;                
     reg                     reg_write;                
     reg                     mem_to_reg;               
     reg                     bds_sel;

@@ -13,9 +13,8 @@ module EX_MEM_reg
         input wire                      i_reset,                    // Reset
         input wire                      i_enable,                   // Write Control Line
         input wire                      i_halt,                     // Halt Control Line
-        input wire                      i_mem_read,                 // MemRead Control Line
         input wire                      i_mem_write,                // MemWrite Control Line
-        input wire [1 : 0]              i_bhw,                      // Memory Size Control Line
+        input wire [2 : 0]              i_bhw,                      // Memory Size Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
@@ -25,9 +24,8 @@ module EX_MEM_reg
         input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
         output wire                     o_halt,                     // Halt Control Line
-        output wire                     o_mem_read,                 // MemRead Control Line
         output wire                     o_mem_write,                // MemWrite Control Line
-        output wire [1 : 0]             o_bhw,                      // Memory Size Control Line
+        output wire [2 : 0]             o_bhw,                      // Memory Size Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
@@ -39,9 +37,8 @@ module EX_MEM_reg
 
     //! Signal Definition    
     reg halt;            
-    reg mem_read;                 
     reg mem_write;
-    reg [1 : 0] bhw;                
+    reg [2 : 0] bhw;                
     reg reg_write;                
     reg mem_to_reg;               
     reg bds_sel;                  
@@ -56,7 +53,6 @@ module EX_MEM_reg
         if(i_reset)
         begin  
             halt            <=      0;                               
-            mem_read        <=      0;                                  
             mem_write       <=      0; 
             bhw             <=      0;                               
             reg_write       <=      0;                                
@@ -71,7 +67,6 @@ module EX_MEM_reg
         else if(i_enable)
         begin 
             halt            <=      i_halt;                               
-            mem_read        <=      i_mem_read;                                  
             mem_write       <=      i_mem_write;                                
             reg_write       <=      i_reg_write;
             bhw             <=      i_bhw;                                
@@ -87,7 +82,6 @@ module EX_MEM_reg
 
     //! Assignments
     assign o_halt               =       halt;
-    assign o_mem_read           =       mem_read;
     assign o_mem_write          =       mem_write;
     assign o_bhw                =       bhw;
     assign o_reg_write          =       reg_write;

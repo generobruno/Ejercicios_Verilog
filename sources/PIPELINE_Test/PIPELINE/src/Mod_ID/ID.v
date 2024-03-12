@@ -45,7 +45,7 @@ module ID
         output                          o_equal_MC,                 // Equal Control Line
         output                          o_mem_read_MC,              // MemRead Control Line
         output                          o_mem_write_MC,             // MemWrite Control Line
-        output [1 : 0]                  o_bhw_MC,                   // Memory Size Control Line
+        output [2 : 0]                  o_bhw_MC,                   // Memory Size Control Line
         output                          o_jump_MC,                  // Jump Control Line
         output                          o_jump_sel_MC,              // JumpSel Control Line
         output                          o_reg_write_MC,             // RegWrite Control Line
