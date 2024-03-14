@@ -1,6 +1,6 @@
 class LookupTables:
     REGISTERS = { # 32 Registers
-        '$zero' :        '0',
+        '$r0'   :        '0',
         '$r1'   :        '1',
         '$r2'   :        '2',
         '$r3'   :        '3',
@@ -31,7 +31,7 @@ class LookupTables:
         '$r28'   :       '28',
         '$r29'   :       '29',
         '$r30'   :       '30',
-        '$ra'   :        '31'       
+        '$r31'   :       '31'       
     }
     
     INSTRUCTIONS = { # 36 Instructions 

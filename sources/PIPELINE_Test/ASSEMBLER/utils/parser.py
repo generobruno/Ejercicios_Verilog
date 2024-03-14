@@ -1,7 +1,7 @@
 import re
 
-from formats import LookupTables
-from utils import Utils
+from utils.formats import LookupTables
+from utils.utils import Utils
 
 class BaseInstruction(object):
     def __init__(self, instrRegex):
@@ -219,11 +219,12 @@ class InstructionParser:
         convertedOutput = convertedOpcode + ''.join(operands)
         return convertedOutput
 
+"""
 if __name__ == '__main__':
     # Test
     ip = InstructionParser()
     print("R-TYPE")
-    print(ip.convert('sll $r6, $r2, $r1'))
+    print(ip.convert('sll $r6, $r2, $r0'))
     print(ip.convert('srl $r6, $r2, $r4'))
     print(ip.convert('sra $r6 $r2 $r4'))
     print(ip.convert('sllv $r6 $r2 $r4'))
@@ -261,3 +262,4 @@ if __name__ == '__main__':
     print(ip.convert('jr $r3'))
     print(ip.convert('jalr $r3, $r5'))
     print(hex(int(ip.convert('addu $r6 $r2 $r4', format='binary'), 2)))
+"""
