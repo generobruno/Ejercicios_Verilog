@@ -1,0 +1,51 @@
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot debbugger_test_behav xil_defaultlib.debbugger_test xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/Debbugger_top.v" Line 1. Module debbugger_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_top.v" Line 7. Module uart_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/mod_m_counter.v" Line 7. Module mod_m_counter(M=163) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_rx.v" Line 5. Module uart_rx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_tx.v" Line 5. Module uart_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/UART_INTERFACE.v" Line 1. Module UART_INTERFACE doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_top.v" Line 7. Module uart_top(DVSR=326) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/mod_m_counter.v" Line 7. Module mod_m_counter(M=326) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_rx.v" Line 5. Module uart_rx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_tx.v" Line 5. Module uart_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/Debbugger_top.v" Line 1. Module debbugger_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_top.v" Line 7. Module uart_top doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/mod_m_counter.v" Line 7. Module mod_m_counter(M=163) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_rx.v" Line 5. Module uart_rx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_tx.v" Line 5. Module uart_tx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/UART_INTERFACE.v" Line 1. Module UART_INTERFACE doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_top.v" Line 7. Module uart_top(DVSR=326) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/mod_m_counter.v" Line 7. Module mod_m_counter(M=326) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_rx.v" Line 5. Module uart_rx doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" Line 18. Module fifo(W=5) doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_tx.v" Line 5. Module uart_tx doesn't have a timescale but at least one module in design has a timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.mod_m_counter(M=163)
+Compiling module xil_defaultlib.uart_rx
+Compiling module xil_defaultlib.fifo(W=5)
+Compiling module xil_defaultlib.uart_tx
+Compiling module xil_defaultlib.uart_top
+Compiling module xil_defaultlib.UART_INTERFACE
+Compiling module xil_defaultlib.debbugger_top
+Compiling module xil_defaultlib.mod_m_counter(M=326)
+Compiling module xil_defaultlib.uart_top(DVSR=326)
+Compiling module xil_defaultlib.debbugger_test
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot debbugger_test_behav

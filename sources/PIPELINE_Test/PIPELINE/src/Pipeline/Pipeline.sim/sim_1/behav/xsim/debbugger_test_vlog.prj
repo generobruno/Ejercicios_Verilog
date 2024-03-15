@@ -1,0 +1,16 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../Mod_UART/Debbugger_top.v" \
+"../../../../../Mod_UART/UART_INTERFACE.v" \
+"../../../../../Mod_UART/fifo.v" \
+"../../../../../Mod_UART/mod_m_counter.v" \
+"../../../../../Mod_UART/uart_rx.v" \
+"../../../../../Mod_UART/uart_top.v" \
+"../../../../../Mod_UART/uart_tx.v" \
+"../../../../../../sims/debbugger_test.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

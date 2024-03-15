@@ -1,0 +1,23 @@
+Time resolution is 1 ps
+Written bits: 11111111
+Written bits: 00000010
+Written bits: 00000011
+Written bits: 00001010
+Written bits: 00001010
+Written bits: 00001010
+Written bits: 00001010
+Written bits: 00001010
+Written bits: 00001010
+Written bits: 00001010
+Received bits: 11111111
+Received bits: 00000010
+Received bits: 00000011
+Received bits: 00001010
+Received bits: 00001010
+Received bits: 00001010
+Received bits: 00001010
+Received bits: 00001010
+Received bits: 00001010
+
+All received data matches sent data. TX Test Passed!
+$stop called at time : 4687935 ns : File "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/debbugger_test.v" Line 188

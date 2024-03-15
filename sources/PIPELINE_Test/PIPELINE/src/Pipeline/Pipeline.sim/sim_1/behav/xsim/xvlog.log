@@ -1,0 +1,16 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/Debbugger_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module debbugger_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/UART_INTERFACE.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module UART_INTERFACE
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/fifo.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fifo
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/mod_m_counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mod_m_counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_rx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_rx
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/src/Mod_UART/uart_tx.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_tx
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/debbugger_test.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module debbugger_test
