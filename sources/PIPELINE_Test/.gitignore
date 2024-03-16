@@ -1,3 +1,4 @@
 *.asm
 *.hex
 __pycache__
+.venv
