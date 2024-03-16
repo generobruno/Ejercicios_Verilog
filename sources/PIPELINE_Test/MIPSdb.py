@@ -25,6 +25,11 @@ class IDE(ctk.CTk):
         super().__init__()
         
         self.title("MIPSdb - Debugger")
+        try: # Icon
+            icon = tk.PhotoImage(file='./resources/icon.png')
+            self.wm_iconphoto(True, icon)
+        except Exception as e:
+            print("Error loading icon:", e)
         self.geometry("800x600")
         
         # File management
