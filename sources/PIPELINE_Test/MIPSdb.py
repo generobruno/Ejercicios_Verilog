@@ -39,16 +39,18 @@ class IDE(ctk.CTk):
         self.file_opt = ctk.CTkOptionMenu(self.files_frame,
                                           values=["Save", "Load"], 
                                           command=self.manage_file, 
-                                          height=5)
+                                          height=5,
+                                          width=100)
         self.file_opt.pack(side='left')
         
-        self.filename_text = ctk.CTkTextbox(self.files_frame, height=1, wrap="none")
+        self.filename_text = ctk.CTkTextbox(self.files_frame, height=1, border_spacing=1, corner_radius=2, wrap="none")
         self.filename_text.pack(side="left", fill="x", padx=5)
         
         self.run_opt = ctk.CTkOptionMenu(self.files_frame,
                                     values=["Run", "Debug"], 
                                     command=self.manage_db, 
-                                    height=5)
+                                    height=5,
+                                    width=100)
         self.run_opt.pack(side='right')
 
         # Text Editor
@@ -303,22 +305,26 @@ class IDE(ctk.CTk):
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
     
     """ update_table
-        Update tables in GUI with the values received from UART.
+        Updates specfici table with new values
     """
-    def update_table(self, text_widget, values): #TODO REVISAR
+    def update_table(self, text_widget, values): #TODO Revisar
         text_widget.configure(state=ctk.NORMAL)
         text_widget.delete('1.0', ctk.END)
-        for value in values:
-            text_widget.insert(ctk.END, value + '\n')
+        for name, value in values.items():
+            text_widget.insert(ctk.END, f"{name} :\t\t{value}\n")
         text_widget.configure(state=ctk.DISABLED)
 
     """ update_register_memory
-        Obtain updated values of registers and memory from UART
+        Update all tables
     """
-    def update_register_memory(self): # TODO REVISAR
+    def update_register_memory(self): #TODO Revisar
         # Placeholder for updating registers and memory values periodically
-        registers_values = ["Value{}".format(i) for i in range(32)]
-        memory_values = ["Value{}".format(i) for i in range(32)]
+        registers_values = {
+            f"Reg {i}": f"Value{i}" for i in range(32)
+        }
+        memory_values = {
+            f"Mem {i}": f"Value{i}" for i in range(32)
+        }
         self.update_table(self.registers_text, registers_values)
         self.update_table(self.memory_text, memory_values)
         self.after(1000, self.update_register_memory)
