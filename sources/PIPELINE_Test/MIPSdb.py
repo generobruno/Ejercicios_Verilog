@@ -248,7 +248,7 @@ class IDE(ctk.CTk):
         Send "run" code to the UART to execute the code, and wait for "halt" code
     """
     def run_code(self):
-        if self.ser: #TODO Revisar - Desactivar run_button hasta que llegue halt
+        if self.ser: #TODO Revisar - Desactivar run_button y write_button hasta que llegue halt
             # Replace this with actual code to send code through UART and receive the result
             print("Sending run command through UART")
             print("Waiting for halt code...")
@@ -266,7 +266,7 @@ class IDE(ctk.CTk):
         Send DEBUG code to start debugging session
     """
     def start_debug(self):
-        if self.ser: # TODO Revisar
+        if self.ser: # TODO Revisar -> deshabilitar start y write button
             # Send DEBUG Code
             print("Starting debug...")
             self.ser.write(bytes.fromhex('FC'))
@@ -300,7 +300,7 @@ class IDE(ctk.CTk):
     """ update_table
         Update tables in GUI with the values received from UART.
     """
-    def update_table(self, text_widget, values):
+    def update_table(self, text_widget, values): #TODO REVISAR
         text_widget.configure(state=ctk.NORMAL)
         text_widget.delete('1.0', ctk.END)
         for value in values:
@@ -310,7 +310,7 @@ class IDE(ctk.CTk):
     """ update_register_memory
         Obtain updated values of registers and memory from UART
     """
-    def update_register_memory(self):
+    def update_register_memory(self): # TODO REVISAR
         # Placeholder for updating registers and memory values periodically
         registers_values = ["Value{}".format(i) for i in range(32)]
         memory_values = ["Value{}".format(i) for i in range(32)]
