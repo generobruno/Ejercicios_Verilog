@@ -1,3 +1,5 @@
+
+
 module debbugger_top
 #(
     parameter   PC          =   32,
@@ -18,7 +20,10 @@ module debbugger_top
     output wire     o_mem_r,
     output wire     [PC-1:0] o_program_mem_addr,
     output wire     [REG_ADDR-1:0] o_addr_ID,
-    output wire     [REG_ADDR-1:0] o_addr_M
+    output wire     [REG_ADDR-1:0] o_addr_M,
+    
+    output wire     [7:0] o_prog_sz,
+    output wire     [7:0] o_state
 
 );
 
@@ -32,7 +37,7 @@ wire wr_wr_uart;
 uart_top#(
     .DBIT(8),
     .SB_TICK(16),
-    .DVSR(163),
+    .DVSR(326),
     .FIFO_W(5)
 )uart_unit(
     .i_clk(i_clock),
@@ -70,7 +75,9 @@ UART_INTERFACE#(
     .o_addr_ID(o_addr_ID),
     .o_addr_M(o_addr_M),
     .o_wr(wr_wr_uart),
-    .o_rd(rd_rd_uart)
+    .o_rd(rd_rd_uart),
+    .o_prog_sz(o_prog_sz),
+    .o_state(o_state)
 );
 
 

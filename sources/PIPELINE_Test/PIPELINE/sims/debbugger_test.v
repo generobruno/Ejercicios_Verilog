@@ -27,21 +27,21 @@ module debbugger_test();
     localparam CLKS_PER_BIT = 5208; // 50MHz / 19200 baud rate = 2604 Clocks per bit
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
     localparam TX_PERIOD = 520830;  // BIT_PERIOD * 10 = TX period
-    localparam NUM_TESTS = 9;       // Number of tests
+    localparam NUM_TESTS = 10;       // Number of tests
 
     // Declarations
     reg i_clk, i_reset, i_rd_uart, i_rx, i_wr_uart, tx_data;
     wire o_tx_full, o_rx_empty, tx_to_rx;
     reg [7:0] i_w_data;
     wire [7:0] o_r_data;
-    wire [7: 0] COMM_result;
     wire [31: 0] o_inst;
     wire [31:0] mem_addr;
-    wire [7: 0] val1;
-    wire [7: 0] val2;
-    wire [5: 0] opc;
+    wire [7:0] prog_sz;
+    wire [7:0] state;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
+    wire mem_read;
+    wire mem_write;
     integer received_data_mismatch;
     integer test_num;
     
@@ -58,11 +58,13 @@ module debbugger_test();
         .i_memory_data(),
         .i_pc(),
         .o_instruction(o_inst),
-        .o_mem_w(),
-        .o_mem_r(),
+        .o_mem_w(mem_write),
+        .o_mem_r(mem_read),
         .o_program_mem_addr(mem_addr),
         .o_addr_ID(),
-        .o_addr_M()
+        .o_addr_M(),
+        .o_prog_sz(prog_sz),
+        .o_state(state)
 
     );
     
@@ -110,25 +112,25 @@ module debbugger_test();
         for (i = 0; i < 10; i = i + 1) begin
             // Generate random data to be sent
             if (i == 0)
-                data_to_send = 8'b11111111; // REC_PROC
+                data_to_send = 8'b11111110; // LOAD_PROG_SIZE
             else if(i==1)
                 data_to_send = 8'b00000010; //PROG_SIZE
             else if(i==2)
                 data_to_send = 8'b00000011;
             else if(i==3)
-                data_to_send = 8'b00001010;
+                data_to_send = 8'b00000000;
             else if(i==4)
-                data_to_send = 8'b00001010;
+                data_to_send = 8'b00000000;
             else if(i==5)
-                data_to_send = 8'b00001010;
+                data_to_send = 8'b00000000;
             else if(i==6)
-                data_to_send = 8'b00001010;
+                data_to_send = 8'b00000101;
             else if(i==7)
-                data_to_send = 8'b00001010;            
+                data_to_send = 8'b00000000;            
             else if(i==8)
-                data_to_send = 8'b00001010;
+                data_to_send = 8'b00000000;
             else if(i==9)
-                data_to_send = 8'b00001010;    
+                data_to_send = 8'b00000000;    
             //data_to_send = $random;
             $display("Written bits: %b", data_to_send);
             sent_data[i] = data_to_send;
@@ -157,7 +159,7 @@ module debbugger_test();
 
         //! Test: Send all data
         UART_SEND_BYTE();
-        #(TX_PERIOD*NUM_TESTS);
+        #(TX_PERIOD*(NUM_TESTS+5));
         
         
         // Test Case: Write random data into TX FIFO
