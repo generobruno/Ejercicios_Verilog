@@ -221,21 +221,22 @@ class IDE(ctk.CTk):
     def write_code(self):
         if self.ser:
             print("Sending code through UART...")
+            # Get Program Size (Number of lines)
             prog_sz = self.get_prog_size()
             print(prog_sz)
             print(format(prog_sz, '02X'))
             
             # Try to write the code to the board
             try: #TODO REVISAR
-                # Send START and REC_PROG Code
+                # Send START Code #TODO -> Creo que ya no es necesario ahora
                 self.ser.write(bytes.fromhex('07'))
-                self.ser.write(bytes.fromhex('FF'))
                 
                 # Send LOAD_PROG_SIZE Code and Send Program Size
                 self.ser.write(bytes.fromhex('FE'))
                 self.ser.write(bytes.fromhex(format(prog_sz, '02X')))  
                 
-                # Send Program Line by Line (byte by byte)
+                # Send LOAD_PROG Code and Write Program Line by Line (byte by byte)
+                self.ser.write(bytes.fromhex('FD'))
                 with open(current_out_file + ".hex", 'r') as file:
                     for line in file:
                         hex_line = format(int(line.strip(), 2), '08X')  # Convert binary line to 8-byte hexadecimal
@@ -257,8 +258,12 @@ class IDE(ctk.CTk):
     def run_code(self):
         if self.ser: #TODO Revisar - Desactivar run_button y write_button hasta que llegue halt
             # Replace this with actual code to send code through UART and receive the result
-            print("Sending run command through UART")
+            print("Running Program...")
+            # Send NO_DEBUG Code
+            self.ser.write(bytes.fromhex('F0'))
+            # Wait for HALT Code and read info
             print("Waiting for halt code...")
+            # TODO Ver:
             # Placeholder for updating 32 registers, 32 memory positions, and Program Counter
             registers_values = ["Value{}".format(i) for i in range(32)]
             memory_values = ["Value{}".format(i) for i in range(32)]
@@ -275,7 +280,7 @@ class IDE(ctk.CTk):
     def start_debug(self):
         if self.ser: # TODO Revisar -> deshabilitar start y write button
             # Send DEBUG Code
-            print("Starting debug...")
+            print("Starting debug session...")
             self.ser.write(bytes.fromhex('FC'))
         else:
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
@@ -287,7 +292,7 @@ class IDE(ctk.CTk):
         if self.ser: #TODO REVISAR
             # Send RESTART Code
             print("Restarting...")
-            self.ser.write(bytes.fromhex('FC'))
+            self.ser.write(bytes.fromhex(''))
         else:
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
 
@@ -317,7 +322,7 @@ class IDE(ctk.CTk):
     """ update_register_memory
         Update all tables
     """
-    def update_register_memory(self): #TODO Revisar
+    def update_register_memory(self): #TODO Revisar -> Leer UART con toda la info (260 bytes -> 32*2 (mem_reg) + 1 (pc))
         # Placeholder for updating registers and memory values periodically
         registers_values = {
             f"Reg {i}": f"Value{i}" for i in range(32)
