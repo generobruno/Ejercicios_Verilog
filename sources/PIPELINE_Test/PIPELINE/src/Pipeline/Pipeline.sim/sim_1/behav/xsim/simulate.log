@@ -1,23 +1,41 @@
 Time resolution is 1 ps
-Written bits: 11111111
+Written bits: 11111110
 Written bits: 00000010
 Written bits: 00000011
-Written bits: 00001010
-Written bits: 00001010
-Written bits: 00001010
-Written bits: 00001010
-Written bits: 00001010
-Written bits: 00001010
-Written bits: 00001010
-Received bits: 11111111
-Received bits: 00000010
-Received bits: 00000011
-Received bits: 00001010
-Received bits: 00001010
-Received bits: 00001010
-Received bits: 00001010
-Received bits: 00001010
-Received bits: 00001010
+Written bits: 00000000
+Written bits: 00000000
+Written bits: 00000000
+Written bits: 00000101
+Written bits: 00000000
+Written bits: 00000000
+Written bits: 00000000
+Written bits: 00111001
+Received bits: 01101010
+Data Mismatch! Received data does not match sent data.
+Received bits: 11000001
+Data Mismatch! Received data does not match sent data.
+Received bits: 11110001
+Data Mismatch! Received data does not match sent data.
+Received bits: 00011010
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Received bits: xxxxxxxx
+Data Mismatch! Received data does not match sent data.
+Instruction MEMMORY
+00000000000000000000000000000000: 00000000000000000000000000000011
+Instruction MEMMORY
+00000000000000000000000000000001: 00000000000000000000000000000011
 
-All received data matches sent data. TX Test Passed!
-$stop called at time : 4687935 ns : File "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/debbugger_test.v" Line 188
+Failed Receiving Data. Check UART FIFO_W Size.
+$stop called at time : 8333845 ns : File "C:/Users/Usuario/OneDrive/Escritorio/Programas/Ejercicios_Verilog/sources/PIPELINE_Test/PIPELINE/sims/debbugger_test.v" Line 238

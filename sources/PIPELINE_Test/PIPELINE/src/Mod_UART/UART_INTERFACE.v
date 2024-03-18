@@ -7,6 +7,7 @@ module UART_INTERFACE#(
         input wire i_clock, 
         input wire i_reset,
         input wire [N-1:0] i_data,
+        input wire i_halt,
         input wire i_fifo_empty,
         input wire i_fifo_full,
         input wire [32-1:0] i_reg_read, // Data from register memory
@@ -20,6 +21,8 @@ module UART_INTERFACE#(
         output wire [W-1: 0] o_addr_ID,
         output wire [W-1: 0] o_addr_M, 
         
+        output wire o_enable,
+
         /*Test Variables */
         output wire [7:0] o_prog_sz,  
         output wire [7:0] o_state,
@@ -41,6 +44,7 @@ module UART_INTERFACE#(
     reg                 wr_reg;
     reg                 write_mem_reg;
     reg                 read_mem_reg;
+    reg                 enable;
     reg [8-1: 0]        mode_reg;
     reg [8-1: 0]        mode_reg_next;
     reg [8-1:0]         wait_mode_reg;
@@ -67,11 +71,13 @@ module UART_INTERFACE#(
     localparam [7:0] SEND_STATE_REG       = 8'b11111011;
     localparam [7:0] SEND_STATE_MEM       = 8'b11111010;
     localparam [7:0] SEND_PC              = 8'b11111001;
+    localparam [7:0] END_SEND             = 8'b11110010;
     localparam [7:0] END_DEBUG            = 8'b11111000;
     localparam [7:0] NEXT                 = 8'b00000001;
     localparam [7:0] WAIT                 = 8'b00000000;
     localparam [7:0] WAIT_SEND            = 8'b10000000;
     localparam [7:0] NO_DEBUG             = 8'b11110000;
+    localparam [7:0] RESET                = 8'b00110000;
 
     
     
@@ -86,7 +92,8 @@ module UART_INTERFACE#(
     assign o_addr = addr_reg;
     assign o_addr_ID = addr_ID_reg;
     assign o_addr_M = addr_M_reg;
-    
+    assign o_enable = enable;
+
     assign o_rd = rd_reg;
     assign o_wr = wr_reg; 
     
@@ -200,34 +207,29 @@ module UART_INTERFACE#(
             end
             
             DEBUG: begin
-                if(i_fifo_empty)begin
-                    mode_reg_next = WAIT;
-                    wait_mode_reg_next = DEBUG;
+                if(i_data == NEXT)begin
+                    //TODO: como señalar a la pipeline que prosiga
+                    mode_reg_next = PREV_SEND;
                 end
-                else begin
-                    if(i_data == NEXT)begin
-                        //TODO: como señalar a la pipeline que prosiga
-                        mode_reg_next = SEND_STATE_REG;
-                    end
-                    else if(i_data == END_DEBUG)begin
-                        mode_reg_next = START;
-                    end
+                else if(i_data == END_DEBUG)begin
+                    mode_reg_next = RESET;
                 end
             end
             
             NO_DEBUG: begin
-                //TODO: Agregar un enable a la pipeline, ponerlo en uno en este estado y dejar que funcione.
-                //TODO: Esperar una señal del pipeline HALT y enviar estados de registros, mem y PC.
+                if(i_halt)begin
+                    mode_reg_next = PREV_SEND;
+                end        
             end
             
             PREV_SEND: begin
                 if(i_fifo_full)begin
                     mode_reg_next = WAIT_SEND;
-                    wait_mode_reg_next   = PREV_SEND;
+                    wait_mode_reg_next = PREV_SEND;
                 end
                 else begin
-                    to_tx_fifo_next = i_pc[0+:8];
-                    mode_reg_next = SEND_PC;
+                    to_tx_fifo_next = i_reg_read[0+:8];
+                    mode_reg_next = SEND_STATE_REG;
                     counter_next = counter + 1;
                 end
             end
@@ -286,9 +288,18 @@ module UART_INTERFACE#(
                     counter_next = counter +1;
                     if(counter == 3)begin
                         counter_next = 3'b000;
-                        mode_reg_next = DEBUG;
+                        mode_reg_next = END_SEND;
                     end
                 end 
+            end
+
+            END_SEND: begin
+                if(i_halt)begin
+                    mode_reg_next = RESET;        
+                end
+                else begin
+                    mode_reg_next = DEBUG;
+                end    
             end
 
             WAIT: begin    
@@ -299,6 +310,10 @@ module UART_INTERFACE#(
             WAIT_SEND: begin
                 if(!i_fifo_full)
                     mode_reg_next = wait_mode_reg;
+            end
+
+            RESET: begin
+                mode_reg_next = IDLE;        
             end
 
         endcase
@@ -313,6 +328,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
             
             START: begin
@@ -320,6 +336,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             LOAD_PROG_SIZE: begin
@@ -327,6 +344,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             LOAD_PROG: begin
@@ -334,6 +352,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             WRITE_INST: begin
@@ -341,6 +360,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b1;
+                enable = 1'b0;
             end
 
             DEBUG: begin
@@ -348,6 +368,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b1;
             end
 
             NO_DEBUG: begin
@@ -355,13 +376,15 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b1;
             end
 
             PREV_SEND: begin
                rd_reg = 1'b0;
                wr_reg = 1'b0;
                read_mem_reg = 1'b0;
-               write_mem_reg = 1'b0; 
+               write_mem_reg = 1'b0;
+               enable = 1'b0; 
             end
 
             SEND_STATE_REG: begin
@@ -369,6 +392,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b1;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             SEND_STATE_MEM: begin
@@ -376,6 +400,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b1;
                 read_mem_reg = 1'b1;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             SEND_PC: begin
@@ -383,6 +408,15 @@ module UART_INTERFACE#(
                 wr_reg = 1'b1;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+            
+            END_SEND: begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b1;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             WAIT: begin
@@ -390,6 +424,15 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            WAIT_SEND: begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
             default: begin
@@ -397,6 +440,7 @@ module UART_INTERFACE#(
                 wr_reg = 1'b0;
                 read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
+                enable = 1'b0;
             end
 
         endcase
