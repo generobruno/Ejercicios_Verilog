@@ -27,23 +27,28 @@ module debbugger_test();
     localparam CLKS_PER_BIT = 5208; // 50MHz / 19200 baud rate = 2604 Clocks per bit
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
     localparam TX_PERIOD = 520830;  // BIT_PERIOD * 10 = TX period
-    localparam NUM_TESTS = 10;       // Number of tests
+    localparam NUM_TESTS = 11;       // Number of tests
 
     // Declarations
-    reg i_clk, i_reset, i_rd_uart, i_rx, i_wr_uart, tx_data;
-    wire o_tx_full, o_rx_empty, tx_to_rx;
+    reg i_clk, i_reset, i_rd_uart, i_rx, i_wr_uart, tx_data, i_enable;
+    reg [4:0] i_mem_addr; 
+    reg [31:0] i_pc;
+    wire o_tx_full, o_rx_empty, tx_to_rx, o_tx;
+    wire[31:0] mem_data;
     reg [7:0] i_w_data;
     wire [7:0] o_r_data;
     wire [31: 0] o_inst;
     wire [31:0] mem_addr;
     wire [7:0] prog_sz;
     wire [7:0] state;
+    wire [31:0] o_pc;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
     wire mem_read;
     wire mem_write;
     integer received_data_mismatch;
     integer test_num;
+    
     
     // Instantiate the ALU_UART_TOP
     debbugger_top#(
@@ -55,8 +60,8 @@ module debbugger_test();
         .i_reset(i_reset),
         .i_rx(tx_to_rx),
         .i_register_data(),
-        .i_memory_data(),
-        .i_pc(),
+        .i_memory_data(mem_data),
+        .i_pc(o_pc),
         .o_instruction(o_inst),
         .o_mem_w(mem_write),
         .o_mem_r(mem_read),
@@ -64,10 +69,33 @@ module debbugger_test();
         .o_addr_ID(),
         .o_addr_M(),
         .o_prog_sz(prog_sz),
-        .o_state(state)
+        .o_state(state),
+        .o_tx(o_tx)
 
     );
     
+    instruction_mem #(
+        .B(32),
+        .W(5),
+        .PC(32)
+    ) inst_mem (
+        .i_clk(i_clk),
+        .i_reset(i_reset),
+        .i_write(mem_write),
+        .i_addr(mem_addr),
+        .i_data(o_inst),
+        .o_data(mem_data)
+    );
+    
+    pc #(
+        .PC_SZ(32)
+    ) pc (
+        .i_clk(i_clk),
+        .i_reset(i_reset),
+        .i_enable(i_enable),
+        .i_pc(i_pc),
+        .o_pc(o_pc)
+    );
 
     // Instantiate the UART module
     uart_top #(
@@ -80,7 +108,7 @@ module debbugger_test();
         .i_reset(i_reset),              // Reset
         .i_rd_uart(i_rd_uart),          // RX: Read RX FIFO Signal
         .i_wr_uart(i_wr_uart),                   //
-        .i_rx(tx_to_rx),                    // RX: RX input bit
+        .i_rx(o_tx),                    // RX: RX input bit
         .i_w_data(i_w_data),                    //
         .o_tx_full(o_tx_full),          //
         .o_rx_empty(o_rx_empty),        // RX: RX FIFO Empty Signal
@@ -109,7 +137,7 @@ module debbugger_test();
     task automatic UART_SEND_BYTE();
     integer i;
     begin
-        for (i = 0; i < 10; i = i + 1) begin
+        for (i = 0; i < NUM_TESTS; i = i + 1) begin
             // Generate random data to be sent
             if (i == 0)
                 data_to_send = 8'b11111110; // LOAD_PROG_SIZE
@@ -130,7 +158,9 @@ module debbugger_test();
             else if(i==8)
                 data_to_send = 8'b00000000;
             else if(i==9)
-                data_to_send = 8'b00000000;    
+                data_to_send = 8'b00000000;
+            else if(i==10)
+                data_to_send = 8'b00111001;        
             //data_to_send = $random;
             $display("Written bits: %b", data_to_send);
             sent_data[i] = data_to_send;
@@ -153,6 +183,8 @@ module debbugger_test();
         // Initialize testbench signals
         i_rd_uart = 1'b0;
         i_wr_uart = 1'b0;
+        i_enable = 1'b1;
+        i_pc = 32'b00011010111100011100000101101010;
         received_data_mismatch = 0;
 
         @(negedge i_reset); // Wait for reset to deassert
@@ -179,7 +211,23 @@ module debbugger_test();
                 i_rd_uart = 1'b0;
                 @(negedge i_clk);
             end
-        end        
+        end 
+        
+        i_mem_addr = 5'b0000;
+        
+        for (test_num = 0; test_num < prog_sz; test_num = test_num + 1) begin
+                @(negedge i_clk);
+                $display("Instruction MEMMORY");
+                $display("\%b: %b", test_num, mem_data);
+
+                // Compare received data with stored sent data
+                
+
+                i_mem_addr = test_num;   // Read FIFO
+           
+            end
+        
+               
 
         if (received_data_mismatch == 0)
             $display("\nAll received data matches sent data. TX Test Passed!");

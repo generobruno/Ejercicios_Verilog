@@ -23,7 +23,9 @@ module debbugger_top
     output wire     [REG_ADDR-1:0] o_addr_M,
     
     output wire     [7:0] o_prog_sz,
-    output wire     [7:0] o_state
+    output wire     [7:0] o_state,
+    
+    output wire     o_tx    
 
 );
 
@@ -49,7 +51,7 @@ uart_top#(
     .o_tx_full(tx_full_fifo_full),
     .o_rx_done(),
     .o_rx_empty(rx_empty_fifo_empty),
-    .o_tx(),
+    .o_tx(o_tx),
     .o_r_data(r_data_data)
 );
 
