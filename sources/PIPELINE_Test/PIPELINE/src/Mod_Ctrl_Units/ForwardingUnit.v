@@ -19,17 +19,11 @@ module ForwardingUnit
         input                           i_reg_write_M,              // RegWrite Control Line from MEM
         input                           i_reg_write_W,              // RegWrite Control Line from WB
         // Outputs
-        output [FORW_EQ-1 : 0]           o_forward_eq_a_FU,         // Forwarding Eq A Control Line
-        output [FORW_EQ-1 : 0]           o_forward_eq_b_FU,         // Forwarding Eq B Control Line
-        output [FORW_ALU-1 : 0]          o_forward_a_FU,            // Forwarding A Control Line
-        output [FORW_ALU-1 : 0]          o_forward_b_FU             // Forwarding B Control Line
+        output reg [FORW_EQ-1 : 0]      o_forward_eq_a_FU,         // Forwarding Eq A Control Line
+        output reg [FORW_EQ-1 : 0]      o_forward_eq_b_FU,         // Forwarding Eq B Control Line
+        output reg [FORW_ALU-1 : 0]     o_forward_a_FU,            // Forwarding A Control Line
+        output reg [FORW_ALU-1 : 0]     o_forward_b_FU             // Forwarding B Control Line
     );
-
-    //! Signal Declaration
-    reg forward_eq_a;         
-    reg forward_eq_b;         
-    reg forward_a;
-    reg forward_b;
 
     // Body
     always @(*) 
@@ -37,51 +31,49 @@ module ForwardingUnit
         // ALU Forward A
         if((i_instr_rs_E != 0) & (i_instr_rs_E == i_instr_rd_M) & i_reg_write_M)
             begin
-                forward_a = 2'b10;
+                o_forward_a_FU = 2'b10;
             end
         else if((i_instr_rs_E != 0) & (i_instr_rs_E == i_instr_rd_W) & i_reg_write_W)
             begin
-                forward_a = 2'b01;
+                o_forward_a_FU = 2'b01;
             end
         else
             begin
-                forward_a = 2'b00;
+                o_forward_a_FU = 2'b00;
             end
 
         // ALU Forward B
         if((i_instr_rt_E != 0) & (i_instr_rt_E == i_instr_rd_M) & i_reg_write_M)
             begin
-                forward_b = 2'b10;
+                o_forward_b_FU = 2'b10;
             end
         else if((i_instr_rt_E != 0) & (i_instr_rt_E == i_instr_rd_W) & i_reg_write_W)
             begin
-                forward_b = 2'b01;
+                o_forward_b_FU = 2'b01;
             end
         else
             begin
-                forward_b = 2'b00;
+                o_forward_b_FU = 2'b00;
             end
 
         // Comparator Forwarding
         if((i_instr_rs_D != 0) & (i_instr_rs_D == i_instr_rd_M) & i_reg_write_M)
             begin
-                forward_eq_a = 1'b1;
-            end
-        else if((i_instr_rt_D != 0) & (i_instr_rt_D == i_instr_rd_M) & i_reg_write_M)
-            begin
-                forward_eq_b = 1'b1;
+                o_forward_eq_a_FU = 1'b1;
             end
         else 
             begin
-                forward_eq_a = 1'b0;
-                forward_eq_b = 1'b0;
+                o_forward_eq_a_FU = 1'b0;
+            end
+        
+        if((i_instr_rt_D != 0) & (i_instr_rt_D == i_instr_rd_M) & i_reg_write_M)
+            begin
+                o_forward_eq_b_FU = 1'b1;
+            end
+        else 
+            begin
+                o_forward_eq_b_FU = 1'b0;
             end
     end
-
-    //! Assignments
-    assign o_forward_eq_a_FU    =   forward_eq_a;     
-    assign o_forward_eq_b_FU    =   forward_eq_b;
-    assign o_forward_a_FU       =   forward_a;
-    assign o_forward_b_FU       =   forward_b;
 
 endmodule

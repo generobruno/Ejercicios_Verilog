@@ -12,6 +12,7 @@ module MEM_WB_reg
         input wire                      i_clk,                      // Clock
         input wire                      i_reset,                    // Reset
         input wire                      i_enable,                   // Write Control Line
+        input wire                      i_halt,                     // Halt Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
@@ -20,6 +21,7 @@ module MEM_WB_reg
         input wire [4 : 0]              i_write_register,           // Write Register
         input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
+        output wire                     o_halt,                     // Halt Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
@@ -30,6 +32,7 @@ module MEM_WB_reg
     );
 
     //! Signal Definition
+    reg halt;
     reg reg_write;
     reg mem_to_reg;
     reg bds_sel;
@@ -43,17 +46,19 @@ module MEM_WB_reg
     begin
         if(i_reset)
         begin
+            halt                <=      0;
             reg_write           <=      0;                
             mem_to_reg          <=      0;                
-            bds_sel             <=      0;            
+            bds_sel             <=      0;           
             read_data           <=      0;                
             alu_result          <=      0;                
             write_register      <=      0;                    
-            bds                 <=      0;        
+            bds                 <=      0;       
 
         end
         else if(i_enable)
         begin
+            halt                <=      i_halt;
             reg_write           <=      i_reg_write;                
             mem_to_reg          <=      i_mem_to_reg;                
             bds_sel             <=      i_bds_sel;            
@@ -67,6 +72,7 @@ module MEM_WB_reg
     end
 
     //! Assignments
+    assign o_halt               =       halt;
     assign o_reg_write          =       reg_write;     
     assign o_mem_to_reg         =       mem_to_reg;     
     assign o_bds_sel            =       bds_sel;     

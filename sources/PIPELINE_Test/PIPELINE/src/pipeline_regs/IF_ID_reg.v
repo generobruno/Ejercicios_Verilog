@@ -31,9 +31,9 @@ module IF_ID_reg
     begin
         if(i_reset)
         begin
-            instruction <= 0; //TODO Averiguear si esta es la forma de hacer NOP
+            instruction <= 0; 
             npc <= 0;
-            bds <= 0;
+            bds <= 0; 
         end
         else if(i_enable)
         begin

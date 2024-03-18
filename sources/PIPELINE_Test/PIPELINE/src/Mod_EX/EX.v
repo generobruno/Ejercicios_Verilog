@@ -16,51 +16,48 @@ module EX
         input [INST_SZ-1 : 0]           i_read_data_2_E,            // Read Data 2 (from reg mem)
         input [INST_SZ-1 : 0]           i_alu_result_M,             // Previous ALU Result (for Forwarding)
         input [INST_SZ-1 : 0]           i_read_data_W,              // Read Data (for Forwarding, from data mem)
-        input [INST_SZ-1 : 0]           i_branch_delay_slot_D,      // Branch Delay Slot
         input                           i_alu_src_MC,               // ALUSrc Control Line
         input                           i_reg_dst_MC,               // RegDst Control Line
         input                           i_jal_sel_MC,               // JalSel Control Line
         input [ALU_OP-1 : 0]            i_alu_op_MC,                // ALUOp Control Line
         input [FORW_ALU-1 : 0]          i_forward_a_FU,             // Forwarding A Control Line
         input [FORW_ALU-1 : 0]          i_forward_b_FU,             // Forwarding B Control Line
-        input [INST_SZ-1 : 0]           i_instr_imm_D,              // Instruction Immediate (instr[15:0]) //TODO Recordar que entran 32 bits por extenderse con signo
-        input [4 : 0]                   i_instr_rs_D,               // Instruction RS (instr[25:21]) 
+        input [INST_SZ-1 : 0]           i_instr_imm_D,              // Instruction Immediate (instr[15:0] sign-extended)
         input [4 : 0]                   i_instr_rt_D,               // Instruction RT (instr[20:16])
         input [4 : 0]                   i_instr_rd_D,               // Instruction RD (instr[15:11])
 
         // Outputs
         output [INST_SZ-1 : 0]          o_alu_result_E,             // ALU Result
         output [INST_SZ-1 : 0]          o_operand_b_E,              // Operand B (for Write Data)
-        output [INST_SZ-1 : 0]          o_instr_rd_E,               // Instruction RD (for Write Register)
-        output [INST_SZ-1 : 0]          o_branch_delay_slot_E       // Branch Delay Slot
+        output [4 : 0]                  o_instr_rd_E                // Instruction RD (for Write Register)
     );
 
     //! Signal Declaration
     wire [INST_SZ-1 : 0]                alu_a;
     wire [INST_SZ-1 : 0]                alu_b;
     wire [ALU_SEL-1 : 0]                alu_sel;
-    wire [INST_SZ-1 : 0]                o_reg_dst_mpx;
+    wire [4 : 0]                        o_reg_dst_mpx;
 
     //! Instantiations
-    mpx_2to1 #(.N(INST_SZ)) reg_dst_mpx
+    mpx_2to1 #(.N(5)) reg_dst_mpx
         (.input_a(i_instr_rt_D), .input_b(i_instr_rd_D),
         .i_select(i_reg_dst_MC),
         .o_output(o_reg_dst_mpx)); 
 
-    mpx_2to1 #(.N(INST_SZ)) jal_sel_mpx
-        (.input_a(o_reg_dst_mpx), .input_b(5'h1F),
+    mpx_2to1 #(.N(5)) jal_sel_mpx
+        (.input_a(o_reg_dst_mpx), .input_b(5'h1F), // Reg 31
         .i_select(i_jal_sel_MC),
         .o_output(o_instr_rd_E));
 
     mpx_3to1 #(.N(INST_SZ)) forward_a_mpx
-        (.input_a(i_read_data_1_E), .input_b(i_alu_result_M), .input_c(i_read_data_W),
+        (.input_a(i_read_data_1_E), .input_b(i_read_data_W), .input_c(i_alu_result_M),
         .i_select(i_forward_a_FU),
         .o_output(alu_a));
 
-    // TODO SXL/SXLV MPX -> su salida reemplazaria a "i_read_data_2_E" en forward_b_mpx
+    // TODO SXL/SXLV MPX -> su salida reemplazaria a "i_read_data_2_E" en forward_b_mpx -> Creo que no hace falta xq le meti otra entrada a la alu directamente como un desgraciado
     
     mpx_3to1 #(.N(INST_SZ)) forward_b_mpx
-        (.input_a(i_read_data_2_E), .input_b(i_alu_result_M), .input_c(i_read_data_W),
+        (.input_a(i_read_data_2_E), .input_b(i_read_data_W), .input_c(i_alu_result_M),
         .i_select(i_forward_b_FU),
         .o_output(o_operand_b_E));
     
@@ -75,11 +72,8 @@ module EX
         .o_alu_sel_AC(alu_sel));
 
     alu #(.N(INST_SZ), .NSel(ALU_SEL)) alu
-        (.i_alu_A(alu_a), .i_alu_B(alu_b),
-        .i_alu_Op(alu_sel),
-        .o_alu_Result(o_alu_result_E));
-    
-    //! Assignments
-    assign o_branch_delay_slot_E    =   i_branch_delay_slot_D;    
+        (.i_alu_A(alu_a), .i_alu_B(alu_b), .i_shamt(i_instr_imm_D[10:6]),
+        .i_alu_Op(alu_sel), .i_alu_op_MC(i_alu_op_MC),
+        .o_alu_Result(o_alu_result_E));   
 
 endmodule

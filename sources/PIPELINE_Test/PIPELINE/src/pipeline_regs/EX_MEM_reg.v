@@ -12,36 +12,33 @@ module EX_MEM_reg
         input wire                      i_clk,                      // Clock
         input wire                      i_reset,                    // Reset
         input wire                      i_enable,                   // Write Control Line
-        input wire                      i_jump,                     // Jump Control Line
-        input wire                      i_jump_sel,                 // JumpSel Control Line
-        input wire                      i_mem_read,                 // MemRead Control Line
+        input wire                      i_halt,                     // Halt Control Line
         input wire                      i_mem_write,                // MemWrite Control Line
+        input wire [2 : 0]              i_bhw,                      // Memory Size Control Line
         input wire                      i_reg_write,                // RegWrite Control Line
         input wire                      i_mem_to_reg,               // MemToReg Control Line
         input wire                      i_bds_sel,                  // BDSSel Control Line
         input wire [INST_SZ-1 : 0]      i_alu_result,               // ALU Result
         input wire [INST_SZ-1 : 0]      i_write_data,               // Write Data
-        input wire [INST_SZ-1 : 0]      i_write_register,           // Write Register
+        input wire [4 : 0]              i_write_register,           // Write Register
         input wire [INST_SZ-1 : 0]      i_bds,                      // BDS
         // Outputs
-        output wire                     o_jump,                     // Jump Control Line
-        output wire                     o_jump_sel,                 // JumpSel Control Line
-        output wire                     o_mem_read,                 // MemRead Control Line
+        output wire                     o_halt,                     // Halt Control Line
         output wire                     o_mem_write,                // MemWrite Control Line
+        output wire [2 : 0]             o_bhw,                      // Memory Size Control Line
         output wire                     o_reg_write,                // RegWrite Control Line
         output wire                     o_mem_to_reg,               // MemToReg Control Line
         output wire                     o_bds_sel,                  // BDSSel Control Line
         output wire [INST_SZ-1 : 0]     o_alu_result,               // ALU Result
         output wire [INST_SZ-1 : 0]     o_write_data,               // Write Data
-        output wire [INST_SZ-1 : 0]     o_write_register,           // Write Register
+        output wire [4 : 0]             o_write_register,           // Write Register
         output wire [INST_SZ-1 : 0]     o_bds                       // BDS
     );
 
-    //! Signal Definition
-    reg jump;                     
-    reg jump_sel;                 
-    reg mem_read;                 
-    reg mem_write;                
+    //! Signal Definition    
+    reg halt;            
+    reg mem_write;
+    reg [2 : 0] bhw;                
     reg reg_write;                
     reg mem_to_reg;               
     reg bds_sel;                  
@@ -54,14 +51,13 @@ module EX_MEM_reg
     always @(posedge i_clk) 
     begin
         if(i_reset)
-        begin
-            jump            <=      0;                                          
-            jump_sel        <=      0;                                  
-            mem_read        <=      0;                                  
-            mem_write       <=      0;                                
+        begin  
+            halt            <=      0;                               
+            mem_write       <=      0; 
+            bhw             <=      0;                               
             reg_write       <=      0;                                
             mem_to_reg      <=      0;                              
-            bds_sel         <=      0;                                    
+            bds_sel         <=      0;                                     
             alu_result      <=      0;                              
             write_data      <=      0;                              
             write_register  <=      0;
@@ -69,12 +65,11 @@ module EX_MEM_reg
 
         end
         else if(i_enable)
-        begin
-            jump            <=      i_jump;                                          
-            jump_sel        <=      i_jump_sel;                                  
-            mem_read        <=      i_mem_read;                                  
+        begin 
+            halt            <=      i_halt;                               
             mem_write       <=      i_mem_write;                                
-            reg_write       <=      i_reg_write;                                
+            reg_write       <=      i_reg_write;
+            bhw             <=      i_bhw;                                
             mem_to_reg      <=      i_mem_to_reg;                              
             bds_sel         <=      i_bds_sel;                                    
             alu_result      <=      i_alu_result;                              
@@ -86,10 +81,9 @@ module EX_MEM_reg
     end
 
     //! Assignments
-    assign o_jump               =       jump;
-    assign o_jump_sel           =       jump_sel;
-    assign o_mem_read           =       mem_read;
+    assign o_halt               =       halt;
     assign o_mem_write          =       mem_write;
+    assign o_bhw                =       bhw;
     assign o_reg_write          =       reg_write;
     assign o_mem_to_reg         =       mem_to_reg;
     assign o_bds_sel            =       bds_sel;
