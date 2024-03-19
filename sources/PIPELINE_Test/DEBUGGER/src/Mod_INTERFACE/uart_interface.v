@@ -1,190 +1,498 @@
+/*
+
+*/
+
 module uart_interface
     #(
-        // Parameters
-        parameter       DATA_WIDTH      = 32,               // Data width (number of bits)
-                        SAVE_COUNT      = 3,                // Number of data words to save
-                        OP_SZ           = DATA_WIDTH,       // Operand size
-                        OPCODE_SZ       = 6                 // Opcode size
+        N       =   8,          // 
+        PC      =   32,         // Numbrer of addres bits for Inst mem    
+        W       =   5,          // Number of address bits for Reg mem
+        PC_SZ   =   32          // 
     )
     (
-        // Inputs
-        input wire i_clk,                           // Clock
-        input wire i_reset,                         // Reset
-        input wire i_rx_empty,                      // Receiver FIFO Empty Signal
-        input wire i_tx_full,                       // Transmitter FIFO Full Signal
-        input wire i_tx_done_tick,                  // Transmitter Done Signal
-        input wire [DATA_WIDTH-1:0] i_r_data,       // UART Receiver Input
-        input wire [DATA_WIDTH-1:0] i_result_data,  // ALU Result Register
+        // Sync Signals
+        input wire i_clk,                   // Clock Signal
+        input wire i_reset,                 // Reset Signal
+
+        // PIPELINE ->  
+        input wire i_halt,                  // Stop Pipeline Execution Signal
+        input wire [32-1:0] i_reg_read,     // Data from register memory
+        input wire [32-1:0] i_mem_read,     // Data from data memory
+        input wire [PC_SZ-1:0] i_pc,        // Current Program Counter
+        // UART ->  
+        input wire [N-1:0] i_data,          // Data to be read
+        input wire i_fifo_empty,            // Rx FIFO Empry Signal
+        input wire i_fifo_full,             // Tx FIFO Full Signal
+
+        // -> UART  
+        output wire [N-1:0] o_tx_data,      // Data to be written
+        output wire o_wr,                   // Write UART Signal
+        output wire o_rd,                   // Read UART Signal
+        // -> PIPELINE  
+        output wire o_write_mem,            // Write Instruction Memory Signal
+        output wire o_enable,               // Enable Pipeline Execution Signal
+        output wire [32-1:0] o_inst,        // Instruction to write
+        output wire [W-1: 0] o_addr,        // Register/Memory Debug Address
+
+
+        /*Test Variables */ 
+        output wire [7:0] o_prog_sz,        // //TODO Remover
+        output wire [7:0] o_state           // // TODO REMOVER
         
-        // Outputs
-        output wire [DATA_WIDTH-1:0] o_w_data,      // UART Data Transmitted
-        output wire o_wr_uart,                      // Receiver FIFO Input Read Signal
-        output wire o_rd_uart,                      // Transmitter FIFO Input Write Signal
-        output wire [OP_SZ-1:0] o_op_a,             // ALU Operand A
-        output wire [OP_SZ-1:0] o_op_b,             // ALU Operand B
-        output wire [OPCODE_SZ-1:0] o_op_code       // ALU Opcode
     );
+    
+    //! Signal Declaration
+    reg [2:0]           counter, counter_next;              //
+    reg [W-1:0]         reg_counter, reg_counter_next;      //
+    reg [32-1:0]        inst_reg, inst_reg_next;            //
+    reg [N-1: 0]        to_tx_fifo, to_tx_fifo_next;        //
+    reg                 rd_reg, wr_reg;                     //
+    reg                 write_mem_reg, read_mem_reg;        // TODO Remover read_mem_reg
+    reg                 enable;                             //
+    reg [8-1: 0]        mode_reg, mode_reg_next;            //
+    reg [8-1:0]         wait_mode_reg, wait_mode_reg_next;  //
+    reg [8-1: 0]        prog_size_reg, prog_size_reg_next;  //
+    reg [8-1: 0]        inst_n, inst_n_next;                // Number of instructions received
+    reg [W-1: 0]        addr_reg, addr_reg_next;            //
 
     //! State Declaration
-    localparam [2:0]
-        IDLE        =   3'b000,
-        SAVE_OP1    =   3'b001,
-        SAVE_OP2    =   3'b010,
-        COMPUTE_ALU =   3'b011,
-        SEND_RESULT =   3'b100,
-        HOLD        =   3'b111;
-
-    //! Signal Declaration
-    //reg [DATA_WIDTH-1 : 0] r_data, w_data;
-    reg [2:0] state_reg, state_next;
-    reg wr_uart_reg, wr_uart_reg_next;
-    reg [2:0] aux_send, aux_send_next;
-
-    // Registers to store received data //TODO Cambiar a array de regs?
-    reg [OPCODE_SZ-1 : 0] opcode, opcode_next;
-    reg [DATA_WIDTH-1 : 0] op1, op1_next; 
-    reg [DATA_WIDTH-1 : 0] op2, op2_next;
-    reg [DATA_WIDTH-1 : 0] result, result_next;
-
-    // TODO Modificar FSMD
-
-    //! FSMD States and data registers
-    always @(posedge i_clk, posedge i_reset) begin
-        if (i_reset) 
-        begin
-            // State
-            state_reg <= IDLE;
-            // Control
-            rd_uart_reg <= 1'b0;
-            wr_uart_reg <= 1'b0;
-            aux_send <= IDLE;
-            // Data
-            opcode <= {OPCODE_SZ {1'b0}};
-            op1 <= {DATA_WIDTH{1'b0}};
-            op2 <= {DATA_WIDTH{1'b0}};
-            result <= {DATA_WIDTH{1'b0}};
-        end 
-        else 
-        begin
-            state_reg <= state_next;
-            // Control
-            rd_uart_reg <= rd_uart_reg_next;
-            wr_uart_reg <= wr_uart_reg_next;
-            aux_send <= aux_send_next;
-            // Data
-            opcode <= opcode_next;
-            op1 <= op1_next;
-            op2 <= op2_next;
-            result <= result_next;
-        end
-    end
-
-    //! Next-State Logic
-    always @(*) begin
-        // Initial assignments
-        state_next = state_reg;
-        wr_uart_reg_next = wr_uart_reg;
-        rd_uart_reg_next = rd_uart_reg;
-        aux_send_next = aux_send;
-        op1_next = op1;
-        op2_next = op2;
-        opcode_next = opcode;
-        result_next = result;
-
-        case (state_reg)
-            IDLE: 
-            begin
-                wr_uart_reg_next = 1'b0;
-                rd_uart_reg_next = 1'b0;
-                if (~i_rx_empty) 
-                    begin
-                        state_next = SAVE_OP1;
-                        rd_uart_reg_next = 1'b1;
-                    end
-            end
-            SAVE_OP1: 
-            begin
-                if(~i_rx_empty)
-                    begin
-                        op1_next = i_r_data;
-                        rd_uart_reg_next = 1'b1;
-                        state_next = SAVE_OP2;
-                    end
-                else
-                    begin
-                        rd_uart_reg_next = 1'b0;
-                        state_next = HOLD;
-                        aux_send_next = SAVE_OP1;
-                    end
-            end
-            SAVE_OP2: 
-            begin
-                if(~i_rx_empty)
-                    begin
-                        op2_next = i_r_data;
-                        rd_uart_reg_next = 1'b1;
-                        state_next = COMPUTE_ALU;
-                    end
-                else
-                    begin
-                        rd_uart_reg_next = 1'b0;
-                        state_next = HOLD;
-                        aux_send_next = SAVE_OP2;
-                    end
-            end
-            COMPUTE_ALU: 
-            begin
-                if(~i_rx_empty)
-                    begin
-                        state_next = SEND_RESULT;
-                        opcode_next = i_r_data[OPCODE_SZ-1 : 0];
-                        rd_uart_reg_next = 1'b1;
-                        aux_send_next = 1'b0;
-                    end
-                else
-                    begin
-                        rd_uart_reg_next = 1'b0;
-                        state_next = HOLD;
-                        aux_send_next = COMPUTE_ALU;
-                    end
-            end
-            SEND_RESULT: 
-            begin
-                rd_uart_reg_next = 1'b0;
-                if (~i_tx_full) 
-                    begin
-                        result_next = i_result_data; 
-                        wr_uart_reg_next = 1'b1;
-                        state_next = IDLE;
-                    end
-                else
-                    begin
-                        wr_uart_reg_next = 1'b0;
-                    end
-                if (i_tx_done_tick)
-                    begin
-                        state_next = IDLE;
-                    end
-            end
-            HOLD:
-            begin
-                if(~i_rx_empty)
-                    begin
-                        state_next = aux_send;
-                        rd_uart_reg_next = 1'b1;
-                    end
-            end
-            default: state_next = IDLE;
-        endcase
-       
-    end
+    localparam [7:0] 
+        IDLE                =   8'b0000_0011,
+        START               =   8'b0000_0111,
+        LOAD_PROG_SIZE      =   8'b1111_1110,
+        LOAD_PROG           =   8'b1111_1101,
+        WRITE_INST          =   8'b1111_1111,
+        DEBUG               =   8'b1111_1100,
+        PREV_SEND           =   8'b0011_1001,
+        SEND_STATE_REG      =   8'b1111_1011,
+        SEND_STATE_MEM      =   8'b1111_1010,
+        SEND_PC             =   8'b1111_1001,
+        END_SEND            =   8'b1111_0010,
+        END_DEBUG           =   8'b1111_1000,
+        NEXT                =   8'b0000_0001,
+        WAIT                =   8'b0000_0000,
+        WAIT_SEND           =   8'b1000_0000,
+        NO_DEBUG            =   8'b1111_0000,
+        RESET               =   8'b0011_0000;
 
     //! Assignments
-    assign o_w_data = result;           // Write UART (TX)
-    assign o_rd_uart = rd_uart_reg;     // Read UART Signal
-    assign o_wr_uart = wr_uart_reg;     // Write UART Signal
-    assign o_op_code = opcode;          // ALU Operation Code
-    assign o_op_a = op1;                // ALU Operand A
-    assign o_op_b = op2;                // ALU Operand B
+    assign o_tx_data    =   to_tx_fifo;     //
+    assign o_inst       =   inst_reg;       //
+    assign o_write_mem  =   write_mem_reg;  //
+    assign o_addr       =   addr_reg;       //
+    assign o_enable     =   enable;         //
+            
+    assign o_rd         =   rd_reg;         //
+    assign o_wr         =   wr_reg;         //
+            
+    assign o_prog_sz    =   prog_size_reg;  //
+    assign o_state      =   mode_reg;       //
+    
+    //! FSMD States and Data Registers
+    always @(posedge i_clk, posedge i_reset)
+    begin
+        if(i_reset)
+        begin
+            // States
+            mode_reg        <=      IDLE;
+            wait_mode_reg   <=      IDLE;
+            // Control
+            to_tx_fifo      <=      {N{1'b0}};
+            counter         <=      {3{1'b0}};
+            reg_counter     <=      {W{1'b0}};
+            // Data
+            inst_reg        <=      {32{1'b0}};
+            prog_size_reg   <=      {8{1'b0}};
+            inst_n          <=      {8{1'b0}};
+            addr_reg        <=      {W{1'b0}};
+        end
+        else 
+        begin
+            // States
+            mode_reg        <=      mode_reg_next;
+            wait_mode_reg   <=      wait_mode_reg_next;
+            // Control
+            to_tx_fifo      <=      to_tx_fifo_next;
+            counter         <=      counter_next;
+            reg_counter     <=      reg_counter_next;
+            // Data
+            inst_reg        <=      inst_reg_next;
+            prog_size_reg   <=      prog_size_reg_next;
+            inst_n          <=      inst_n_next;
+            addr_reg        <=      addr_reg_next;
+        end
+        
+    end
+    
+    //! Next-State Logic
+    always@(*)
+    begin
+        // Initial Assignments
+        inst_reg_next       = inst_reg;
+        counter_next        = counter;
+        to_tx_fifo_next     = to_tx_fifo;
+        mode_reg_next       = mode_reg;
+        wait_mode_reg_next  = wait_mode_reg;
+        prog_size_reg_next  = prog_size_reg;
+        inst_n_next         = inst_n;
+        addr_reg_next       = addr_reg;
+        reg_counter_next    = reg_counter;
 
+        case(mode_reg)
+            
+            default: 
+            begin
+
+            end
+            
+            IDLE: //! Idle State
+            begin
+                if(!i_fifo_empty)
+                    mode_reg_next = START;
+            end
+            
+            START: //! Start Decoding Next State
+            begin
+                if(i_fifo_empty)
+                begin
+                    mode_reg_next = WAIT;
+                    wait_mode_reg_next = START;
+                end
+                else 
+                begin
+                    mode_reg_next = i_data;
+                end
+            end
+            
+            LOAD_PROG_SIZE: //! Load Program Size
+            begin
+                if(i_fifo_empty)
+                begin
+                    mode_reg_next = WAIT;
+                    wait_mode_reg_next = LOAD_PROG_SIZE; 
+                end
+                else 
+                begin
+                    prog_size_reg_next = i_data;
+                    mode_reg_next = LOAD_PROG;
+                end
+            end
+            
+            LOAD_PROG: //! Load Program (Instruction by Instruction)
+            begin
+                if(i_fifo_empty)
+                begin
+                    mode_reg_next = WAIT;
+                    wait_mode_reg_next = LOAD_PROG;
+                end
+                else 
+                begin
+                    inst_reg_next[8*(counter)+:8] = i_data;
+                    counter_next = counter +1;
+                    if(counter == 3)
+                    begin
+                        counter_next = 3'b000;
+                        inst_n_next = inst_n + 1;
+                        mode_reg_next = WRITE_INST;
+                    end
+                end
+            end
+            
+            WRITE_INST: //! Write Single Instruction (Byte by Byte)
+            begin
+                if(inst_n == prog_size_reg)
+                begin
+                    mode_reg_next = START;
+                    inst_n_next = 8'b00000000;
+                end
+                else 
+                begin
+                    mode_reg_next = LOAD_PROG;
+                end
+            end
+            
+            DEBUG:  //! Start Debug Session
+            begin
+                if(i_data == NEXT)
+                begin
+                    mode_reg_next = PREV_SEND;
+                end
+                else if(i_data == END_DEBUG)
+                begin
+                    mode_reg_next = RESET;
+                end
+            end
+            
+            NO_DEBUG: //! Run program to the end
+            begin
+                if(i_halt)
+                begin
+                    mode_reg_next = PREV_SEND;
+                end        
+            end
+            
+            PREV_SEND: //! Prepare for sending Data
+            begin
+                if(i_fifo_full)
+                begin
+                    mode_reg_next = WAIT_SEND;
+                    wait_mode_reg_next = PREV_SEND;
+                end
+                else 
+                begin
+                    to_tx_fifo_next = i_reg_read[0+:8];
+                    mode_reg_next = SEND_STATE_REG;
+                    counter_next = counter + 1;
+                end
+            end
+            
+            SEND_STATE_REG: //! Send Registers to UART
+            begin
+                if(i_fifo_full)
+                begin
+                    mode_reg_next           = WAIT_SEND;
+                    wait_mode_reg_next      = SEND_STATE_REG;
+                end
+                else 
+                begin
+                    if(reg_counter < 32)
+                    begin
+                        to_tx_fifo_next = i_reg_read[8*counter+:8];
+                        counter_next = counter +1;
+                        if(counter == 3)
+                        begin
+                            counter_next = 0;
+                            addr_reg_next = reg_counter+1;
+                            reg_counter_next = reg_counter+1;
+                        end
+                    end
+                    else 
+                    begin
+                        reg_counter_next = 5'b00000;
+                        mode_reg_next = SEND_STATE_MEM;
+                    end
+                end
+            end
+                
+            SEND_STATE_MEM: //! Send Memory to UART
+            begin
+                if(i_fifo_full)
+                begin
+                    mode_reg_next = WAIT_SEND;
+                    wait_mode_reg_next   = SEND_STATE_MEM;
+                end
+                else 
+                begin
+                    if(reg_counter < 32)
+                    begin
+                        to_tx_fifo_next = i_mem_read[8*counter+:8];
+                        counter_next = counter +1;
+                        if(counter == 3)
+                        begin
+                            counter_next = 0;
+                            addr_reg_next = reg_counter+1;
+                            reg_counter_next = reg_counter+1;
+                        end
+                    end
+                    else 
+                    begin
+                        reg_counter_next = 5'b00000;
+                        mode_reg_next = SEND_PC;
+                    end
+                end
+            end
+                
+            SEND_PC: //! Send PC to UART
+            begin
+                if(i_fifo_full)
+                begin
+                    mode_reg_next = WAIT_SEND;
+                    wait_mode_reg_next   = SEND_PC;
+                end
+                else 
+                begin   
+                    to_tx_fifo_next = i_pc[8*counter+:8];
+                    counter_next = counter +1;
+                    if(counter == 3)
+                    begin
+                        counter_next = 3'b000;
+                        mode_reg_next = END_SEND;
+                    end
+                end 
+            end
+
+            END_SEND: //! End Send State
+            begin
+                if(i_halt)
+                begin
+                    mode_reg_next = RESET;        
+                end
+                else 
+                begin
+                    mode_reg_next = DEBUG;
+                end    
+            end
+
+            WAIT: //! Wait State
+            begin    
+                if(!i_fifo_empty)
+                    mode_reg_next = wait_mode_reg;
+            end
+
+            WAIT_SEND: //! Wait before send data
+            begin
+                if(!i_fifo_full)
+                    mode_reg_next = wait_mode_reg;
+            end
+
+            RESET: //! Reset
+            begin
+                mode_reg_next = IDLE;        
+            end
+
+        endcase
+        
+    end
+
+    //! Output Logic
+    always @(*)
+    begin
+        case(mode_reg)
+            IDLE: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+            
+            START: 
+            begin
+                rd_reg = 1'b1;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            LOAD_PROG_SIZE: 
+            begin
+                rd_reg = 1'b1;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            LOAD_PROG: 
+            begin
+                rd_reg = 1'b1;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            WRITE_INST: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b1;
+                enable = 1'b0;
+            end
+
+            DEBUG: 
+            begin
+                rd_reg = 1'b1;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b1;
+            end
+
+            NO_DEBUG: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b1;
+            end
+
+            PREV_SEND: 
+            begin
+               rd_reg = 1'b0;
+               wr_reg = 1'b0;
+               read_mem_reg = 1'b0;
+               write_mem_reg = 1'b0;
+               enable = 1'b0; 
+            end
+
+            SEND_STATE_REG: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b1;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            SEND_STATE_MEM: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b1;
+                read_mem_reg = 1'b1;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            SEND_PC: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b1;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+            
+            END_SEND: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b1;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            WAIT: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            WAIT_SEND: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+
+            default: 
+            begin
+                rd_reg = 1'b0;
+                wr_reg = 1'b0;
+                read_mem_reg = 1'b0;
+                write_mem_reg = 1'b0;
+                enable = 1'b0;
+            end
+        endcase
+    end
+    
 endmodule
