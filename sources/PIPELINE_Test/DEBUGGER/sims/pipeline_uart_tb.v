@@ -15,7 +15,7 @@ module pipeline_uart_test();
     wire tx_to_rx, o_tx, halt, mem_w, enable;
     wire[REGS_MEM-1 : 0] regs, mem, pc;
     wire[31 : 0] inst;
-    wire[31 : 0] debug_addr;
+    wire[4 : 0] debug_addr;
     wire[7 : 0] prog_sz, state;
     // UART declaration
     reg i_rd_uart, i_wr_uart; 
@@ -26,6 +26,7 @@ module pipeline_uart_test();
     reg tx_data;
     reg [7:0] data_to_send; // Data to be sent
     reg [7:0] sent_data [NUM_TESTS-1:0]; // Data sent during each test
+    integer test_num;
     
     // Instantiate the ALU_UART_TOP
     debbugger_top#(
@@ -139,9 +140,7 @@ module pipeline_uart_test();
             
         end
     end
-    endtask
-    
-    
+    endtask 
 
     // Test cases
     initial
@@ -155,23 +154,17 @@ module pipeline_uart_test();
 
         //! Test: Send all data
         UART_SEND_BYTE();
-        #(TX_PERIOD*(NUM_TESTS+5));
 
-        @(negedge halt)
-        
-        /*
-        
-        // Test Case: Write random data into TX FIFO
-        while ((o_rx_empty != 1) && (received_data_mismatch != 1)) begin
-            for (test_num = 0; test_num < NUM_TESTS; test_num = test_num + 1) begin
-                @(negedge i_clk);
-                $display("Received bits: %b", o_r_data);
+        @(posedge halt)
 
-                // Compare received data with stored sent data
-                if (o_r_data !== sent_data[test_num]) begin
-                    $display("Data Mismatch! Received data does not match sent data.");
-                    received_data_mismatch = 1;
-                end
+        $display("Programm finished. Receiving Data...");        
+        // Read UART
+        //while ((o_rx_empty != 1)) 
+        begin
+            for (test_num = 0; test_num < 66; test_num = test_num + 1) 
+            begin //TODO Ver porque no lee
+                $display("Received bits: %b \t(addr: %b)", o_r_data, debug_addr);
+                $display("Received bits: %b", o_tx);
 
                 i_rd_uart = 1'b1;   // Read FIFO
                 @(negedge i_clk);   // Assert i_rd_signal for 1 clk cycle to remove word
@@ -179,28 +172,6 @@ module pipeline_uart_test();
                 @(negedge i_clk);
             end
         end 
-        
-        i_mem_addr = 5'b0000;
-        i_enable = 1'b1;
-        for (test_num = 0; test_num < prog_sz; test_num = test_num + 1) begin
-                @(negedge i_clk);
-                $display("Instruction MEMMORY");
-                $display("\%b: %b", test_num, mem_data);
-
-                // Compare received data with stored sent data
-
-                i_pc = test_num;   // Read FIFO
-                #(1000);
-           
-            end
-        
-               
-
-        if (received_data_mismatch == 0)
-            $display("\nAll received data matches sent data. TX Test Passed!");
-        else
-            $display("\nFailed Receiving Data. Check UART FIFO_W Size.");
-        */
 
         // Stop simulation
         $stop;
