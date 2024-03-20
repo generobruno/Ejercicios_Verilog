@@ -1,7 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
-import subprocess, os, serial
+import subprocess, os, serial, struct
 
 current_file_path = ""
 current_out_file = ""
@@ -30,6 +30,8 @@ class IDE(ctk.CTk):
             self.wm_iconphoto(True, icon)
         except Exception as e:
             print("Error loading icon:", e)
+        ctk.set_appearance_mode("Dark")
+        ctk.set_default_color_theme("dark-blue")
         self.geometry("800x600")
         
         # File management
@@ -110,7 +112,7 @@ class IDE(ctk.CTk):
         self.pc_value_label = ctk.CTkLabel(self.pc_frame, text="")
         self.pc_value_label.pack(side='top', pady=5)
 
-        self.update_register_memory()
+        self.init_tables()
 
     """ manage_file
         Save or Load File depending on the option selected
@@ -163,7 +165,7 @@ class IDE(ctk.CTk):
         
         try:
             # Execute assembler.py with appropriate arguments
-            subprocess.run(["python", "ASSEMBLER/assembler.py", "-i", current_file_path, "-o", name + ".hex"], check=True)
+            subprocess.run("python ASSEMBLER/assembler.py -i {} -o {}.hex".format(current_file_path, name), shell=True, check=True)
             messagebox.showinfo("Compilation Successful", "The file has been compiled successfully.")
         except subprocess.CalledProcessError:
             messagebox.showerror("Compilation Error", "An error occurred during compilation. Please check the assembler script.")
@@ -223,8 +225,8 @@ class IDE(ctk.CTk):
             print("Sending code through UART...")
             # Get Program Size (Number of lines)
             prog_sz = self.get_prog_size()
-            print(prog_sz)
-            print(format(prog_sz, '02X'))
+            #print(prog_sz)
+            #print(format(prog_sz, '02X'))
             
             # Try to write the code to the board
             try: #TODO REVISAR
@@ -240,17 +242,44 @@ class IDE(ctk.CTk):
                 with open(current_out_file + ".hex", 'r') as file:
                     for line in file:
                         hex_line = format(int(line.strip(), 2), '08X')  # Convert binary line to 8-byte hexadecimal
-                        print(f'hex_line: {hex_line}')
-                        for i in range(0, len(hex_line), 2):
+                        #print(f'hex_line: {hex_line}')
+                        for i in range(len(hex_line) - 2, -1, -2): # TODO Revisar Send from right to left
                             byte = hex_line[i:i+2]
-                            print(f'bye: {byte}')
+                            #print(f'bye: {byte}')
                             self.ser.write(bytes.fromhex(byte))
+                            
+                print("Code Written to board!")
                             
             except Exception as e:
                 messagebox.showwarning("Write Error", f"Could not write code.\n{e}")
         
         else:
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
+
+    """ parse_and_update_data
+        Parse the received data and update tables with the extracted values
+    """
+    def parse_and_update_data(self, read_data):
+        registers_values = {}
+        memory_values = {}
+        program_counter_value = ""
+        
+        if len(read_data) >= 260:  # Ensure there are enough bytes to unpack
+            for i in range(0, 128, 4):  # Registers data
+                reg_value = struct.unpack('<I', read_data[i:i+4])[0]  # Unpack 4 bytes as an unsigned integer
+                registers_values[f"Reg {i//4}"] = f"{reg_value:#010x}"  # Format the register value as hexadecimal
+            for i in range(128, 256, 4):  # Memory data
+                mem_value = struct.unpack('<I', read_data[i:i+4])[0]  # Unpack 4 bytes as an unsigned integer
+                memory_values[f"Mem {i//4-32}"] = f"{mem_value:#010x}"  # Format the memory value as hexadecimal
+            program_counter_value = struct.unpack('<I', read_data[256:260])[0]  # Program Counter
+            program_counter_value = f"{program_counter_value:#010x}"  # Format the PC value as hexadecimal
+            
+            # Update tables with new values
+            self.update_table(self.registers_text, registers_values)
+            self.update_table(self.memory_text, memory_values)
+            self.pc_value_label.configure(text=f"Program Counter: {program_counter_value}")
+        else:
+            print("Received data does not contain enough bytes to unpack.")
 
     """ run_code
         Send "run" code to the UART to execute the code, and wait for "halt" code
@@ -261,16 +290,14 @@ class IDE(ctk.CTk):
             print("Running Program...")
             # Send NO_DEBUG Code
             self.ser.write(bytes.fromhex('F0'))
+            
             # Wait for HALT Code and read info
             print("Waiting for halt code...")
+            read_data = self.ser.read(260) # Read mem/regs/pc states
+            
             # TODO Ver:
-            # Placeholder for updating 32 registers, 32 memory positions, and Program Counter
-            registers_values = ["Value{}".format(i) for i in range(32)]
-            memory_values = ["Value{}".format(i) for i in range(32)]
-            program_counter_value = "Value"
-            self.update_table(self.registers_text, registers_values)
-            self.update_table(self.memory_text, memory_values)
-            self.pc_value_label.config(text="Program Counter: {}".format(program_counter_value))
+            # Parse the received data and update tables
+            self.parse_and_update_data(read_data)
         else:
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
 
@@ -304,8 +331,13 @@ class IDE(ctk.CTk):
             print("Step Instruction...")
             # Send NEXT Code
             self.ser.write(bytes.fromhex('01'))
-            # Update info
-            self.update_register_memory()
+            
+            # Read Data
+            read_data = self.ser.read(260) # Read mem/regs/pc states
+            
+            # TODO Ver:
+            # Parse the received data and update tables
+            self.parse_and_update_data(read_data)
         else:
             messagebox.showwarning("Serial Error", "Serial Port Not Found.\nYou need to connect it to run a program")
     
@@ -316,13 +348,17 @@ class IDE(ctk.CTk):
         text_widget.configure(state=ctk.NORMAL)
         text_widget.delete('1.0', ctk.END)
         for name, value in values.items():
-            text_widget.insert(ctk.END, f"{name} :\t\t{value}\n")
+            try:
+                dec_value = int(value, 16)  # Convert hexadecimal value to decimal
+                text_widget.insert(ctk.END, f"{name} :\t\t{value} \t (d {dec_value})\n")
+            except ValueError:
+                text_widget.insert(ctk.END, f"{name} :\t\t{value}\n")  # If value is not a valid hexadecimal, display it as is
         text_widget.configure(state=ctk.DISABLED)
 
     """ update_register_memory
         Update all tables
     """
-    def update_register_memory(self): #TODO Revisar -> Leer UART con toda la info (260 bytes -> 32*2 (mem_reg) + 1 (pc))
+    def init_tables(self): #TODO Revisar -> Leer UART con toda la info (260 bytes -> 32*2 (mem_reg) + 1 (pc))
         # Placeholder for updating registers and memory values periodically
         registers_values = {
             f"Reg {i}": f"Value{i}" for i in range(32)
@@ -332,7 +368,7 @@ class IDE(ctk.CTk):
         }
         self.update_table(self.registers_text, registers_values)
         self.update_table(self.memory_text, memory_values)
-        self.after(1000, self.update_register_memory)
+        self.pc_value_label.configure(text="0x00")
 
 '''
                             MAIN PROGRAM

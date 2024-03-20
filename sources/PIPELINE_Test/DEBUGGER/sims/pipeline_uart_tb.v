@@ -7,7 +7,7 @@ module pipeline_uart_test();
     localparam CLKS_PER_BIT = 5208; // 50MHz / 19200 baud rate = 2604 Clocks per bit
     localparam BIT_PERIOD = 52083;  // CLKS_PER_BIT * T_NS = Bit period
     localparam TX_PERIOD = 520830;  // BIT_PERIOD * 10 = TX period
-    localparam NUM_TESTS = 11;       // Number of tests
+    localparam NUM_TESTS = 11;      // Number of tests
     localparam REGS_MEM = 32;
 
     // Declarations
@@ -159,10 +159,21 @@ module pipeline_uart_test();
 
         $display("Programm finished. Receiving Data...");        
         // Read UART
+        repeat (66) begin
+            @(negedge i_clk);
+            i_rd_uart = 1'b1;   // Read FIFO
+            @(negedge i_clk);            
+            $display("Received bits: %b \t(addr: %b)", o_r_data, debug_addr);
+            @(negedge i_clk);
+            i_rd_uart = 1'b0;
+        end
+
+        /*
         //while ((o_rx_empty != 1)) 
         begin
             for (test_num = 0; test_num < 66; test_num = test_num + 1) 
             begin //TODO Ver porque no lee
+                @(negedge i_clk);
                 $display("Received bits: %b \t(addr: %b)", o_r_data, debug_addr);
                 $display("Received bits: %b", o_tx);
 
@@ -172,6 +183,7 @@ module pipeline_uart_test();
                 @(negedge i_clk);
             end
         end 
+        */
 
         // Stop simulation
         $stop;
