@@ -24,7 +24,7 @@ module uart
         output wire                     o_tx_full,          // Transmiter FIFO Full Signal
         output wire                     o_rx_empty,         // Receiver FIFO Empty Signal
         output wire                     o_tx,               // Data transmitted
-        output wire                     o_tx_done_tick,     // Transmission Done Signal
+        //output wire                     o_tx_done_tick,     // Transmission Done Signal //TODO VER Si sacar
         output wire [DBIT-1 : 0]        o_r_data            //! Received data from Receiver FIFO -> DATA TO BE RECEIVED
     );
 
@@ -63,6 +63,6 @@ module uart
             .o_tx_done_tick(tx_done_tick), .o_tx(o_tx));
 
     assign tx_fifo_not_empty = ~tx_empty;
-    assign o_tx_done_tick = tx_done_tick;
+    //assign o_tx_done_tick = tx_done_tick;
 
 endmodule

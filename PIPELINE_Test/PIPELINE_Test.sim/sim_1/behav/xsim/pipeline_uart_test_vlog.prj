@@ -1,5 +1,6 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  \
+verilog xil_defaultlib  --include "../../../../PIPELINE_Test.ip_user_files/ipstatic" \
+"../../../../../sources/PIPELINE_Test/PIPELINE/src/clk_wiz/clk_wiz_sim_netlist.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_Ctrl_Units/AluControl.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/Mod_EX/EX.v" \
 "../../../../../sources/PIPELINE_Test/PIPELINE/src/pipeline_regs/EX_MEM_reg.v" \

@@ -1,1 +1,0 @@
---incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "unisims_ver" -L "unimacro_ver" -L "secureip" --snapshot "debbugger_test_behav" "xil_defaultlib.debbugger_test" "xil_defaultlib.glbl" -log "elaborate.log" 

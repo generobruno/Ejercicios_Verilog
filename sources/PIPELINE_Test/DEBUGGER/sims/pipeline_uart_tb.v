@@ -13,14 +13,14 @@ module pipeline_uart_test();
     // Declarations
     reg i_clk, i_reset;
     wire tx_to_rx, o_tx, halt, mem_w, enable;
-    wire[REGS_MEM-1 : 0] regs, mem, pc;
-    wire[31 : 0] inst;
-    wire[4 : 0] debug_addr;
-    wire[7 : 0] prog_sz, state;
+    wire [REGS_MEM-1 : 0] regs, mem, pc;
+    wire [31 : 0] inst;
+    wire [4 : 0] debug_addr;
+    wire [7 : 0] prog_sz, state;
     // UART declaration
     reg i_rd_uart, i_wr_uart; 
     wire o_tx_full, o_rx_empty;
-    reg[7 : 0] i_w_data;
+    reg [7 : 0] i_w_data;
     wire [7:0] o_r_data;
 
     reg tx_data;
@@ -30,9 +30,14 @@ module pipeline_uart_test();
     
     // Instantiate the ALU_UART_TOP
     debbugger_top#(
-        .PC(32),
-        .REG_ADDR(5),
-        .INST_SZ(32)
+        .N(8),       
+        .W(5),      
+        .PC_SZ(32),   
+        .INST_SZ(32),
+        .DATA_SZ(32),
+        .SB_TICK(16), 
+        .DVSR(326),    
+        .FIFO_W(5)
     ) uart_comm (
         // Inputs
         .i_clk(i_clk),
@@ -69,7 +74,7 @@ module pipeline_uart_test();
         .DBIT(8),
         .SB_TICK(16),
         .DVSR(326),
-        .FIFO_W(5)
+        .FIFO_W(10)
     ) uart (
         .i_clk(i_clk),                  // Clock
         .i_reset(i_reset),              // Reset
@@ -161,8 +166,7 @@ module pipeline_uart_test();
         // Read UART
         repeat (66) begin
             @(negedge i_clk);
-            i_rd_uart = 1'b1;   // Read FIFO
-            @(negedge i_clk);            
+            i_rd_uart = 1'b1;   // Read FIFO           
             $display("Received bits: %b \t(addr: %b)", o_r_data, debug_addr);
             @(negedge i_clk);
             i_rd_uart = 1'b0;

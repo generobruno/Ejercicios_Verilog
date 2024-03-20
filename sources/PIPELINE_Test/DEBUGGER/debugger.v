@@ -4,45 +4,50 @@
 
 module debbugger_top
     #(
-        parameter   PC          =   32,
-                    REG_ADDR    =   5,
-                    INST_SZ     =   32
+        parameter   N       =   8,          // UART Data Lenght
+                    W       =   5,          // Number of address bits for Reg mem
+                    PC_SZ   =   32,         // Size of Program Counter
+                    INST_SZ =   32,         // Size of Instructions
+                    DATA_SZ =   32,         // Size of Data
+                    SB_TICK =   16,         // # Ticks for stop bits (16/24/32 for 1/1.5/2 bits)
+                    DVSR    =   326,        // Baud Rate divisor ( Clock/(BaudRate*16) )
+                    FIFO_W  =   5           // # Address bits of FIFO ( # Words in FIFO = 2^FIFO_W )
     )
     (
         // Sync Signales
-        input wire      i_clk,
-        input wire      i_reset,
-        // Inputs
-        input wire      i_rx,
-        input wire      [2**5-1:0] i_register_data,
-        input wire      [2**5-1:0] i_memory_data,
-        input wire      [PC-1:0] i_pc,
-        input wire      i_halt,
-        // Outputs
-        output wire     o_tx,
-        output wire     [INST_SZ-1:0] o_instruction,
-        output wire     o_mem_w,
-        output wire     o_enable,
-        output wire     [REG_ADDR-1:0] o_addr,
+        input wire                          i_clk,
+        input wire                          i_reset,
+        //  Inputs
+        input wire                          i_rx,
+        input wire      [DATA_SZ-1 : 0]     i_register_data,
+        input wire      [DATA_SZ-1 : 0]     i_memory_data,
+        input wire      [PC_SZ-1 : 0]       i_pc,
+        input wire                          i_halt,
+        //  Outputs
+        output wire                         o_tx,
+        output wire     [INST_SZ-1 : 0]     o_instruction,
+        output wire                         o_mem_w,
+        output wire                         o_enable,
+        output wire     [W-1 : 0]           o_addr,
 
-        output wire     [7:0] o_prog_sz,
-        output wire     [7:0] o_state   
+        output wire     [7 : 0]             o_prog_sz,
+        output wire     [7 : 0]             o_state   
     );
 
     //! Signal Declaration
-    wire [7:0] r_data_data;
+    wire [N-1 : 0] r_data_data;
     wire rx_empty_fifo_empty;
     wire tx_full_fifo_full;
-    wire [7:0] tx_data_w_data;
+    wire [N-1 : 0] tx_data_w_data;
     wire rd_rd_uart;
     wire wr_wr_uart;
 
     //! Instantiations
     uart #(
-        .DBIT(8),
-        .SB_TICK(16),
-        .DVSR(326),
-        .FIFO_W(5)
+        .DBIT(N),
+        .SB_TICK(SB_TICK),
+        .DVSR(DVSR),
+        .FIFO_W(FIFO_W)
     ) uart_unit (
         // Sync Signals
         .i_clk(i_clk),
@@ -60,10 +65,11 @@ module debbugger_top
     );
 
     uart_interface #(
-        .N(8),
-        .PC(PC),
-        .W(REG_ADDR),
-        .PC_SZ(PC)
+        .N(N),     
+        .W(W),
+        .PC_SZ(PC_SZ),   
+        .INST_SZ(INST_SZ),
+        .DATA_SZ(DATA_SZ) 
     ) debugger (
         // Sync Signals
         .i_clk(i_clk),

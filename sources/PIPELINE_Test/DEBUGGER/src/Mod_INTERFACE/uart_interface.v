@@ -4,36 +4,36 @@
 
 module uart_interface
     #(
-        N       =   8,          // 
-        PC      =   32,         // Numbrer of addres bits for Inst mem    
+        N       =   8,          // UART Data Lenght
         W       =   5,          // Number of address bits for Reg mem
-        PC_SZ   =   32          // 
+        PC_SZ   =   32,         // Size of Program Counter
+        INST_SZ =   32,         // Size of Instructions
+        DATA_SZ =   32          // Size of Data
     )
     (
         // Sync Signals
-        input wire i_clk,                   // Clock Signal
-        input wire i_reset,                 // Reset Signal
+        input wire i_clk,                           // Clock Signal
+        input wire i_reset,                         // Reset Signal
 
         // PIPELINE ->  
-        input wire i_halt,                  // Stop Pipeline Execution Signal
-        input wire [32-1:0] i_reg_read,     // Data from register memory
-        input wire [32-1:0] i_mem_read,     // Data from data memory
-        input wire [PC_SZ-1:0] i_pc,        // Current Program Counter
+        input wire i_halt,                          // Stop Pipeline Execution Signal
+        input wire [DATA_SZ-1 : 0] i_reg_read,      // Data from register memory
+        input wire [DATA_SZ-1 : 0] i_mem_read,      // Data from data memory
+        input wire [PC_SZ-1 : 0] i_pc,              // Current Program Counter
         // UART ->  
-        input wire [N-1:0] i_data,          // Data to be read
-        input wire i_fifo_empty,            // Rx FIFO Empry Signal
-        input wire i_fifo_full,             // Tx FIFO Full Signal
+        input wire [N-1 : 0] i_data,                // Data to be read
+        input wire i_fifo_empty,                    // Rx FIFO Empry Signal
+        input wire i_fifo_full,                     // Tx FIFO Full Signal
 
         // -> UART  
-        output wire [N-1:0] o_tx_data,      // Data to be written
-        output wire o_wr,                   // Write UART Signal
-        output wire o_rd,                   // Read UART Signal
+        output wire [N-1 : 0] o_tx_data,            // Data to be written
+        output wire o_wr,                           // Write UART Signal
+        output wire o_rd,                           // Read UART Signal
         // -> PIPELINE  
-        output wire o_write_mem,            // Write Instruction Memory Signal
-        output wire o_enable,               // Enable Pipeline Execution Signal
-        output wire [32-1:0] o_inst,        // Instruction to write
-        output wire [W-1: 0] o_addr,        // Register/Memory Debug Address
-
+        output wire o_write_mem,                    // Write Instruction Memory Signal
+        output wire o_enable,                       // Enable Pipeline Execution Signal
+        output wire [INST_SZ-1 : 0] o_inst,         // Instruction to write
+        output wire [W-1 : 0] o_addr,               // Register/Memory Debug Address
 
         /*Test Variables */ 
         output wire [7:0] o_prog_sz,        // //TODO Remover
@@ -42,18 +42,18 @@ module uart_interface
     );
     
     //! Signal Declaration
-    reg [2:0]           counter, counter_next;              //
-    reg [W-1:0]         reg_counter, reg_counter_next;      //
-    reg [32-1:0]        inst_reg, inst_reg_next;            //
-    reg [N-1: 0]        to_tx_fifo, to_tx_fifo_next;        //
-    reg                 rd_reg, wr_reg;                     //
-    reg                 write_mem_reg, read_mem_reg;        // TODO Remover read_mem_reg
-    reg                 enable;                             //
-    reg [8-1: 0]        mode_reg, mode_reg_next;            //
-    reg [8-1:0]         wait_mode_reg, wait_mode_reg_next;  //
-    reg [8-1: 0]        prog_size_reg, prog_size_reg_next;  //
-    reg [8-1: 0]        inst_n, inst_n_next;                // Number of instructions received
-    reg [W-1: 0]        addr_reg, addr_reg_next;            //
+    reg [2 : 0]             counter, counter_next;              // Auxiliar Counter (for bytes)
+    reg [W-1 : 0]           reg_counter, reg_counter_next;      // Auxiliar Counter (for number mem/reg size)
+    reg [INST_SZ-1 : 0]     inst_reg, inst_reg_next;            // Instruction Register
+    reg [N-1 : 0]           to_tx_fifo, to_tx_fifo_next;        // To UART Tx Registers
+    reg                     rd_reg, wr_reg;                     // Read and Write UART Registers
+    reg                     write_mem_reg;                      // Write Instructions Register
+    reg                     enable;                             // Enable Register
+    reg [7 : 0]             mode_reg, mode_reg_next;            // State Register
+    reg [7 : 0]             wait_mode_reg, wait_mode_reg_next;  // Next-State after Wait
+    reg [7 : 0]             prog_size_reg, prog_size_reg_next;  // Program Size
+    reg [7 : 0]             inst_n, inst_n_next;                // Number of instructions received
+    reg [W-1 : 0]           addr_reg, addr_reg_next;            // Debug Address
 
     //! State Declaration
     localparam [7:0] 
@@ -76,17 +76,17 @@ module uart_interface
         RESET               =   8'b0011_0000;
 
     //! Assignments
-    assign o_tx_data    =   to_tx_fifo;     //
-    assign o_inst       =   inst_reg;       //
-    assign o_write_mem  =   write_mem_reg;  //
-    assign o_addr       =   addr_reg;       //
-    assign o_enable     =   enable;         //
+    assign o_tx_data    =   to_tx_fifo;     
+    assign o_inst       =   inst_reg;       
+    assign o_write_mem  =   write_mem_reg;  
+    assign o_addr       =   addr_reg;       
+    assign o_enable     =   enable;         
             
-    assign o_rd         =   rd_reg;         //
-    assign o_wr         =   wr_reg;         //
-            
-    assign o_prog_sz    =   prog_size_reg;  //
-    assign o_state      =   mode_reg;       //
+    assign o_rd         =   rd_reg;         
+    assign o_wr         =   wr_reg;         
+
+    assign o_prog_sz    =   prog_size_reg;  
+    assign o_state      =   mode_reg;       
     
     //! FSMD States and Data Registers
     always @(posedge i_clk, posedge i_reset)
@@ -139,12 +139,7 @@ module uart_interface
         reg_counter_next    = reg_counter;
 
         case(mode_reg)
-            
-            default: 
-            begin
-
-            end
-            
+                        
             IDLE: //! Idle State
             begin
                 if(!i_fifo_empty)
@@ -350,6 +345,11 @@ module uart_interface
                 mode_reg_next = IDLE;        
             end
 
+            default: 
+            begin
+                //TODO Poner cosas que se escriben en 0 (instructions, counter, address, etc)
+            end
+
         endcase
         
     end
@@ -362,7 +362,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -371,7 +370,6 @@ module uart_interface
             begin
                 rd_reg = 1'b1;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -380,7 +378,6 @@ module uart_interface
             begin
                 rd_reg = 1'b1;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -389,7 +386,6 @@ module uart_interface
             begin
                 rd_reg = 1'b1;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -398,7 +394,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b1;
                 enable = 1'b0;
             end
@@ -407,7 +402,6 @@ module uart_interface
             begin
                 rd_reg = 1'b1;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b1;
             end
@@ -416,7 +410,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b1;
             end
@@ -425,7 +418,6 @@ module uart_interface
             begin
                rd_reg = 1'b0;
                wr_reg = 1'b0;
-               read_mem_reg = 1'b0;
                write_mem_reg = 1'b0;
                enable = 1'b0; 
             end
@@ -434,7 +426,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b1;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -443,7 +434,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b1;
-                read_mem_reg = 1'b1;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -452,7 +442,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b1;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -461,7 +450,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b1;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -470,7 +458,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -479,7 +466,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
@@ -488,7 +474,6 @@ module uart_interface
             begin
                 rd_reg = 1'b0;
                 wr_reg = 1'b0;
-                read_mem_reg = 1'b0;
                 write_mem_reg = 1'b0;
                 enable = 1'b0;
             end
